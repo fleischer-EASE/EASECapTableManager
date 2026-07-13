@@ -7,7 +7,7 @@ Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSO
 - Cap Table über mehrere Finanzierungsstände
 - Wandeldarlehen mit Zins, Discount, Valuation Cap und wählbarer Fully-Diluted-Wandlungsbasis
 - Mehrere VSOP-Pools mit zugeordneten Personen, Vesting, Cliff, Leaver- und Ablaufdatum
-- Exit-Simulation mit MOIC und IRR
+- Exit-Simulation mit Multiple und IRR für alle Beteiligten
 - Lokale automatische Speicherung, Rückgängig/Wiederholen und Suche
 - CSV-Import und -Export für Backups
 
@@ -18,18 +18,14 @@ Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSO
 
 ## Starten
 
-1. `start-app.cmd` doppelt anklicken.
-2. Der Browser öffnet `http://127.0.0.1:8080/` automatisch.
-3. Das Serverfenster geöffnet lassen. Mit `Strg+C` wird der Server beendet.
-
-Falls Python nicht installiert ist, öffnet das Startskript die eigenständige `index.html` direkt im Browser.
+Öffne `index.html` direkt in einem modernen Browser. Alternativ kann die Datei über einen beliebigen lokalen Webserver bereitgestellt werden.
 
 ## Daten und Backups
 
 Die Eingaben werden lokal im Browser gespeichert. Über **CSV exportieren** und **CSV laden** lassen sich Versionen sichern und wiederherstellen. Verwende möglichst immer dieselbe Adresse und denselben Port, da Browserdaten an die Adresse gebunden sind.
 
-## Anderen Port verwenden
+## Optional über einen lokalen Server starten
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File .\start-app.ps1 -Port 8090
+python -m http.server 8080
 ```
