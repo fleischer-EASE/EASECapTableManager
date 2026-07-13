@@ -1,8 +1,8 @@
-schema_version;record_type;id;name;category;shares;planned_shares;cost_basis_eur;investment_date;is_virtual;counterparty;principal_eur;interest_pct;discount_pct;valuation_cap_eur;include_granted_vsop;pre_money_eur;investment_eur;closing_date;pool_refresh_shares;pool_refresh_timing;grant_date;vesting_start;vesting_months;cliff_months;strike_price_eur;status;leaver_date;expiry_date;exit_value_eur;exit_debt_eur;exit_costs_eur;exit_date
-1;holder;founder-alex;Alex Beispiel;Gründer;700000;;25000;2023-01-02;false;;;;;;;;;;;;;;;;;;;;;;;
-1;holder;founder-sam;Sam Beispiel;Gründer;200000;;10000;2023-01-02;false;;;;;;;;;;;;;;;;;;;;;;;
-1;holder;vsop-pool;VSOP Pool;Mitarbeitende;100000;;0;;true;;;;;;;;;;;;;;;;;;;;;;;
-1;convertible;convertible-pre-seed;Pre-Seed Wandeldarlehen;;;;;2024-02-01;;EASE Angel;200000;6;20;3000000;true;;;;;;;;;;;;;;;;;
-1;round;round-seed;Seed-Runde;;;;;;;EASE Ventures;;;;;;5000000;1000000;2025-01-15;50000;pre;;;;;;;;;;;;
-1;vsop;vsop-anna;Anna Beispiel;;25000;5000;;;;;;;;;;;;;;;2024-06-01;2024-06-01;48;12;1;Aktiv;;2034-06-01;;;;
-1;exit;exit-example;Exit-Annahme;;;;;;;;;;;;;;;;;;;;;;;;;;20000000;500000;300000;2028-12-31
+schema_version;record_type;id;name;category;shares;planned_shares;cost_basis_eur;investment_date;is_virtual;counterparty;principal_eur;interest_pct;discount_pct;valuation_cap_eur;fully_diluted_conversion;pool_id;pre_money_eur;investment_eur;closing_date;pool_refresh_shares;pool_refresh_timing;grant_date;vesting_start;vesting_months;cliff_months;strike_price_eur;status;leaver_date;expiry_date;exit_value_eur;exit_debt_eur;exit_costs_eur;exit_date
+1;holder;founder-alex;Alex Beispiel;Gründer;700000;;25000;2023-01-02;false;;;;;;;;;;;;;;;;;;;;;;;;
+1;holder;founder-sam;Sam Beispiel;Gründer;200000;;10000;2023-01-02;false;;;;;;;;;;;;;;;;;;;;;;;;
+1;holder;vsop-pool;Employee Pool 2024;VSOP-Pool;100000;;0;;true;;;;;;;;;;;;;;;;;;;;;;;;
+1;convertible;convertible-pre-seed;Pre-Seed Wandeldarlehen;;;;;2024-02-01;;EASE Angel;200000;6;20;3000000;true;;;;;;;;;;;;;;;;;;
+1;round;round-seed;Seed-Runde;;;;;;;EASE Ventures;;;;;;vsop-pool;5000000;1000000;2025-01-15;50000;pre;;;;;;;;;;;;
+1;vsop;vsop-anna;Anna Beispiel;;25000;5000;;;;;;;;;;vsop-pool;;;;;;2024-06-01;2024-06-01;48;12;1;Aktiv;;2034-06-01;;;;
+1;exit;exit-example;Exit-Annahme;;;;;;;;;;;;;;;;;;;;;;;;;;;20000000;500000;300000;2028-12-31

@@ -5,8 +5,8 @@ Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSO
 ## Funktionen
 
 - Cap Table über mehrere Finanzierungsstände
-- Wandeldarlehen mit Zins, Discount, Valuation Cap und optionaler Berücksichtigung bereits gewährter VSOP-Anteile
-- VSOP-Zuteilungen mit Vesting, Cliff, Leaver- und Ablaufdatum
+- Wandeldarlehen mit Zins, Discount, Valuation Cap und wählbarer Fully-Diluted-Wandlungsbasis
+- Mehrere VSOP-Pools mit zugeordneten Personen, Vesting, Cliff, Leaver- und Ablaufdatum
 - Exit-Simulation mit MOIC und IRR
 - Lokale automatische Speicherung, Rückgängig/Wiederholen und Suche
 - CSV-Import und -Export für Backups
