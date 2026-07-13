@@ -1,10 +1,10 @@
-# Bedienungsanleitung: EASE Captable Manager
+# Bedienungsanleitung: EASE Cap Table Manager
 
-Der EASE Captable Manager ist eine lokale Browser-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, mehrere VSOP-Pools, VSOP-Zuteilungen und Exit-Simulationen. Alle Eingaben bleiben im lokalen Browserspeicher; ein Server oder Benutzerkonto ist nicht erforderlich.
+Der EASE Cap Table Manager ist eine lokale Browser-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, mehrere VSOP-Pools, VSOP-Zuteilungen und Exit-Simulationen. Alle Eingaben bleiben im lokalen Browserspeicher; ein Server oder Benutzerkonto ist nicht erforderlich.
 
 ## Schnellstart mit Beispieldaten
 
-1. Starte die App über `start-app.cmd`.
+1. Öffne `index.html` in einem modernen Browser.
 2. Klicke links unter **Versionen & Daten** auf **CSV laden**.
 3. Wähle [`examples/ease-cap-table-example.csv`](../examples/ease-cap-table-example.csv).
 4. Prüfe die importierten Daten in den Bereichen **Cap Table**, **Finanzierungen**, **VSOP Pool** und **Exit Simulation**.
@@ -13,17 +13,17 @@ Der EASE Captable Manager ist eine lokale Browser-App für Cap Tables, Finanzier
 
 ## 1. Oberfläche und Navigation
 
-![Übersicht des EASE Captable Managers](images/01-overview.jpg)
+![Übersicht des EASE Cap Table Managers](images/01-overview.jpg)
 
 Die Seitenleiste führt zu den fünf Arbeitsbereichen:
 
-- **Übersicht** zeigt Kennzahlen und die Entwicklung der Beteiligungsverhältnisse.
+- **Übersicht** zeigt Kennzahlen, das Donutdiagramm der Beteiligungsverhältnisse und die danebenliegende Cap Table.
 - **Cap Table** enthält alle Beteiligten, Anteile und Ownership-Werte.
-- **Finanzierungen** zeigt Wandeldarlehen und Equity-Runden unterhalb der Cap Table.
+- **Finanzierungen** zeigt Wandeldarlehen und Equity-Runden gemeinsam in chronologischer Reihenfolge.
 - **VSOP Pool** verwaltet Pools sowie gewährte und geplante virtuelle Anteile.
 - **Exit Simulation** berechnet die Verteilung eines angenommenen Verkaufserlöses.
 
-Über die Schaltflächen im Kopfbereich legst du Beteiligte, VSOP-Pools, Wandeldarlehen, VSOP-Zuteilungen und Finanzierungsrunden an. Mit **Aktuell** springst du zum neuesten Finanzierungsstand. Das Suchfeld filtert die sichtbaren Cap-Table-Zeilen nach Name oder Typ.
+Über die Schaltflächen im Kopfbereich legst du Beteiligte, VSOP-Pools, Wandeldarlehen, VSOP-Zuteilungen und Finanzierungsrunden an. Mit **Aktuell** springst du zum neuesten Finanzierungsstand. Das Suchfeld filtert die sichtbaren Zeilen der Cap Table nach Name oder Typ.
 
 ## 2. Beteiligte und VSOP-Pools anlegen
 
@@ -53,12 +53,14 @@ Das Darlehen wandelt bei der ersten Finanzierungsrunde, deren Closing-Datum am o
 
 ## 4. Finanzierungsrunde hinzufügen
 
+![Chronologische Finanzierungen im Drei-Spalten-Raster](images/03-financing-grid.jpg)
+
 1. Klicke auf **Finanzierungsrunde**.
 2. Erfasse Investor, Pre-Money-Bewertung, Investment und Closing-Datum.
 3. Optional kannst du zusätzliche VSOP-Pool-Anteile festlegen, den Zielpool auswählen und bestimmen, ob die Auffrischung Pre- oder Post-Money erfolgt.
 4. Klicke auf **Speichern**.
 
-Über die Zeitpunkte unter **Entwicklung** wechselst du zwischen Gründung und den einzelnen Runden. Cap Table, Ownership und Kennzahlen werden für den ausgewählten Stand neu berechnet. Die Finanzierungsübersicht steht direkt unter der Cap Table.
+Über die Zeitpunkte unter **Entwicklung** wechselst du zwischen Gründung und den einzelnen Runden. Cap Table, Ownership und Kennzahlen werden für den ausgewählten Stand neu berechnet. Alle Finanzierungsarten erscheinen gemeinsam chronologisch in einem dreispaltigen Raster: Der älteste Eintrag beginnt rechts, danach wird nach links und anschließend in der nächsten Zeile weitergezählt.
 
 ## 5. VSOP-Zuteilung verwalten
 
@@ -80,8 +82,9 @@ Die App prüft die Kapazität für jeden Pool getrennt und berücksichtigt dabei
 1. Öffne **Exit Simulation**.
 2. Erfasse Unternehmensverkauf, Exit-Datum, Schulden und Transaktionskosten.
 3. Prüfe den verteilbaren Nettoerlös sowie die Auszahlungen an Gründer, Angels, Investoren und VSOP-Personen.
+4. Vergleiche für jede Person das **Multiple** aus Auszahlung geteilt durch Investment. Bei einer positiven Auszahlung ohne Investment zeigt die App `∞×`.
 
-Die Simulation verteilt den Erlös pro rata und berücksichtigt keine Liquidationspräferenzen, Steuern oder individuellen Vertragsklauseln. MOIC und IRR werden nur angezeigt, wenn die notwendigen Investitionsbeträge und Daten vorhanden sind.
+Die Simulation verteilt den Erlös pro rata und berücksichtigt keine Liquidationspräferenzen, Steuern oder individuellen Vertragsklauseln. Bei VSOP-Personen gilt der Strike der gevesteten Anteile als Investment. Die IRR wird angezeigt, wenn die notwendigen Investitionsbeträge und Daten vorhanden sind.
 
 ## 7. Speichern, Rückgängig und Backups
 
@@ -92,7 +95,7 @@ Die Simulation verteilt den Erlös pro rata und berücksichtigt keine Liquidatio
 - **CSV laden** ersetzt den aktuellen Datenstand durch eine zuvor exportierte oder kompatible Datei.
 - **Zurücksetzen** bietet an, vor dem Löschen eine CSV-Sicherung zu erstellen.
 
-Browserdaten sind an Adresse und Port gebunden. Verwende für dieselbe Arbeitsdatei möglichst immer dieselbe Startadresse, beispielsweise `http://127.0.0.1:8080/`.
+Browserdaten sind an die aufgerufene Adresse gebunden. Öffne daher möglichst immer dieselbe `index.html` oder verwende bei einem lokalen Webserver dieselbe Adresse und denselben Port.
 
 ## 8. Aufbau der Beispiel-CSV
 
