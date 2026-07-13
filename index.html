@@ -756,7 +756,7 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-stat { padding:16px; gap:6px; }
     #equity-round-manager .erm-stat .viz-stat-value { font-variant-numeric:tabular-nums; }
     #equity-round-manager .erm-tabs { display:flex; gap:6px; flex-wrap:wrap; }
-    #equity-round-manager .erm-main { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(280px,.85fr); gap:28px; align-items:start; }
+    #equity-round-manager .erm-main { display:grid; grid-template-columns:1fr; gap:18px; align-items:start; }
     #equity-round-manager .erm-section { display:grid; gap:14px; min-width:0; }
     #equity-round-manager .erm-section[id], #equity-round-manager .erm-head[id] { scroll-margin-top:20px; }
     #equity-round-manager .erm-section-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px 18px; flex-wrap:wrap; }
@@ -906,12 +906,7 @@ html>body{padding:0}</style>
       box-shadow:10px 0 32px rgb(23 43 67 / 8%); overflow:auto;
     }
     #equity-round-manager .erm-brand { display:grid; gap:16px; padding:0 8px 24px; border-bottom:1px solid rgb(255 255 255 / 10%); }
-    #equity-round-manager .erm-brand-lockup { display:flex; align-items:center; gap:12px; }
-    #equity-round-manager .erm-brand-mark {
-      display:grid; place-items:center; width:40px; height:40px; flex:0 0 40px; border-radius:13px;
-      color:#203247; background:#f3eee5; box-shadow:inset 0 0 0 1px rgb(255 255 255 / 35%),0 6px 16px rgb(8 21 35 / 18%);
-      font-family:var(--font-serif); font-size:17px; font-weight:600; letter-spacing:-.04em;
-    }
+    #equity-round-manager .erm-brand-lockup { display:flex; align-items:center; }
     #equity-round-manager .erm-brand-copy { display:grid; gap:1px; min-width:0; }
     #equity-round-manager .erm-brand strong { color:#fff; font-family:var(--font-serif); font-size:18px; font-weight:500; letter-spacing:-.02em; }
     #equity-round-manager .erm-brand .text-muted { color:rgb(231 240 235 / 57%); }
@@ -965,7 +960,7 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-stat .viz-stat-value { font-family:var(--font-serif); font-size:clamp(1.8rem,2.5vw,2.35rem); font-weight:500; color:#1b2f43; letter-spacing:-.035em; }
 
     #equity-round-manager .erm-section { gap:18px; padding:24px; }
-    #equity-round-manager .erm-main { grid-template-columns:minmax(0,1.55fr) minmax(320px,.75fr); gap:18px; }
+    #equity-round-manager .erm-main { grid-template-columns:1fr; gap:18px; }
     #equity-round-manager .erm-section-head { align-items:center; }
     #equity-round-manager .erm-section-head > .text-small { color:#849087; }
     #equity-round-manager .erm-tabs { gap:4px; padding:4px; border-radius:11px; background:#f0ece5; }
@@ -1033,9 +1028,8 @@ html>body{padding:0}</style>
     <aside class="erm-sidebar" aria-label="Seitennavigation">
       <div class="erm-brand">
         <div class="erm-brand-lockup">
-          <span class="erm-brand-mark" aria-hidden="true">EC</span>
           <span class="erm-brand-copy">
-            <strong>EASE Cap Table Manager</strong>
+            <strong>EASE Captable Manager</strong>
             <span class="text-small text-muted">Cap table workspace</span>
           </span>
         </div>
@@ -1071,6 +1065,7 @@ html>body{padding:0}</style>
         </div>
         <div class="viz-row erm-create-actions" aria-label="Einträge hinzufügen">
           <button type="button" class="btn" id="erm-add-convertible"><i data-lucide="file-plus-2" aria-hidden="true"></i> Wandeldarlehen</button>
+          <button type="button" class="btn" id="erm-add-pool"><i data-lucide="layers-3" aria-hidden="true"></i> VSOP-Pool</button>
           <button type="button" class="btn" id="erm-add-vsop"><i data-lucide="badge-plus" aria-hidden="true"></i> VSOP-Person</button>
           <button type="button" class="btn" id="erm-add-person"><i data-lucide="user-plus" aria-hidden="true"></i> Beteiligte</button>
           <button type="button" class="btn btn-primary" id="erm-add-round"><i data-lucide="plus" aria-hidden="true"></i> Finanzierungsrunde</button>
@@ -1101,13 +1096,13 @@ html>body{padding:0}</style>
         </table>
       </div>
     </section>
-    <aside class="erm-section" id="erm-financing" aria-labelledby="erm-rounds-heading">
+    <section class="erm-section" id="erm-financing" aria-labelledby="erm-rounds-heading">
       <div class="erm-section-head"><h3 id="erm-rounds-heading">Finanzierungen</h3></div>
       <span class="text-small text-muted erm-subheading">Wandeldarlehen</span>
       <div class="erm-rounds" id="erm-convertible-list"></div>
       <span class="text-small text-muted erm-subheading">Equity-Runden</span>
       <div class="erm-rounds" id="erm-round-list"></div>
-    </aside>
+    </section>
   </div>
 
   <section class="erm-section erm-exit" id="erm-vsop" aria-labelledby="erm-vsop-heading">
@@ -1183,6 +1178,7 @@ html>body{padding:0}</style>
         <label class="form-label">Investment (€)<input class="form-control" id="erm-investment" data-money type="text" inputmode="numeric" value="2.000.000" required></label>
         <label class="form-label">Closing-Datum<input class="form-control" id="erm-round-date" type="date" required></label>
         <label class="form-label">Zusätzliche Pool-Anteile<input class="form-control" id="erm-round-pool-refresh" type="number" min="0" step="1" value="0"></label>
+        <label class="form-label">Zielpool<select class="form-select" id="erm-round-pool-id"></select></label>
         <label class="form-label">Pool-Auffrischung<select class="form-select" id="erm-round-pool-timing"><option value="pre">Pre-Money</option><option value="post">Post-Money</option></select></label>
       </div>
       <div class="text-small text-destructive erm-error" id="erm-round-error"></div>
@@ -1201,7 +1197,7 @@ html>body{padding:0}</style>
         <label class="form-label">Zins p. a. (%)<input class="form-control" id="erm-convertible-interest" type="number" min="0" step="0.1"></label>
         <label class="form-label">Discount (%)<input class="form-control" id="erm-convertible-discount" type="number" min="0" max="99" step="0.1"></label>
         <label class="form-label">Valuation Cap (€)<input class="form-control" id="erm-convertible-cap" data-money type="text" inputmode="numeric"></label>
-        <label class="erm-check-card"><input id="erm-convertible-include-vsop" type="checkbox"><span class="erm-check-copy"><strong>Bereits gewährte VSOP-Anteile einbeziehen</strong><span class="text-small text-muted">Erhöht die Fully-Diluted-Basis der Wandlung um bis zum Closing gewährte, nicht stornierte VSOP-Anteile. Freier und nur geplanter Pool bleibt unberücksichtigt.</span></span></label>
+        <label class="erm-check-card"><input id="erm-convertible-fully-diluted" type="checkbox"><span class="erm-check-copy"><strong>Fully Diluted wandeln</strong><span class="text-small text-muted">Bezieht alle bestehenden VSOP-Pools einschließlich freier und geplanter Pool-Anteile in die Wandlungsbasis ein. Deaktiviert wird nur auf Basis der echten Equity-Anteile gewandelt.</span></span></label>
       </div>
       <div class="text-small text-destructive erm-error" id="erm-convertible-error"></div>
       <div class="erm-form-actions"><button type="button" class="btn text-destructive" id="erm-delete-convertible" hidden><i data-lucide="trash-2" aria-hidden="true"></i> Löschen</button><button class="btn" value="cancel" formnovalidate>Abbrechen</button><button class="btn btn-primary" value="default" id="erm-save-convertible">Speichern</button></div>
@@ -1216,10 +1212,21 @@ html>body{padding:0}</style>
     </form>
   </dialog>
 
+  <dialog id="erm-pool-dialog">
+    <form method="dialog" class="erm-form" id="erm-pool-form">
+      <h3 id="erm-pool-form-title">VSOP-Pool anlegen</h3>
+      <label class="form-label">Poolname<input class="form-control" id="erm-pool-name" required placeholder="z. B. Employee Pool 2026"></label>
+      <label class="form-label">Pool-Anteile<input class="form-control" id="erm-pool-shares" type="number" min="1" step="1" value="100000" required></label>
+      <div class="text-small text-destructive erm-error" id="erm-pool-error"></div>
+      <div class="erm-form-actions"><button class="btn" value="cancel" formnovalidate>Abbrechen</button><button class="btn btn-primary" value="default" id="erm-save-pool">Speichern</button></div>
+    </form>
+  </dialog>
+
   <dialog id="erm-vsop-dialog">
     <form method="dialog" class="erm-form" id="erm-vsop-form">
       <h3 id="erm-vsop-form-title">VSOP-Person</h3>
       <div class="erm-fields">
+        <label class="form-label">VSOP-Pool<select class="form-select" id="erm-vsop-pool" required></select></label>
         <label class="form-label">Name<input class="form-control" id="erm-vsop-name" required></label>
         <label class="form-label">Granted<input class="form-control" id="erm-vsop-shares" type="number" min="1" step="1" required></label>
         <label class="form-label">Planned<input class="form-control" id="erm-vsop-planned" type="number" min="0" step="1" value="0"></label>
@@ -1294,8 +1301,11 @@ html>body{padding:0}</style>
       }
       if(h.investmentDate===undefined) h.investmentDate='';
     });
-    state.rounds.forEach(r=>{if(r.date===undefined)r.date=r.id==='seed'&&r.name==='Seed'?'2024-01-15':r.id==='series-a'&&r.name==='Series A'?'2025-07-01':'';if(r.poolRefresh===undefined)r.poolRefresh=0;if(!r.poolRefreshTiming)r.poolRefreshTiming='pre';});
-    state.convertibles.forEach(c=>{if(typeof c.includeGrantedVsop!=='boolean')c.includeGrantedVsop=true;});
+    state.holders.forEach(h=>{if(h.isVirtual||h.id==='vsop-pool'){h.isVirtual=true;h.type='VSOP-Pool';}});
+    const migratedPoolId=(state.holders.find(h=>h.isVirtual)||{}).id||'';
+    state.rounds.forEach(r=>{if(r.date===undefined)r.date=r.id==='seed'&&r.name==='Seed'?'2024-01-15':r.id==='series-a'&&r.name==='Series A'?'2025-07-01':'';if(r.poolRefresh===undefined)r.poolRefresh=0;if(!r.poolRefreshTiming)r.poolRefreshTiming='pre';if(r.poolId===undefined)r.poolId=migratedPoolId;});
+    state.convertibles.forEach(c=>{if(typeof c.fullyDilutedConversion!=='boolean')c.fullyDilutedConversion=typeof c.includeGrantedVsop==='boolean'?c.includeGrantedVsop:true;});
+    state.vsopParticipants.forEach(g=>{if(!g.poolId)g.poolId=migratedPoolId;});
     let stage = state.rounds.length;
     let editRound = null;
     let editHolder = null;
@@ -1304,6 +1314,7 @@ html>body{padding:0}</style>
     let pendingDeleteConvertible = null;
     let editVsop = null;
     let pendingDeleteVsop = null;
+    let editPool = null;
     let capQuery = '';
     const $ = s => root.querySelector(s);
     let undoStack=[];
@@ -1342,11 +1353,8 @@ html>body{padding:0}</style>
       return Math.max(0,Math.min(Number(grant.shares)||0,(Number(grant.shares)||0)*((endDate-start)/(finish-start))));
     };
     const reservedVsopShares = grant => grant.status==='Storniert'?0:grant.status==='Ausgeschieden'?vestedShares(grant):(Number(grant.shares)||0)+(Number(grant.plannedShares)||0);
-    const grantedVsopSharesAt = asOf => state.vsopParticipants.reduce((sum,grant)=>{
-      if(grant.status==='Storniert'||!validDate(grant.grantDate)||grant.grantDate>asOf)return sum;
-      if(grant.status==='Ausgeschieden'&&validDate(grant.leaverDate)&&grant.leaverDate<=asOf)return sum+vestedShares(grant,asOf);
-      return sum+(Number(grant.shares)||0);
-    },0);
+    const vsopPools = () => state.holders.filter(h=>h.isVirtual);
+    const poolSelectOptions = (selected='',allowEmpty=false) => (allowEmpty?`<option value="">Kein Zielpool</option>`:'')+vsopPools().map(pool=>`<option value="${esc(pool.id)}" ${pool.id===selected?'selected':''}>${esc(pool.name)} · ${num(pool.shares)} Anteile</option>`).join('');
     function xirr(flows){
       if(flows.length<2||!flows.some(f=>f.amount<0)||!flows.some(f=>f.amount>0)||flows.some(f=>!validDate(f.date))) return null;
       const dates=flows.map(f=>Date.parse(f.date+'T00:00:00Z')), start=Math.min(...dates);
@@ -1393,7 +1401,7 @@ html>body{padding:0}</style>
         vsopParticipants:[],
         exit:{value:0,debt:0,costs:0,date:''}
       };
-      stage=0;editRound=null;editHolder=null;pendingDeleteHolder=null;editConvertible=null;pendingDeleteConvertible=null;editVsop=null;pendingDeleteVsop=null;
+      stage=0;editRound=null;editHolder=null;pendingDeleteHolder=null;editConvertible=null;pendingDeleteConvertible=null;editVsop=null;pendingDeleteVsop=null;editPool=null;
       save();
       $('#erm-reset-dialog').close();
       $('#erm-csv-status').textContent='Eingaben zurückgesetzt: Founder hält 100 %.';
@@ -1401,15 +1409,15 @@ html>body{padding:0}</style>
       $('#erm-csv-status').classList.add('text-muted');
       render();
     }
-    const csvHeaders=['schema_version','record_type','id','name','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','include_granted_vsop','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
+    const csvHeaders=['schema_version','record_type','id','name','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','fully_diluted_conversion','pool_id','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
     const csvCell=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
     function exportCsv(){
       const rows=[];
       const add=(record_type,data={})=>rows.push({schema_version:1,record_type,...data});
       state.holders.forEach(h=>add('holder',{id:h.id,name:h.name,category:h.type,shares:h.shares,cost_basis_eur:h.costBasis||0,investment_date:h.investmentDate||'',is_virtual:h.isVirtual?'true':'false'}));
-      state.rounds.forEach(r=>add('round',{id:r.id,name:r.name,counterparty:r.investor,pre_money_eur:r.preMoney,investment_eur:r.investment,closing_date:r.date,pool_refresh_shares:r.poolRefresh||0,pool_refresh_timing:r.poolRefreshTiming||'pre'}));
-      state.convertibles.forEach(c=>add('convertible',{id:c.id,name:c.name,counterparty:c.lender,principal_eur:c.principal,investment_date:c.date,interest_pct:c.interest||0,discount_pct:c.discount||0,valuation_cap_eur:c.valuationCap||0,include_granted_vsop:c.includeGrantedVsop?'true':'false'}));
-      state.vsopParticipants.forEach(g=>add('vsop',{id:g.id,name:g.name,shares:g.shares,planned_shares:g.plannedShares||0,grant_date:g.grantDate,vesting_start:g.startDate,vesting_months:g.vestingMonths,cliff_months:g.cliffMonths,strike_price_eur:g.hurdle||0,status:g.status,leaver_date:g.leaverDate||'',expiry_date:g.expiryDate||''}));
+      state.rounds.forEach(r=>add('round',{id:r.id,name:r.name,counterparty:r.investor,pool_id:r.poolId||'',pre_money_eur:r.preMoney,investment_eur:r.investment,closing_date:r.date,pool_refresh_shares:r.poolRefresh||0,pool_refresh_timing:r.poolRefreshTiming||'pre'}));
+      state.convertibles.forEach(c=>add('convertible',{id:c.id,name:c.name,counterparty:c.lender,principal_eur:c.principal,investment_date:c.date,interest_pct:c.interest||0,discount_pct:c.discount||0,valuation_cap_eur:c.valuationCap||0,fully_diluted_conversion:c.fullyDilutedConversion?'true':'false'}));
+      state.vsopParticipants.forEach(g=>add('vsop',{id:g.id,name:g.name,pool_id:g.poolId||'',shares:g.shares,planned_shares:g.plannedShares||0,grant_date:g.grantDate,vesting_start:g.startDate,vesting_months:g.vestingMonths,cliff_months:g.cliffMonths,strike_price_eur:g.hurdle||0,status:g.status,leaver_date:g.leaverDate||'',expiry_date:g.expiryDate||''}));
       add('exit',{exit_value_eur:state.exit.value||0,exit_debt_eur:state.exit.debt||0,exit_costs_eur:state.exit.costs||0,exit_date:state.exit.date||''});
       const csv='\ufeff'+csvHeaders.map(csvCell).join(';')+'\r\n'+rows.map(row=>csvHeaders.map(header=>csvCell(row[header])).join(';')).join('\r\n');
       const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a'),now=new Date(),stamp=now.toISOString().slice(0,16).replace(/[:T]/g,'-');
@@ -1433,15 +1441,18 @@ html>body{padding:0}</style>
       const headers=matrix[0].map(h=>h.trim().toLowerCase()),typeIndex=headers.indexOf('record_type');if(typeIndex<0)throw new Error('Spalte record_type fehlt.');
       const imported={founderSetVersion:'mf-ch-ng-jb-v3',financingSetVersion:'preseed-seed-v1',vsopSetVersion:'vsop-2500-v2',holders:[],rounds:[],convertibles:[],vsopParticipants:[],exit:{...state.exit}};
       matrix.slice(1).forEach((values,rowIndex)=>{const r={};headers.forEach((h,i)=>r[h]=values[i]??'');const type=(r.record_type||'').trim().toLowerCase(),id=(r.id||'').trim()||uid(),n=(field)=>csvNumber(r[field]);
-        if(type==='holder'){if(!r.name.trim()||!(n('shares')>0))throw new Error(`Ungültiger holder in Zeile ${rowIndex+2}.`);imported.holders.push({id,name:r.name.trim(),type:r.category.trim()||'Sonstige',shares:n('shares'),costBasis:Math.max(0,n('cost_basis_eur')||0),investmentDate:r.investment_date.trim(),isVirtual:['true','1','ja','yes'].includes(r.is_virtual.trim().toLowerCase())});}
-        else if(type==='round'){if(!r.name.trim()||!r.counterparty.trim()||!(n('pre_money_eur')>0)||!(n('investment_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültige round in Zeile ${rowIndex+2}.`);imported.rounds.push({id,name:r.name.trim(),investor:r.counterparty.trim(),preMoney:n('pre_money_eur'),investment:n('investment_eur'),date:r.closing_date.trim(),poolRefresh:Math.max(0,n('pool_refresh_shares')||0),poolRefreshTiming:r.pool_refresh_timing.trim()==='post'?'post':'pre'});}
-        else if(type==='convertible'){if(!r.name.trim()||!r.counterparty.trim()||!(n('principal_eur')>0)||!validDate(r.investment_date.trim()))throw new Error(`Ungültiges convertible in Zeile ${rowIndex+2}.`);const includeVsop=String(r.include_granted_vsop??'').trim().toLowerCase();imported.convertibles.push({id,name:r.name.trim(),lender:r.counterparty.trim(),principal:n('principal_eur'),date:r.investment_date.trim(),interest:Math.max(0,n('interest_pct')||0),discount:Math.max(0,n('discount_pct')||0),valuationCap:Math.max(0,n('valuation_cap_eur')||0),includeGrantedVsop:includeVsop===''||['true','1','ja','yes'].includes(includeVsop)});}
-        else if(type==='vsop'){if(!r.name.trim()||!(n('shares')>0)||!validDate(r.grant_date.trim())||!validDate(r.vesting_start.trim()))throw new Error(`Ungültiger vsop-Datensatz in Zeile ${rowIndex+2}.`);imported.vsopParticipants.push({id,name:r.name.trim(),shares:n('shares'),plannedShares:Math.max(0,n('planned_shares')||0),grantDate:r.grant_date.trim(),startDate:r.vesting_start.trim(),vestingMonths:Math.max(1,n('vesting_months')||48),cliffMonths:Math.max(0,n('cliff_months')||0),hurdle:Math.max(0,n('strike_price_eur')||0),status:r.status.trim()||'Aktiv',leaverDate:r.leaver_date.trim(),expiryDate:r.expiry_date.trim()});}
+        if(type==='holder'){if(!r.name.trim()||!(n('shares')>0))throw new Error(`Ungültiger holder in Zeile ${rowIndex+2}.`);const isVirtual=['true','1','ja','yes'].includes(r.is_virtual.trim().toLowerCase());imported.holders.push({id,name:r.name.trim(),type:isVirtual?'VSOP-Pool':r.category.trim()||'Sonstige',shares:n('shares'),costBasis:Math.max(0,n('cost_basis_eur')||0),investmentDate:r.investment_date.trim(),isVirtual});}
+        else if(type==='round'){if(!r.name.trim()||!r.counterparty.trim()||!(n('pre_money_eur')>0)||!(n('investment_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültige round in Zeile ${rowIndex+2}.`);imported.rounds.push({id,name:r.name.trim(),investor:r.counterparty.trim(),preMoney:n('pre_money_eur'),investment:n('investment_eur'),date:r.closing_date.trim(),poolRefresh:Math.max(0,n('pool_refresh_shares')||0),poolRefreshTiming:r.pool_refresh_timing.trim()==='post'?'post':'pre',poolId:String(r.pool_id??'').trim()});}
+        else if(type==='convertible'){if(!r.name.trim()||!r.counterparty.trim()||!(n('principal_eur')>0)||!validDate(r.investment_date.trim()))throw new Error(`Ungültiges convertible in Zeile ${rowIndex+2}.`);const fullyDiluted=String(r.fully_diluted_conversion??r.include_granted_vsop??'').trim().toLowerCase();imported.convertibles.push({id,name:r.name.trim(),lender:r.counterparty.trim(),principal:n('principal_eur'),date:r.investment_date.trim(),interest:Math.max(0,n('interest_pct')||0),discount:Math.max(0,n('discount_pct')||0),valuationCap:Math.max(0,n('valuation_cap_eur')||0),fullyDilutedConversion:fullyDiluted===''||['true','1','ja','yes'].includes(fullyDiluted)});}
+        else if(type==='vsop'){if(!r.name.trim()||!(n('shares')>0)||!validDate(r.grant_date.trim())||!validDate(r.vesting_start.trim()))throw new Error(`Ungültiger vsop-Datensatz in Zeile ${rowIndex+2}.`);imported.vsopParticipants.push({id,name:r.name.trim(),poolId:String(r.pool_id??'').trim(),shares:n('shares'),plannedShares:Math.max(0,n('planned_shares')||0),grantDate:r.grant_date.trim(),startDate:r.vesting_start.trim(),vestingMonths:Math.max(1,n('vesting_months')||48),cliffMonths:Math.max(0,n('cliff_months')||0),hurdle:Math.max(0,n('strike_price_eur')||0),status:r.status.trim()||'Aktiv',leaverDate:r.leaver_date.trim(),expiryDate:r.expiry_date.trim()});}
         else if(type==='exit')imported.exit={value:Math.max(0,n('exit_value_eur')||0),debt:Math.max(0,n('exit_debt_eur')||0),costs:Math.max(0,n('exit_costs_eur')||0),date:r.exit_date.trim()};
       });
       if(!imported.holders.length)throw new Error('Mindestens ein holder wird benötigt.');
       const ids=[...imported.holders,...imported.rounds,...imported.convertibles,...imported.vsopParticipants].map(x=>x.id);if(new Set(ids).size!==ids.length)throw new Error('IDs müssen über alle Datensätze eindeutig sein.');
-      const pool=imported.holders.find(h=>h.id==='vsop-pool');if(imported.vsopParticipants.length&&!pool)throw new Error('Für VSOP-Datensätze fehlt der holder mit ID vsop-pool.');
+      const pools=imported.holders.filter(h=>h.isVirtual),poolIds=new Set(pools.map(p=>p.id));
+      if(imported.vsopParticipants.length&&!pools.length)throw new Error('Für VSOP-Datensätze fehlt ein VSOP-Pool.');
+      imported.vsopParticipants.forEach(g=>{if(!g.poolId&&pools.length===1)g.poolId=pools[0].id;if(!poolIds.has(g.poolId))throw new Error(`VSOP-Zuteilung ${g.name} verweist auf keinen gültigen Pool.`);});
+      imported.rounds.forEach(r=>{if(r.poolRefresh>0&&!r.poolId&&pools.length===1)r.poolId=pools[0].id;if(r.poolRefresh>0&&!poolIds.has(r.poolId))throw new Error(`Pool-Auffrischung in ${r.name} benötigt einen gültigen Zielpool.`);});
       state=imported;stage=state.rounds.length;save();render();
     }
     function snapshots(){
@@ -1450,14 +1461,15 @@ html>body{padding:0}</style>
       const out=[{label:'Gründung',cap:cap.map(x=>({...x})),valuation:null,raised}];
       const converted=new Set();
       state.rounds.forEach(r=>{
-        const poolRefresh=Math.max(0,Number(r.poolRefresh)||0),pool=cap.find(h=>h.id==='vsop-pool');
+        const poolRefresh=Math.max(0,Number(r.poolRefresh)||0),pool=cap.find(h=>h.id===r.poolId&&h.isVirtual);
         if(pool&&poolRefresh>0&&r.poolRefreshTiming==='pre')pool.shares+=poolRefresh;
         const equityTotal=cap.filter(h=>!h.isVirtual).reduce((a,h)=>a+h.shares,0);
+        const fullyDilutedTotal=cap.reduce((sum,h)=>sum+(Number(h.shares)||0),0);
         const price=r.preMoney/equityTotal;
         const conversions=[];
         state.convertibles.forEach(c=>{
           if(converted.has(c.id)||!validDate(c.date)||!validDate(r.date)||c.date>r.date) return;
-          const conversionBaseTotal=equityTotal+(c.includeGrantedVsop?grantedVsopSharesAt(r.date):0);
+          const conversionBaseTotal=c.fullyDilutedConversion?fullyDilutedTotal:equityTotal;
           const discount=Math.min(99,Math.max(0,Number(c.discount)||0));
           const discountPrice=(r.preMoney*(1-discount/100))/conversionBaseTotal;
           const capPrice=Number(c.valuationCap)>0?Number(c.valuationCap)/conversionBaseTotal:Infinity;
@@ -1497,18 +1509,20 @@ html>body{padding:0}</style>
       $('#erm-cap-body').innerHTML=capRows.map((h)=>{
         const i=snap.cap.findIndex(x=>x.id===h.id); const p=h.shares/total*100;
         const baseIndex=state.holders.findIndex(x=>x.id===h.id);
-        const actions=baseIndex>=0&&h.id!=='vsop-pool'?`<div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-holder="${baseIndex}" aria-label="${esc(h.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-holder="${baseIndex}" aria-label="${esc(h.name)} löschen" ${state.holders.length<=1?'disabled data-tooltip="Mindestens ein Beteiligter muss verbleiben"':''}><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`:'–';
+        const poolInUse=h.isVirtual&&(state.vsopParticipants.some(g=>g.poolId===h.id)||state.rounds.some(r=>r.poolId===h.id&&Number(r.poolRefresh)>0));
+        const actions=baseIndex<0?'–':h.isVirtual?`<div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-pool="${baseIndex}" aria-label="${esc(h.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-holder="${baseIndex}" aria-label="${esc(h.name)} löschen" ${poolInUse?'disabled data-tooltip="Zuerst zugeordnete VSOP-Personen verschieben oder löschen"':''}><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`:`<div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-holder="${baseIndex}" aria-label="${esc(h.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-holder="${baseIndex}" aria-label="${esc(h.name)} löschen" ${state.holders.filter(x=>!x.isVirtual).length<=1?'disabled data-tooltip="Mindestens ein Beteiligter muss verbleiben"':''}><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`;
         return `<tr><td data-label="Beteiligte"><span class="erm-name"><span class="erm-swatch" style="background:${colors[i%colors.length]}"></span><span>${esc(h.name)}<br><span class="text-small text-muted">${esc(h.type)}</span></span></span></td><td data-label="Anteile">${num(h.shares)}</td><td data-label="Ownership">${pct(p)}</td><td data-label="Wert">${companyValue?euro(companyValue*p/100):'–'}</td><td data-label="Aktionen">${actions}</td></tr>`;
       }).join('')||'<tr><td colspan="5" class="erm-empty">Keine Beteiligten für diese Suche gefunden.</td></tr>';
       $('#erm-convertible-list').innerHTML=state.convertibles.length?state.convertibles.map((c,i)=>{
         const conversionIndex=state.rounds.findIndex(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date);
         const converted=conversionIndex>=0, targetDate=converted?state.rounds[conversionIndex].date:today, claim=loanClaim(c,targetDate);
         const status=converted?'Konvertiert in '+state.rounds[conversionIndex].name:'Ausstehend';
-        return `<div class="erm-round"><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${i}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${i}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(c.date+'T00:00:00Z'))}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap)>0?euro(c.valuationCap):'–'}</span><span class="text-muted">VSOP bei Wandlung</span><span>${c.includeGrantedVsop?'Gewährte Anteile einbezogen':'Nicht einbezogen'}</span></div></div>`;
+        return `<div class="erm-round"><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${i}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${i}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(c.date+'T00:00:00Z'))}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap)>0?euro(c.valuationCap):'–'}</span><span class="text-muted">Wandlungsbasis</span><span>${c.fullyDilutedConversion?'Fully Diluted':'Nur Equity-Anteile'}</span></div></div>`;
       }).join(''):'<div class="erm-empty">Noch kein Wandeldarlehen.</div>';
       $('#erm-round-list').innerHTML=state.rounds.length?state.rounds.map((r,i)=>{
         const before=snaps[i].cap.reduce((a,h)=>a+h.shares,0); const after=snaps[i+1].cap.reduce((a,h)=>a+h.shares,0); const dilution=(1-before/after)*100;
-        return `<div class="erm-round"><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${i}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${i}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(r.investor)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date?esc(new Intl.DateTimeFormat('de-DE').format(new Date(r.date+'T00:00:00Z'))):'Datum fehlt'}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(r.investment)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euro(snaps[i+1].price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh||0)} · ${r.poolRefreshTiming==='post'?'Post-Money':'Pre-Money'}</span></div></div>`;
+        const poolName=(state.holders.find(h=>h.id===r.poolId)||{}).name||'Kein Zielpool';
+        return `<div class="erm-round"><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${i}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${i}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(r.investor)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date?esc(new Intl.DateTimeFormat('de-DE').format(new Date(r.date+'T00:00:00Z'))):'Datum fehlt'}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(r.investment)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euro(snaps[i+1].price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh||0)} · ${esc(poolName)} · ${r.poolRefreshTiming==='post'?'Post-Money':'Pre-Money'}</span></div></div>`;
       }).join(''):'<div class="erm-empty">Noch keine Finanzierungsrunde.</div>';
       const exitValue=Math.max(0,Number(state.exit.value)||0);
       const exitDebt=Math.max(0,Number(state.exit.debt)||0);
@@ -1521,10 +1535,10 @@ html>body{padding:0}</style>
       state.holders.forEach(h=>{if(Number(h.costBasis)>0)addCashflow(h.name,-Number(h.costBasis),h.investmentDate||'');});
       state.rounds.slice(0,stage).forEach(r=>addCashflow(r.investor,-r.investment,r.date||''));
       state.convertibles.forEach(c=>{if(state.rounds.slice(0,stage).some(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date))addCashflow(c.lender,-c.principal,c.date);});
-      const poolInSnap=snap.cap.find(h=>h.id==='vsop-pool'),poolSizeAtStage=poolInSnap?Number(poolInSnap.shares)||0:0,fullyDilutedValuePerShare=total?exitNet/total:0;
+      const poolSizeAtStage=snap.cap.filter(h=>h.isVirtual).reduce((sum,h)=>sum+(Number(h.shares)||0),0),fullyDilutedValuePerShare=total?exitNet/total:0;
       const vsopExitRows=state.vsopParticipants.map(g=>{const eligible=!validDate(g.expiryDate)||!validDate(exitDate)||exitDate<=g.expiryDate,vested=eligible?vestedShares(g,exitDate):0,payout=Math.max(0,(fullyDilutedValuePerShare-(Number(g.hurdle)||0))*vested);return{grant:g,vested,payout};});
       const vsopPayout=vsopExitRows.reduce((sum,row)=>sum+row.payout,0),vestedPoolShares=vsopExitRows.reduce((sum,row)=>sum+row.vested,0),restPoolShares=Math.max(0,poolSizeAtStage-vestedPoolShares),equityRemainder=Math.max(0,exitNet-vsopPayout);
-      const actualHolders=snap.cap.filter(h=>!h.isVirtual&&h.id!=='vsop-pool'),actualShares=actualHolders.reduce((sum,h)=>sum+h.shares,0);
+      const actualHolders=snap.cap.filter(h=>!h.isVirtual),actualShares=actualHolders.reduce((sum,h)=>sum+h.shares,0);
       const angelNames=new Set(state.convertibles.filter(c=>state.rounds.slice(0,stage).some(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date)).map(c=>c.lender.trim().toLowerCase()));
       let founderPayout=0, angelPayout=0, investorPayout=0;
       const holderRows=actualHolders.slice().sort((a,b)=>b.shares-a.shares).map(h=>{
@@ -1539,12 +1553,14 @@ html>body{padding:0}</style>
       const groupSection=(label,amount,rows)=>[`<tr class="erm-group-row"><th colspan="6" scope="rowgroup"><div class="viz-row"><strong>${label}</strong><span>${euro(amount)}</span></div></th></tr>`,...rows];
       $('#erm-exit-body').innerHTML=[...groupSection('Gründer',founderPayout,holderRows.filter(r=>r.group==='founders').map(r=>r.html)),...groupSection('Angels',angelPayout,holderRows.filter(r=>r.group==='angels').map(r=>r.html)),...groupSection('Investoren',investorPayout,holderRows.filter(r=>r.group==='investors').map(r=>r.html)),...groupSection('VSOP',vsopPayout,[...personRows,restRow])].join('');
       $('#erm-exit-net').textContent=euro(exitNet); $('#erm-exit-founders').textContent=euro(founderPayout); $('#erm-exit-angels').textContent=euro(angelPayout); $('#erm-exit-investors').textContent=euro(investorPayout); $('#erm-exit-vsop').textContent=euro(vsopPayout); $('#erm-exit-pool-rest').textContent=`${num(restPoolShares)} Anteile · ${euro(0)}`;
-      const poolHolder=snap.cap.find(h=>h.id==='vsop-pool'),poolSize=poolHolder?Number(poolHolder.shares)||0:0;
+      const poolSize=snap.cap.filter(h=>h.isVirtual).reduce((sum,h)=>sum+(Number(h.shares)||0),0);
       const reserved=state.vsopParticipants.reduce((sum,g)=>sum+reservedVsopShares(g),0),available=Math.max(0,poolSize-reserved),initialFullyDiluted=state.holders.reduce((sum,h)=>sum+(Number(h.shares)||0),0);
-      $('#erm-vsop-summary').textContent=`${num(poolSize)} Pool · ${num(reserved)} belegt · ${num(available)} verfügbar`;
+      const poolCount=vsopPools().length;
+      $('#erm-vsop-summary').textContent=`${poolCount} ${poolCount===1?'Pool':'Pools'} · ${num(poolSize)} Anteile · ${num(reserved)} belegt · ${num(available)} verfügbar`;
       $('#erm-vsop-body').innerHTML=state.vsopParticipants.length?state.vsopParticipants.map((g,i)=>{
         const vested=vestedShares(g),fullyDiluted=initialFullyDiluted?Number(g.shares)/initialFullyDiluted*100:0;
-        return `<tr><td data-label="Owner">${esc(g.name)}<br><span class="text-small text-muted">${esc(g.status)}</span></td><td data-label="Vested">${num(vested)}</td><td data-label="Granted">${num(g.shares)}</td><td data-label="Planned">${num(g.plannedShares||0)}</td><td data-label="Fully Diluted">${pct(fullyDiluted)}</td><td data-label="Date">${new Intl.DateTimeFormat('de-DE').format(new Date(g.grantDate+'T00:00:00Z'))}</td><td data-label="Expired Date">${validDate(g.expiryDate)?new Intl.DateTimeFormat('de-DE').format(new Date(g.expiryDate+'T00:00:00Z')):'N/A'}</td><td data-label="Strike Price">${euro(g.hurdle||0)}</td><td data-label="Cliff">${g.cliffMonths} Monate</td><td data-label="Aktionen"><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-vsop="${i}" aria-label="${esc(g.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-vsop="${i}" aria-label="${esc(g.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></td></tr>`;
+        const poolName=(state.holders.find(h=>h.id===g.poolId)||{}).name||'Pool fehlt';
+        return `<tr><td data-label="Owner">${esc(g.name)}<br><span class="text-small text-muted">${esc(g.status)} · ${esc(poolName)}</span></td><td data-label="Vested">${num(vested)}</td><td data-label="Granted">${num(g.shares)}</td><td data-label="Planned">${num(g.plannedShares||0)}</td><td data-label="Fully Diluted">${pct(fullyDiluted)}</td><td data-label="Date">${new Intl.DateTimeFormat('de-DE').format(new Date(g.grantDate+'T00:00:00Z'))}</td><td data-label="Expired Date">${validDate(g.expiryDate)?new Intl.DateTimeFormat('de-DE').format(new Date(g.expiryDate+'T00:00:00Z')):'N/A'}</td><td data-label="Strike Price">${euro(g.hurdle||0)}</td><td data-label="Cliff">${g.cliffMonths} Monate</td><td data-label="Aktionen"><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-vsop="${i}" aria-label="${esc(g.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-vsop="${i}" aria-label="${esc(g.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></td></tr>`;
       }).join(''):'<tr><td colspan="10" class="erm-empty">Noch keine Personen im VSOP-Pool.</td></tr>';
       if(window.lucide) lucide.createIcons({attrs:{width:16,height:16}});
     }
@@ -1554,11 +1570,36 @@ html>body{padding:0}</style>
     $('#erm-undo').addEventListener('click',()=>restoreHistory(undoStack,redoStack,'Änderung rückgängig gemacht'));
     $('#erm-redo').addEventListener('click',()=>restoreHistory(redoStack,undoStack,'Änderung wiederhergestellt'));
     $('.erm-nav').addEventListener('click',e=>{const link=e.target.closest('a[href^="#erm-"]');if(!link)return;root.querySelectorAll('.erm-nav a').forEach(a=>{a.classList.remove('is-selected');a.removeAttribute('aria-current');});link.classList.add('is-selected');link.setAttribute('aria-current','page');});
+    function openPool(i=null,message=''){
+      editPool=i;
+      const pool=i===null?{name:'',shares:100000}:state.holders[i];
+      $('#erm-pool-form-title').textContent=i===null?'VSOP-Pool anlegen':'VSOP-Pool bearbeiten';
+      $('#erm-pool-name').value=pool.name;
+      $('#erm-pool-shares').value=pool.shares;
+      $('#erm-pool-error').textContent=message;
+      $('#erm-pool-dialog').showModal();
+    }
+    $('#erm-add-pool').addEventListener('click',()=>openPool());
+    $('#erm-save-pool').addEventListener('click',e=>{
+      e.preventDefault();
+      const name=$('#erm-pool-name').value.trim(),shares=Number($('#erm-pool-shares').value),id=editPool===null?'pool-'+uid():state.holders[editPool].id;
+      const duplicate=vsopPools().some(pool=>pool.id!==id&&pool.name.toLocaleLowerCase('de-DE')===name.toLocaleLowerCase('de-DE'));
+      const reserved=state.vsopParticipants.filter(g=>g.poolId===id).reduce((sum,g)=>sum+reservedVsopShares(g),0);
+      const refreshes=state.rounds.filter(r=>r.poolId===id).reduce((sum,r)=>sum+(Number(r.poolRefresh)||0),0);
+      if(!name||!Number.isFinite(shares)||shares<=0){$('#erm-pool-error').textContent='Bitte Poolname und eine gültige Anzahl Anteile eingeben.';return;}
+      if(duplicate){$('#erm-pool-error').textContent='Ein VSOP-Pool mit diesem Namen existiert bereits.';return;}
+      if(shares+refreshes<reserved){$('#erm-pool-error').textContent=`Der Pool muss inklusive Auffrischungen mindestens ${num(reserved)} reservierte Anteile abdecken.`;return;}
+      const pool={id,name,type:'VSOP-Pool',shares,costBasis:0,investmentDate:'',isVirtual:true};
+      if(editPool===null)state.holders.push(pool);else state.holders[editPool]=pool;
+      save();$('#erm-pool-dialog').close();render();
+    });
     function openVsop(i=null){
+      const pools=vsopPools();
+      if(!pools.length){openPool(null,'Lege zuerst einen VSOP-Pool an.');return;}
       editVsop=i;
-      const g=i===null?{name:'',shares:100,plannedShares:0,grantDate:today,startDate:today,vestingMonths:48,cliffMonths:12,hurdle:0,status:'Aktiv',leaverDate:'',expiryDate:''}:state.vsopParticipants[i];
+      const g=i===null?{poolId:pools[0].id,name:'',shares:100,plannedShares:0,grantDate:today,startDate:today,vestingMonths:48,cliffMonths:12,hurdle:0,status:'Aktiv',leaverDate:'',expiryDate:''}:state.vsopParticipants[i];
       $('#erm-vsop-form-title').textContent=i===null?'VSOP-Person hinzufügen':'VSOP-Zuteilung bearbeiten'; $('#erm-delete-vsop').hidden=i===null;
-      $('#erm-vsop-name').value=g.name; $('#erm-vsop-shares').value=g.shares; $('#erm-vsop-planned').value=g.plannedShares||0; $('#erm-vsop-grant-date').value=g.grantDate; $('#erm-vsop-start-date').value=g.startDate; $('#erm-vsop-months').value=g.vestingMonths; $('#erm-vsop-cliff').value=g.cliffMonths; $('#erm-vsop-hurdle').value=moneyInputValue(g.hurdle||0); $('#erm-vsop-expiry-date').value=g.expiryDate||''; $('#erm-vsop-status').value=g.status; $('#erm-vsop-leaver-date').value=g.leaverDate||'';
+      $('#erm-vsop-pool').innerHTML=poolSelectOptions(g.poolId); $('#erm-vsop-pool').value=g.poolId||pools[0].id; $('#erm-vsop-name').value=g.name; $('#erm-vsop-shares').value=g.shares; $('#erm-vsop-planned').value=g.plannedShares||0; $('#erm-vsop-grant-date').value=g.grantDate; $('#erm-vsop-start-date').value=g.startDate; $('#erm-vsop-months').value=g.vestingMonths; $('#erm-vsop-cliff').value=g.cliffMonths; $('#erm-vsop-hurdle').value=moneyInputValue(g.hurdle||0); $('#erm-vsop-expiry-date').value=g.expiryDate||''; $('#erm-vsop-status').value=g.status; $('#erm-vsop-leaver-date').value=g.leaverDate||'';
       $('#erm-vsop-error').textContent=''; $('#erm-vsop-dialog').showModal();
     }
     function requestVsopDelete(i){
@@ -1571,10 +1612,10 @@ html>body{padding:0}</style>
     $('#erm-confirm-delete-vsop').addEventListener('click',()=>{if(pendingDeleteVsop!==null&&state.vsopParticipants[pendingDeleteVsop])state.vsopParticipants.splice(pendingDeleteVsop,1);pendingDeleteVsop=null;save();$('#erm-delete-vsop-dialog').close();render();});
     $('#erm-save-vsop').addEventListener('click',e=>{
       e.preventDefault();
-      const g={id:editVsop===null?uid():state.vsopParticipants[editVsop].id,name:$('#erm-vsop-name').value.trim(),shares:Number($('#erm-vsop-shares').value),plannedShares:Math.max(0,Number($('#erm-vsop-planned').value)||0),grantDate:$('#erm-vsop-grant-date').value,startDate:$('#erm-vsop-start-date').value,vestingMonths:Number($('#erm-vsop-months').value),cliffMonths:Number($('#erm-vsop-cliff').value),hurdle:parseMoney($('#erm-vsop-hurdle').value),status:$('#erm-vsop-status').value,leaverDate:$('#erm-vsop-leaver-date').value,expiryDate:$('#erm-vsop-expiry-date').value};
-      if(!g.name||g.shares<=0||!validDate(g.grantDate)||!validDate(g.startDate)||g.vestingMonths<=0||g.cliffMonths<0||g.cliffMonths>g.vestingMonths){$('#erm-vsop-error').textContent='Bitte Zuteilung, Daten und Vestingparameter vollständig prüfen.';return;}
+      const g={id:editVsop===null?uid():state.vsopParticipants[editVsop].id,poolId:$('#erm-vsop-pool').value,name:$('#erm-vsop-name').value.trim(),shares:Number($('#erm-vsop-shares').value),plannedShares:Math.max(0,Number($('#erm-vsop-planned').value)||0),grantDate:$('#erm-vsop-grant-date').value,startDate:$('#erm-vsop-start-date').value,vestingMonths:Number($('#erm-vsop-months').value),cliffMonths:Number($('#erm-vsop-cliff').value),hurdle:parseMoney($('#erm-vsop-hurdle').value),status:$('#erm-vsop-status').value,leaverDate:$('#erm-vsop-leaver-date').value,expiryDate:$('#erm-vsop-expiry-date').value};
+      if(!g.poolId||!g.name||g.shares<=0||!validDate(g.grantDate)||!validDate(g.startDate)||g.vestingMonths<=0||g.cliffMonths<0||g.cliffMonths>g.vestingMonths){$('#erm-vsop-error').textContent='Bitte Pool, Zuteilung, Daten und Vestingparameter vollständig prüfen.';return;}
       if(g.status==='Ausgeschieden'&&!validDate(g.leaverDate)){$('#erm-vsop-error').textContent='Für ausgeschiedene Personen wird ein Austrittsdatum benötigt.';return;}
-      const pool=state.holders.find(h=>h.id==='vsop-pool'),poolCapacity=(pool?pool.shares:0)+state.rounds.reduce((sum,r)=>sum+(Number(r.poolRefresh)||0),0),used=state.vsopParticipants.reduce((sum,x,i)=>sum+(i===editVsop?0:reservedVsopShares(x)),0);
+      const pool=state.holders.find(h=>h.id===g.poolId&&h.isVirtual),poolCapacity=(pool?pool.shares:0)+state.rounds.filter(r=>r.poolId===g.poolId).reduce((sum,r)=>sum+(Number(r.poolRefresh)||0),0),used=state.vsopParticipants.filter((x,i)=>x.poolId===g.poolId&&i!==editVsop).reduce((sum,x)=>sum+reservedVsopShares(x),0);
       if(used+reservedVsopShares(g)>poolCapacity){$('#erm-vsop-error').textContent='Diese Zuteilung überschreitet die inklusive Auffrischungen verfügbaren Pool-Anteile.';return;}
       if(editVsop===null)state.vsopParticipants.push(g);else state.vsopParticipants[editVsop]=g;save();$('#erm-vsop-dialog').close();render();
     });
@@ -1591,7 +1632,8 @@ html>body{padding:0}</style>
     $('#erm-add-person').addEventListener('click',()=>openPerson());
     function requestHolderDelete(i){
       const h=state.holders[i];
-      if(!h||state.holders.length<=1) return;
+      if(!h||(!h.isVirtual&&state.holders.filter(x=>!x.isVirtual).length<=1)) return;
+      if(h.isVirtual&&(state.vsopParticipants.some(g=>g.poolId===h.id)||state.rounds.some(r=>r.poolId===h.id&&Number(r.poolRefresh)>0)))return;
       pendingDeleteHolder=i;
       if($('#erm-person-dialog').open) $('#erm-person-dialog').close();
       $('#erm-delete-person-message').textContent=`${h.name} wird aus allen Berechnungen und Finanzierungsständen entfernt.`;
@@ -1611,16 +1653,17 @@ html>body{padding:0}</style>
       save(); $('#erm-person-dialog').close(); render();
     });
     $('#erm-cap-body').addEventListener('click',e=>{
-      const edit=e.target.closest('[data-edit-holder]'), del=e.target.closest('[data-delete-holder]');
+      const edit=e.target.closest('[data-edit-holder]'),editPoolButton=e.target.closest('[data-edit-pool]'), del=e.target.closest('[data-delete-holder]');
       if(edit) openPerson(Number(edit.dataset.editHolder));
+      if(editPoolButton)openPool(Number(editPoolButton.dataset.editPool));
       if(del&&!del.disabled) requestHolderDelete(Number(del.dataset.deleteHolder));
     });
     function openConvertible(i=null){
       editConvertible=i;
-      const c=i===null?{name:'Pre-Seed Wandeldarlehen',lender:'',principal:100000,date:today,interest:5,discount:20,valuationCap:2000000,includeGrantedVsop:true}:state.convertibles[i];
+      const c=i===null?{name:'Pre-Seed Wandeldarlehen',lender:'',principal:100000,date:today,interest:5,discount:20,valuationCap:2000000,fullyDilutedConversion:true}:state.convertibles[i];
       $('#erm-convertible-form-title').textContent=i===null?'Wandeldarlehen hinzufügen':'Wandeldarlehen bearbeiten';
       $('#erm-delete-convertible').hidden=i===null;
-      $('#erm-convertible-name').value=c.name; $('#erm-convertible-lender').value=c.lender; $('#erm-convertible-principal').value=moneyInputValue(c.principal); $('#erm-convertible-date').value=c.date; $('#erm-convertible-interest').value=c.interest||0; $('#erm-convertible-discount').value=c.discount||0; $('#erm-convertible-cap').value=moneyInputValue(c.valuationCap||0); $('#erm-convertible-include-vsop').checked=c.includeGrantedVsop!==false;
+      $('#erm-convertible-name').value=c.name; $('#erm-convertible-lender').value=c.lender; $('#erm-convertible-principal').value=moneyInputValue(c.principal); $('#erm-convertible-date').value=c.date; $('#erm-convertible-interest').value=c.interest||0; $('#erm-convertible-discount').value=c.discount||0; $('#erm-convertible-cap').value=moneyInputValue(c.valuationCap||0); $('#erm-convertible-fully-diluted').checked=c.fullyDilutedConversion!==false;
       $('#erm-convertible-error').textContent=''; $('#erm-convertible-dialog').showModal();
     }
     function requestConvertibleDelete(i){
@@ -1638,7 +1681,7 @@ html>body{padding:0}</style>
     });
     $('#erm-save-convertible').addEventListener('click',e=>{
       e.preventDefault();
-      const c={id:editConvertible===null?uid():state.convertibles[editConvertible].id,name:$('#erm-convertible-name').value.trim(),lender:$('#erm-convertible-lender').value.trim(),principal:parseMoney($('#erm-convertible-principal').value),date:$('#erm-convertible-date').value,interest:Math.max(0,Number($('#erm-convertible-interest').value)||0),discount:Math.min(99,Math.max(0,Number($('#erm-convertible-discount').value)||0)),valuationCap:parseMoney($('#erm-convertible-cap').value),includeGrantedVsop:$('#erm-convertible-include-vsop').checked};
+      const c={id:editConvertible===null?uid():state.convertibles[editConvertible].id,name:$('#erm-convertible-name').value.trim(),lender:$('#erm-convertible-lender').value.trim(),principal:parseMoney($('#erm-convertible-principal').value),date:$('#erm-convertible-date').value,interest:Math.max(0,Number($('#erm-convertible-interest').value)||0),discount:Math.min(99,Math.max(0,Number($('#erm-convertible-discount').value)||0)),valuationCap:parseMoney($('#erm-convertible-cap').value),fullyDilutedConversion:$('#erm-convertible-fully-diluted').checked};
       if(!c.name||!c.lender||c.principal<=0||!validDate(c.date)){$('#erm-convertible-error').textContent='Bitte Darlehensgeber, Betrag und Datum vollständig eingeben.';return;}
       if(editConvertible===null)state.convertibles.push(c);else state.convertibles[editConvertible]=c;
       save(); $('#erm-convertible-dialog').close(); render();
@@ -1649,14 +1692,15 @@ html>body{padding:0}</style>
       if(del)requestConvertibleDelete(Number(del.dataset.deleteConvertible));
     });
     function openRound(i=null){
-      editRound=i; const r=i===null?{name:'Series '+String.fromCharCode(65+state.rounds.length),investor:'',preMoney:8000000,investment:2000000,date:today,poolRefresh:0,poolRefreshTiming:'pre'}:state.rounds[i];
+      editRound=i; const pools=vsopPools(),r=i===null?{name:'Series '+String.fromCharCode(65+state.rounds.length),investor:'',preMoney:8000000,investment:2000000,date:today,poolRefresh:0,poolRefreshTiming:'pre',poolId:pools[0]?.id||''}:state.rounds[i];
       $('#erm-round-form-title').textContent=i===null?'Finanzierungsrunde hinzufügen':'Finanzierungsrunde bearbeiten';
-      $('#erm-round-name').value=r.name; $('#erm-investor').value=r.investor; $('#erm-premoney').value=moneyInputValue(r.preMoney); $('#erm-investment').value=moneyInputValue(r.investment); $('#erm-round-date').value=r.date||''; $('#erm-round-pool-refresh').value=r.poolRefresh||0; $('#erm-round-pool-timing').value=r.poolRefreshTiming||'pre'; $('#erm-round-error').textContent=''; $('#erm-round-dialog').showModal();
+      $('#erm-round-name').value=r.name; $('#erm-investor').value=r.investor; $('#erm-premoney').value=moneyInputValue(r.preMoney); $('#erm-investment').value=moneyInputValue(r.investment); $('#erm-round-date').value=r.date||''; $('#erm-round-pool-refresh').value=r.poolRefresh||0; $('#erm-round-pool-id').innerHTML=poolSelectOptions(r.poolId,true); $('#erm-round-pool-id').value=r.poolId||''; $('#erm-round-pool-timing').value=r.poolRefreshTiming||'pre'; $('#erm-round-error').textContent=''; $('#erm-round-dialog').showModal();
     }
     $('#erm-add-round').addEventListener('click',()=>openRound());
     $('#erm-save-round').addEventListener('click',e=>{
-      e.preventDefault(); const r={id:editRound===null?uid():state.rounds[editRound].id,name:$('#erm-round-name').value.trim(),investor:$('#erm-investor').value.trim(),preMoney:parseMoney($('#erm-premoney').value),investment:parseMoney($('#erm-investment').value),date:$('#erm-round-date').value,poolRefresh:Math.max(0,Number($('#erm-round-pool-refresh').value)||0),poolRefreshTiming:$('#erm-round-pool-timing').value};
+      e.preventDefault(); const r={id:editRound===null?uid():state.rounds[editRound].id,name:$('#erm-round-name').value.trim(),investor:$('#erm-investor').value.trim(),preMoney:parseMoney($('#erm-premoney').value),investment:parseMoney($('#erm-investment').value),date:$('#erm-round-date').value,poolRefresh:Math.max(0,Number($('#erm-round-pool-refresh').value)||0),poolId:$('#erm-round-pool-id').value,poolRefreshTiming:$('#erm-round-pool-timing').value};
       if(!r.name||!r.investor||r.preMoney<=0||r.investment<=0||!validDate(r.date)){$('#erm-round-error').textContent='Bitte alle Felder mit gültigen Werten ausfüllen.';return;}
+      if(r.poolRefresh>0&&!r.poolId){$('#erm-round-error').textContent='Für zusätzliche Pool-Anteile wird ein Zielpool benötigt.';return;}
       if(editRound===null) state.rounds.push(r); else state.rounds[editRound]=r; stage=state.rounds.length; save(); $('#erm-round-dialog').close(); render();
     });
     $('#erm-round-list').addEventListener('click',e=>{
