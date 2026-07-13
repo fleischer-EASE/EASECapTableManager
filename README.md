@@ -1,6 +1,20 @@
-# Startup Equity Manager
+# EASE Cap Table Manager
 
-Die App startet mit einem leeren Modell: ein Founder hält 100 %, alle Finanzierungs-, VSOP- und Exit-Werte stehen auf null.
+Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSOP-Pools und Exit-Simulationen. Die App startet mit einem leeren Modell: Ein Founder hält 100 %, alle Finanzierungs-, VSOP- und Exit-Werte stehen auf null.
+
+## Funktionen
+
+- Cap Table über mehrere Finanzierungsstände
+- Wandeldarlehen mit Zins, Discount, Valuation Cap und optionaler Berücksichtigung bereits gewährter VSOP-Anteile
+- VSOP-Zuteilungen mit Vesting, Cliff, Leaver- und Ablaufdatum
+- Exit-Simulation mit MOIC und IRR
+- Lokale automatische Speicherung, Rückgängig/Wiederholen und Suche
+- CSV-Import und -Export für Backups
+
+## Dokumentation und Beispiel
+
+- [Bebilderte Bedienungsanleitung](docs/bedienungsanleitung.md)
+- [Importierbare Beispiel-CSV](examples/ease-cap-table-example.csv)
 
 ## Starten
 
