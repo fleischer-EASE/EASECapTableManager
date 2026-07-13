@@ -11,6 +11,11 @@ Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSO
 - Lokale automatische Speicherung, Rückgängig/Wiederholen und Suche
 - CSV-Import und -Export für Backups
 
+## Dokumentation und Beispiel
+
+- [Bebilderte Bedienungsanleitung](docs/bedienungsanleitung.md)
+- [Importierbare Beispiel-CSV](examples/ease-cap-table-example.csv)
+
 ## Starten
 
 1. `start-app.cmd` doppelt anklicken.
