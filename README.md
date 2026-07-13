@@ -24,8 +24,3 @@ Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSO
 
 Die Eingaben werden lokal im Browser gespeichert. Über **CSV exportieren** und **CSV laden** lassen sich Versionen sichern und wiederherstellen. Verwende möglichst immer dieselbe Adresse und denselben Port, da Browserdaten an die Adresse gebunden sind.
 
-## Optional über einen lokalen Server starten
-
-```powershell
-python -m http.server 8080
-```
