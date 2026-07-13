@@ -30,7 +30,7 @@ $url = "http://127.0.0.1:$Port/"
 $openBrowser = "Start-Sleep -Milliseconds 700; Start-Process '$url'"
 Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile', '-Command', $openBrowser) -WindowStyle Hidden
 
-Write-Host "Startup Equity Manager läuft unter $url"
+Write-Host "EASE Cap Table Manager läuft unter $url"
 Write-Host 'Zum Beenden Strg+C drücken.'
 
 $arguments = @($python.Prefix) + @('-m', 'http.server', $Port, '--bind', '127.0.0.1')

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Startup Equity Manager</title>
+<title>EASE Cap Table Manager</title>
 <style>:root {
   color-scheme: light dark;
   background-color: var(--background) !important;
@@ -769,7 +769,7 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-legend { display:flex; flex-wrap:wrap; gap:8px 16px; }
     #equity-round-manager .erm-legend-item { display:inline-flex; align-items:center; gap:6px; }
     #equity-round-manager .erm-swatch { width:10px; height:10px; border-radius:999px; flex:0 0 auto; }
-    #equity-round-manager .erm-table-wrap { min-width:0; }
+    #equity-round-manager .erm-table-wrap { min-width:0; overflow-x:auto; }
     #equity-round-manager table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
     #equity-round-manager th, #equity-round-manager td { text-align:left; padding:11px 8px; border-bottom:1px solid var(--border); white-space:normal; vertical-align:top; }
     #equity-round-manager th { color:var(--muted-foreground); font-weight:400; }
@@ -794,6 +794,13 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     #equity-round-manager .erm-form-actions { display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
     #equity-round-manager .erm-error { min-height:1.2em; }
+    #equity-round-manager .erm-panel-tools { display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
+    #equity-round-manager .erm-search { width:min(240px,100%); min-height:38px; }
+    #equity-round-manager .erm-check-card { grid-column:1 / -1; display:flex; align-items:flex-start; gap:10px; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--muted); cursor:pointer; }
+    #equity-round-manager .erm-check-card input { width:17px; height:17px; margin:2px 0 0; accent-color:var(--primary); flex:0 0 auto; }
+    #equity-round-manager .erm-check-copy { display:grid; gap:3px; }
+    #equity-round-manager .erm-autosave { display:inline-flex; align-items:center; gap:6px; color:rgb(240 245 242 / 58%); }
+    #equity-round-manager .erm-autosave::before { width:7px; height:7px; border-radius:50%; background:#8eb49f; content:""; }
     #equity-round-manager .erm-mobile-label { display:none; }
     @media (max-width:1120px) {
       #equity-round-manager .erm-app-shell { grid-template-columns:1fr; }
@@ -947,7 +954,7 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-section {
       border:1px solid rgb(213 205 194 / 88%); border-radius:18px; background:rgb(255 253 249 / 94%); box-shadow:var(--shadow-card);
     }
-    #equity-round-manager .erm-stat { position:relative; min-height:140px; justify-content:flex-end; gap:7px; padding:24px; overflow:hidden; }
+    #equity-round-manager .erm-stat { position:relative; min-height:118px; justify-content:flex-end; gap:7px; padding:22px; overflow:hidden; }
     #equity-round-manager .erm-stat::before { position:absolute; top:0; left:0; width:100%; height:4px; background:var(--sage); content:""; }
     #equity-round-manager .erm-stat:nth-child(2)::before { background:var(--coral); }
     #equity-round-manager .erm-stat:nth-child(3)::before { background:var(--violet); }
@@ -1026,9 +1033,9 @@ html>body{padding:0}</style>
     <aside class="erm-sidebar" aria-label="Seitennavigation">
       <div class="erm-brand">
         <div class="erm-brand-lockup">
-          <span class="erm-brand-mark" aria-hidden="true">EM</span>
+          <span class="erm-brand-mark" aria-hidden="true">EC</span>
           <span class="erm-brand-copy">
-            <strong>Equity Manager</strong>
+            <strong>EASE Cap Table Manager</strong>
             <span class="text-small text-muted">Cap table workspace</span>
           </span>
         </div>
@@ -1044,11 +1051,14 @@ html>body{padding:0}</style>
       <div class="erm-sidebar-actions" aria-label="Daten verwalten">
         <span class="text-small text-muted">Versionen &amp; Daten</span>
         <div class="erm-data-buttons">
+          <button type="button" class="btn btn-block" id="erm-undo" disabled><i data-lucide="undo-2" aria-hidden="true"></i> Rückgängig</button>
+          <button type="button" class="btn btn-block" id="erm-redo" disabled><i data-lucide="redo-2" aria-hidden="true"></i> Wiederholen</button>
           <button type="button" class="btn btn-block" id="erm-export-csv"><i data-lucide="download" aria-hidden="true"></i> CSV exportieren</button>
           <button type="button" class="btn btn-block" id="erm-import-csv"><i data-lucide="upload" aria-hidden="true"></i> CSV laden</button>
           <input id="erm-csv-file" type="file" accept=".csv,text/csv" hidden>
           <button type="button" class="btn btn-block text-destructive" id="erm-reset"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Zurücksetzen</button>
         </div>
+        <span class="text-small erm-autosave" id="erm-save-status" aria-live="polite">Lokal gespeichert</span>
         <span class="text-small text-muted" id="erm-csv-status" aria-live="polite"></span>
       </div>
     </aside>
@@ -1056,7 +1066,7 @@ html>body{padding:0}</style>
     <main class="erm-content">
       <header class="erm-head" id="erm-overview">
         <div class="erm-page-title">
-          <span class="erm-page-kicker">Equity Management</span>
+          <span class="erm-page-kicker">EASE Cap Table Manager</span>
           <h2>Cap Table &amp; Finanzierungen</h2>
         </div>
         <div class="viz-row erm-create-actions" aria-label="Einträge hinzufügen">
@@ -1074,7 +1084,7 @@ html>body{padding:0}</style>
   </div>
 
   <div class="erm-section">
-    <div class="erm-section-head"><h3>Entwicklung</h3><div class="erm-tabs" id="erm-tabs" aria-label="Cap-Table-Zeitpunkt"></div></div>
+    <div class="erm-section-head"><h3>Entwicklung</h3><div class="erm-panel-tools"><div class="erm-tabs" id="erm-tabs" aria-label="Cap-Table-Zeitpunkt"></div><button type="button" class="btn" id="erm-latest-stage"><i data-lucide="skip-forward" aria-hidden="true"></i> Aktuell</button></div></div>
     <div class="erm-chart">
       <div class="erm-bar" id="erm-bar" role="img" aria-label="Verteilung der Unternehmensanteile"></div>
       <div class="erm-legend text-small" id="erm-legend"></div>
@@ -1083,7 +1093,7 @@ html>body{padding:0}</style>
 
   <div class="erm-main">
     <section class="erm-section" id="erm-cap-table" aria-labelledby="erm-cap-heading">
-      <div class="erm-section-head"><h3 id="erm-cap-heading">Cap Table</h3><span class="text-small text-muted" id="erm-total-shares"></span></div>
+      <div class="erm-section-head"><h3 id="erm-cap-heading">Cap Table</h3><div class="erm-panel-tools"><input class="form-control erm-search" id="erm-cap-search" type="search" placeholder="Beteiligte suchen…" aria-label="Cap Table durchsuchen"><span class="text-small text-muted" id="erm-total-shares"></span></div></div>
       <div class="erm-table-wrap">
         <table class="erm-responsive-table">
           <thead><tr><th>Beteiligte</th><th>Anteile</th><th>Ownership</th><th>Wert</th><th><span class="sr-only">Aktionen</span></th></tr></thead>
@@ -1191,6 +1201,7 @@ html>body{padding:0}</style>
         <label class="form-label">Zins p. a. (%)<input class="form-control" id="erm-convertible-interest" type="number" min="0" step="0.1"></label>
         <label class="form-label">Discount (%)<input class="form-control" id="erm-convertible-discount" type="number" min="0" max="99" step="0.1"></label>
         <label class="form-label">Valuation Cap (€)<input class="form-control" id="erm-convertible-cap" data-money type="text" inputmode="numeric"></label>
+        <label class="erm-check-card"><input id="erm-convertible-include-vsop" type="checkbox"><span class="erm-check-copy"><strong>Bereits gewährte VSOP-Anteile einbeziehen</strong><span class="text-small text-muted">Erhöht die Fully-Diluted-Basis der Wandlung um bis zum Closing gewährte, nicht stornierte VSOP-Anteile. Freier und nur geplanter Pool bleibt unberücksichtigt.</span></span></label>
       </div>
       <div class="text-small text-destructive erm-error" id="erm-convertible-error"></div>
       <div class="erm-form-actions"><button type="button" class="btn text-destructive" id="erm-delete-convertible" hidden><i data-lucide="trash-2" aria-hidden="true"></i> Löschen</button><button class="btn" value="cancel" formnovalidate>Abbrechen</button><button class="btn btn-primary" value="default" id="erm-save-convertible">Speichern</button></div>
@@ -1253,7 +1264,8 @@ html>body{padding:0}</style>
   <script>
   (() => {
     const root = document.getElementById('equity-round-manager');
-    const key = 'startup-equity-manager-v1';
+    const key = 'ease-cap-table-manager-v1';
+    const legacyKey = 'startup-equity-manager-v1';
     try { localStorage.removeItem('codex-equity-round-manager-v1'); localStorage.removeItem('codex-equity-round-manager-v2-blank'); } catch(e) {}
     const defaults = {
       founderSetVersion:'mf-ch-ng-jb-v3',
@@ -1268,7 +1280,7 @@ html>body{padding:0}</style>
       exit:{value:0,debt:0,costs:0,date:''}
     };
     let state;
-    try { state = JSON.parse(localStorage.getItem(key)) || structuredClone(defaults); } catch(e) { state = structuredClone(defaults); }
+    try { state = JSON.parse(localStorage.getItem(key)||localStorage.getItem(legacyKey)) || structuredClone(defaults); } catch(e) { state = structuredClone(defaults); }
     const today=new Date().toISOString().slice(0,10);
     if(!Array.isArray(state.holders)||!state.holders.length)state.holders=structuredClone(defaults.holders);
     if(!Array.isArray(state.rounds))state.rounds=[];
@@ -1283,6 +1295,7 @@ html>body{padding:0}</style>
       if(h.investmentDate===undefined) h.investmentDate='';
     });
     state.rounds.forEach(r=>{if(r.date===undefined)r.date=r.id==='seed'&&r.name==='Seed'?'2024-01-15':r.id==='series-a'&&r.name==='Series A'?'2025-07-01':'';if(r.poolRefresh===undefined)r.poolRefresh=0;if(!r.poolRefreshTiming)r.poolRefreshTiming='pre';});
+    state.convertibles.forEach(c=>{if(typeof c.includeGrantedVsop!=='boolean')c.includeGrantedVsop=true;});
     let stage = state.rounds.length;
     let editRound = null;
     let editHolder = null;
@@ -1291,7 +1304,11 @@ html>body{padding:0}</style>
     let pendingDeleteConvertible = null;
     let editVsop = null;
     let pendingDeleteVsop = null;
+    let capQuery = '';
     const $ = s => root.querySelector(s);
+    let undoStack=[];
+    let redoStack=[];
+    let lastSavedState=JSON.stringify(state);
     const colors = ['var(--viz-series-1)','var(--viz-series-2)','var(--viz-series-3)','var(--viz-series-4)','var(--viz-series-5)','var(--viz-series-6)'];
     const euro = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:n>=1000000?1:0,notation:n>=1000000?'compact':'standard'}).format(n);
     const num = n => new Intl.NumberFormat('de-DE',{maximumFractionDigits:0}).format(n);
@@ -1325,6 +1342,11 @@ html>body{padding:0}</style>
       return Math.max(0,Math.min(Number(grant.shares)||0,(Number(grant.shares)||0)*((endDate-start)/(finish-start))));
     };
     const reservedVsopShares = grant => grant.status==='Storniert'?0:grant.status==='Ausgeschieden'?vestedShares(grant):(Number(grant.shares)||0)+(Number(grant.plannedShares)||0);
+    const grantedVsopSharesAt = asOf => state.vsopParticipants.reduce((sum,grant)=>{
+      if(grant.status==='Storniert'||!validDate(grant.grantDate)||grant.grantDate>asOf)return sum;
+      if(grant.status==='Ausgeschieden'&&validDate(grant.leaverDate)&&grant.leaverDate<=asOf)return sum+vestedShares(grant,asOf);
+      return sum+(Number(grant.shares)||0);
+    },0);
     function xirr(flows){
       if(flows.length<2||!flows.some(f=>f.amount<0)||!flows.some(f=>f.amount>0)||flows.some(f=>!validDate(f.date))) return null;
       const dates=flows.map(f=>Date.parse(f.date+'T00:00:00Z')), start=Math.min(...dates);
@@ -1337,7 +1359,29 @@ html>body{padding:0}</style>
       for(let i=0;i<180;i++){const mid=(low+high)/2,m=npv(mid);if(Math.abs(m)<0.000001)return mid;if(a*m>0){low=mid;a=m;}else{high=mid;b=m;}}
       return (low+high)/2;
     }
-    function save(){ localStorage.setItem(key,JSON.stringify(state)); }
+    function updateHistoryButtons(){
+      $('#erm-undo').disabled=!undoStack.length;
+      $('#erm-redo').disabled=!redoStack.length;
+    }
+    function save({track=true}={}){
+      const next=JSON.stringify(state);
+      if(track&&next!==lastSavedState){undoStack.push(lastSavedState);if(undoStack.length>30)undoStack.shift();redoStack=[];}
+      lastSavedState=next;
+      localStorage.setItem(key,next);
+      $('#erm-save-status').textContent='Lokal gespeichert';
+      updateHistoryButtons();
+    }
+    function restoreHistory(source,target,message){
+      if(!source.length)return;
+      target.push(JSON.stringify(state));
+      state=JSON.parse(source.pop());
+      lastSavedState=JSON.stringify(state);
+      localStorage.setItem(key,lastSavedState);
+      stage=Math.min(stage,state.rounds.length);
+      $('#erm-save-status').textContent=message;
+      updateHistoryButtons();
+      render();
+    }
     function resetToBlank(){
       state={
         founderSetVersion:'mf-ch-ng-jb-v3',
@@ -1357,14 +1401,14 @@ html>body{padding:0}</style>
       $('#erm-csv-status').classList.add('text-muted');
       render();
     }
-    const csvHeaders=['schema_version','record_type','id','name','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
+    const csvHeaders=['schema_version','record_type','id','name','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','include_granted_vsop','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
     const csvCell=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
     function exportCsv(){
       const rows=[];
       const add=(record_type,data={})=>rows.push({schema_version:1,record_type,...data});
       state.holders.forEach(h=>add('holder',{id:h.id,name:h.name,category:h.type,shares:h.shares,cost_basis_eur:h.costBasis||0,investment_date:h.investmentDate||'',is_virtual:h.isVirtual?'true':'false'}));
       state.rounds.forEach(r=>add('round',{id:r.id,name:r.name,counterparty:r.investor,pre_money_eur:r.preMoney,investment_eur:r.investment,closing_date:r.date,pool_refresh_shares:r.poolRefresh||0,pool_refresh_timing:r.poolRefreshTiming||'pre'}));
-      state.convertibles.forEach(c=>add('convertible',{id:c.id,name:c.name,counterparty:c.lender,principal_eur:c.principal,investment_date:c.date,interest_pct:c.interest||0,discount_pct:c.discount||0,valuation_cap_eur:c.valuationCap||0}));
+      state.convertibles.forEach(c=>add('convertible',{id:c.id,name:c.name,counterparty:c.lender,principal_eur:c.principal,investment_date:c.date,interest_pct:c.interest||0,discount_pct:c.discount||0,valuation_cap_eur:c.valuationCap||0,include_granted_vsop:c.includeGrantedVsop?'true':'false'}));
       state.vsopParticipants.forEach(g=>add('vsop',{id:g.id,name:g.name,shares:g.shares,planned_shares:g.plannedShares||0,grant_date:g.grantDate,vesting_start:g.startDate,vesting_months:g.vestingMonths,cliff_months:g.cliffMonths,strike_price_eur:g.hurdle||0,status:g.status,leaver_date:g.leaverDate||'',expiry_date:g.expiryDate||''}));
       add('exit',{exit_value_eur:state.exit.value||0,exit_debt_eur:state.exit.debt||0,exit_costs_eur:state.exit.costs||0,exit_date:state.exit.date||''});
       const csv='\ufeff'+csvHeaders.map(csvCell).join(';')+'\r\n'+rows.map(row=>csvHeaders.map(header=>csvCell(row[header])).join(';')).join('\r\n');
@@ -1391,7 +1435,7 @@ html>body{padding:0}</style>
       matrix.slice(1).forEach((values,rowIndex)=>{const r={};headers.forEach((h,i)=>r[h]=values[i]??'');const type=(r.record_type||'').trim().toLowerCase(),id=(r.id||'').trim()||uid(),n=(field)=>csvNumber(r[field]);
         if(type==='holder'){if(!r.name.trim()||!(n('shares')>0))throw new Error(`Ungültiger holder in Zeile ${rowIndex+2}.`);imported.holders.push({id,name:r.name.trim(),type:r.category.trim()||'Sonstige',shares:n('shares'),costBasis:Math.max(0,n('cost_basis_eur')||0),investmentDate:r.investment_date.trim(),isVirtual:['true','1','ja','yes'].includes(r.is_virtual.trim().toLowerCase())});}
         else if(type==='round'){if(!r.name.trim()||!r.counterparty.trim()||!(n('pre_money_eur')>0)||!(n('investment_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültige round in Zeile ${rowIndex+2}.`);imported.rounds.push({id,name:r.name.trim(),investor:r.counterparty.trim(),preMoney:n('pre_money_eur'),investment:n('investment_eur'),date:r.closing_date.trim(),poolRefresh:Math.max(0,n('pool_refresh_shares')||0),poolRefreshTiming:r.pool_refresh_timing.trim()==='post'?'post':'pre'});}
-        else if(type==='convertible'){if(!r.name.trim()||!r.counterparty.trim()||!(n('principal_eur')>0)||!validDate(r.investment_date.trim()))throw new Error(`Ungültiges convertible in Zeile ${rowIndex+2}.`);imported.convertibles.push({id,name:r.name.trim(),lender:r.counterparty.trim(),principal:n('principal_eur'),date:r.investment_date.trim(),interest:Math.max(0,n('interest_pct')||0),discount:Math.max(0,n('discount_pct')||0),valuationCap:Math.max(0,n('valuation_cap_eur')||0)});}
+        else if(type==='convertible'){if(!r.name.trim()||!r.counterparty.trim()||!(n('principal_eur')>0)||!validDate(r.investment_date.trim()))throw new Error(`Ungültiges convertible in Zeile ${rowIndex+2}.`);const includeVsop=String(r.include_granted_vsop??'').trim().toLowerCase();imported.convertibles.push({id,name:r.name.trim(),lender:r.counterparty.trim(),principal:n('principal_eur'),date:r.investment_date.trim(),interest:Math.max(0,n('interest_pct')||0),discount:Math.max(0,n('discount_pct')||0),valuationCap:Math.max(0,n('valuation_cap_eur')||0),includeGrantedVsop:includeVsop===''||['true','1','ja','yes'].includes(includeVsop)});}
         else if(type==='vsop'){if(!r.name.trim()||!(n('shares')>0)||!validDate(r.grant_date.trim())||!validDate(r.vesting_start.trim()))throw new Error(`Ungültiger vsop-Datensatz in Zeile ${rowIndex+2}.`);imported.vsopParticipants.push({id,name:r.name.trim(),shares:n('shares'),plannedShares:Math.max(0,n('planned_shares')||0),grantDate:r.grant_date.trim(),startDate:r.vesting_start.trim(),vestingMonths:Math.max(1,n('vesting_months')||48),cliffMonths:Math.max(0,n('cliff_months')||0),hurdle:Math.max(0,n('strike_price_eur')||0),status:r.status.trim()||'Aktiv',leaverDate:r.leaver_date.trim(),expiryDate:r.expiry_date.trim()});}
         else if(type==='exit')imported.exit={value:Math.max(0,n('exit_value_eur')||0),debt:Math.max(0,n('exit_debt_eur')||0),costs:Math.max(0,n('exit_costs_eur')||0),date:r.exit_date.trim()};
       });
@@ -1408,17 +1452,17 @@ html>body{padding:0}</style>
       state.rounds.forEach(r=>{
         const poolRefresh=Math.max(0,Number(r.poolRefresh)||0),pool=cap.find(h=>h.id==='vsop-pool');
         if(pool&&poolRefresh>0&&r.poolRefreshTiming==='pre')pool.shares+=poolRefresh;
-        const fullyDilutedTotal=cap.reduce((a,h)=>a+h.shares,0);
         const equityTotal=cap.filter(h=>!h.isVirtual).reduce((a,h)=>a+h.shares,0);
         const price=r.preMoney/equityTotal;
         const conversions=[];
         state.convertibles.forEach(c=>{
           if(converted.has(c.id)||!validDate(c.date)||!validDate(r.date)||c.date>r.date) return;
+          const conversionBaseTotal=equityTotal+(c.includeGrantedVsop?grantedVsopSharesAt(r.date):0);
           const discount=Math.min(99,Math.max(0,Number(c.discount)||0));
-          const discountPrice=(r.preMoney*(1-discount/100))/fullyDilutedTotal;
-          const capPrice=Number(c.valuationCap)>0?Number(c.valuationCap)/fullyDilutedTotal:Infinity;
+          const discountPrice=(r.preMoney*(1-discount/100))/conversionBaseTotal;
+          const capPrice=Number(c.valuationCap)>0?Number(c.valuationCap)/conversionBaseTotal:Infinity;
           const conversionPrice=Math.min(discountPrice,capPrice);
-          const claim=loanClaim(c,r.date), shares=claim/Math.max(0.000001,conversionPrice-1);
+          const claim=loanClaim(c,r.date), shares=claim/Math.max(0.000001,conversionPrice);
           const existing=cap.find(h=>h.name.trim().toLowerCase()===c.lender.trim().toLowerCase()&&h.type==='Investor');
           if(existing) existing.shares+=shares; else cap.push({id:'conv-'+c.id,name:c.lender,type:'Investor',shares});
           converted.add(c.id); conversions.push({id:c.id,price:conversionPrice,claim,shares});
@@ -1449,17 +1493,18 @@ html>body{padding:0}</style>
       $('#erm-bar').setAttribute('aria-label','Unternehmensanteile '+snap.cap.map(h=>h.name+' '+pct(h.shares/total*100)).join(', '));
       $('#erm-legend').innerHTML=snap.cap.map((h,i)=>`<span class="erm-legend-item"><span class="erm-swatch" style="background:${colors[i%colors.length]}"></span>${esc(h.name)} ${pct(h.shares/total*100)}</span>`).join('');
       const companyValue=snap.valuation||0;
-      $('#erm-cap-body').innerHTML=snap.cap.slice().sort((a,b)=>b.shares-a.shares).map((h)=>{
+      const capRows=snap.cap.slice().filter(h=>!capQuery||`${h.name} ${h.type}`.toLocaleLowerCase('de-DE').includes(capQuery)).sort((a,b)=>b.shares-a.shares);
+      $('#erm-cap-body').innerHTML=capRows.map((h)=>{
         const i=snap.cap.findIndex(x=>x.id===h.id); const p=h.shares/total*100;
         const baseIndex=state.holders.findIndex(x=>x.id===h.id);
         const actions=baseIndex>=0&&h.id!=='vsop-pool'?`<div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-holder="${baseIndex}" aria-label="${esc(h.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-holder="${baseIndex}" aria-label="${esc(h.name)} löschen" ${state.holders.length<=1?'disabled data-tooltip="Mindestens ein Beteiligter muss verbleiben"':''}><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`:'–';
         return `<tr><td data-label="Beteiligte"><span class="erm-name"><span class="erm-swatch" style="background:${colors[i%colors.length]}"></span><span>${esc(h.name)}<br><span class="text-small text-muted">${esc(h.type)}</span></span></span></td><td data-label="Anteile">${num(h.shares)}</td><td data-label="Ownership">${pct(p)}</td><td data-label="Wert">${companyValue?euro(companyValue*p/100):'–'}</td><td data-label="Aktionen">${actions}</td></tr>`;
-      }).join('');
+      }).join('')||'<tr><td colspan="5" class="erm-empty">Keine Beteiligten für diese Suche gefunden.</td></tr>';
       $('#erm-convertible-list').innerHTML=state.convertibles.length?state.convertibles.map((c,i)=>{
         const conversionIndex=state.rounds.findIndex(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date);
         const converted=conversionIndex>=0, targetDate=converted?state.rounds[conversionIndex].date:today, claim=loanClaim(c,targetDate);
         const status=converted?'Konvertiert in '+state.rounds[conversionIndex].name:'Ausstehend';
-        return `<div class="erm-round"><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${i}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${i}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(c.date+'T00:00:00Z'))}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap)>0?euro(c.valuationCap):'–'}</span></div></div>`;
+        return `<div class="erm-round"><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${i}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${i}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(c.date+'T00:00:00Z'))}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap)>0?euro(c.valuationCap):'–'}</span><span class="text-muted">VSOP bei Wandlung</span><span>${c.includeGrantedVsop?'Gewährte Anteile einbezogen':'Nicht einbezogen'}</span></div></div>`;
       }).join(''):'<div class="erm-empty">Noch kein Wandeldarlehen.</div>';
       $('#erm-round-list').innerHTML=state.rounds.length?state.rounds.map((r,i)=>{
         const before=snaps[i].cap.reduce((a,h)=>a+h.shares,0); const after=snaps[i+1].cap.reduce((a,h)=>a+h.shares,0); const dilution=(1-before/after)*100;
@@ -1504,6 +1549,10 @@ html>body{padding:0}</style>
       if(window.lucide) lucide.createIcons({attrs:{width:16,height:16}});
     }
     $('#erm-tabs').addEventListener('click',e=>{const b=e.target.closest('[data-stage]'); if(b){stage=Number(b.dataset.stage);render();}});
+    $('#erm-latest-stage').addEventListener('click',()=>{stage=state.rounds.length;render();});
+    $('#erm-cap-search').addEventListener('input',e=>{capQuery=e.target.value.trim().toLocaleLowerCase('de-DE');render();});
+    $('#erm-undo').addEventListener('click',()=>restoreHistory(undoStack,redoStack,'Änderung rückgängig gemacht'));
+    $('#erm-redo').addEventListener('click',()=>restoreHistory(redoStack,undoStack,'Änderung wiederhergestellt'));
     $('.erm-nav').addEventListener('click',e=>{const link=e.target.closest('a[href^="#erm-"]');if(!link)return;root.querySelectorAll('.erm-nav a').forEach(a=>{a.classList.remove('is-selected');a.removeAttribute('aria-current');});link.classList.add('is-selected');link.setAttribute('aria-current','page');});
     function openVsop(i=null){
       editVsop=i;
@@ -1568,10 +1617,10 @@ html>body{padding:0}</style>
     });
     function openConvertible(i=null){
       editConvertible=i;
-      const c=i===null?{name:'Pre-Seed Wandeldarlehen',lender:'',principal:100000,date:today,interest:5,discount:20,valuationCap:2000000}:state.convertibles[i];
+      const c=i===null?{name:'Pre-Seed Wandeldarlehen',lender:'',principal:100000,date:today,interest:5,discount:20,valuationCap:2000000,includeGrantedVsop:true}:state.convertibles[i];
       $('#erm-convertible-form-title').textContent=i===null?'Wandeldarlehen hinzufügen':'Wandeldarlehen bearbeiten';
       $('#erm-delete-convertible').hidden=i===null;
-      $('#erm-convertible-name').value=c.name; $('#erm-convertible-lender').value=c.lender; $('#erm-convertible-principal').value=moneyInputValue(c.principal); $('#erm-convertible-date').value=c.date; $('#erm-convertible-interest').value=c.interest||0; $('#erm-convertible-discount').value=c.discount||0; $('#erm-convertible-cap').value=moneyInputValue(c.valuationCap||0);
+      $('#erm-convertible-name').value=c.name; $('#erm-convertible-lender').value=c.lender; $('#erm-convertible-principal').value=moneyInputValue(c.principal); $('#erm-convertible-date').value=c.date; $('#erm-convertible-interest').value=c.interest||0; $('#erm-convertible-discount').value=c.discount||0; $('#erm-convertible-cap').value=moneyInputValue(c.valuationCap||0); $('#erm-convertible-include-vsop').checked=c.includeGrantedVsop!==false;
       $('#erm-convertible-error').textContent=''; $('#erm-convertible-dialog').showModal();
     }
     function requestConvertibleDelete(i){
@@ -1589,7 +1638,7 @@ html>body{padding:0}</style>
     });
     $('#erm-save-convertible').addEventListener('click',e=>{
       e.preventDefault();
-      const c={id:editConvertible===null?uid():state.convertibles[editConvertible].id,name:$('#erm-convertible-name').value.trim(),lender:$('#erm-convertible-lender').value.trim(),principal:parseMoney($('#erm-convertible-principal').value),date:$('#erm-convertible-date').value,interest:Math.max(0,Number($('#erm-convertible-interest').value)||0),discount:Math.min(99,Math.max(0,Number($('#erm-convertible-discount').value)||0)),valuationCap:parseMoney($('#erm-convertible-cap').value)};
+      const c={id:editConvertible===null?uid():state.convertibles[editConvertible].id,name:$('#erm-convertible-name').value.trim(),lender:$('#erm-convertible-lender').value.trim(),principal:parseMoney($('#erm-convertible-principal').value),date:$('#erm-convertible-date').value,interest:Math.max(0,Number($('#erm-convertible-interest').value)||0),discount:Math.min(99,Math.max(0,Number($('#erm-convertible-discount').value)||0)),valuationCap:parseMoney($('#erm-convertible-cap').value),includeGrantedVsop:$('#erm-convertible-include-vsop').checked};
       if(!c.name||!c.lender||c.principal<=0||!validDate(c.date)){$('#erm-convertible-error').textContent='Bitte Darlehensgeber, Betrag und Datum vollständig eingeben.';return;}
       if(editConvertible===null)state.convertibles.push(c);else state.convertibles[editConvertible]=c;
       save(); $('#erm-convertible-dialog').close(); render();
@@ -1633,6 +1682,13 @@ html>body{padding:0}</style>
       if(e.target.dataset.exitInput!=='date'&&e.target.value==='')return;
       state.exit[e.target.dataset.exitInput]=e.target.dataset.exitInput==='date'?e.target.value:parseMoney(e.target.value); save(); render();
     }));
+    document.addEventListener('keydown',e=>{
+      if(!(e.ctrlKey||e.metaKey)||e.altKey)return;
+      if(e.target.matches('input, textarea, select, [contenteditable="true"]'))return;
+      if(e.key.toLowerCase()==='z'){e.preventDefault();if(e.shiftKey)restoreHistory(redoStack,undoStack,'Änderung wiederhergestellt');else restoreHistory(undoStack,redoStack,'Änderung rückgängig gemacht');}
+      if(e.key.toLowerCase()==='y'){e.preventDefault();restoreHistory(redoStack,undoStack,'Änderung wiederhergestellt');}
+    });
+    save({track:false});
     render();
   })();
   </script>
