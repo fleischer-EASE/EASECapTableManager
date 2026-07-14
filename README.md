@@ -1,15 +1,18 @@
 # EASE Cap Table Manager
 
-Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSOP-Pools und Exit-Simulationen. Die App startet mit einem leeren Modell: Ein Founder hält 100 %, alle Finanzierungs-, VSOP- und Exit-Werte stehen auf null.
+Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Secondaries, VSOP-Pools und Exit-Simulationen. Die App startet mit einem leeren Modell: Ein Founder hält 100 %, alle Transaktions-, VSOP- und Exit-Werte stehen auf null.
 
 ## Funktionen
 
-- Cap Table über mehrere Finanzierungsstände
+- Cap Table über chronologische Eigenkapital- und Secondary-Stände
+- Gemeinsamer Einstieg **Neue Transaktion** für Eigenkapitalrunde, Wandeldarlehen und Secondary
+- Eigenkapitalrunden mit nicht partizipierender oder partizipierender Liquidationspräferenz
 - Wandeldarlehen mit Zins, Discount, Valuation Cap und wählbarer Fully-Diluted-Wandlungsbasis
+- Secondaries mit Verkäufer, Käufer, Anteilen, Stückpreis und Rendite-Cashflows
 - Mehrere VSOP-Pools mit zugeordneten Personen, Vesting, Cliff, Leaver- und Ablaufdatum
-- Exit-Simulation mit Multiple und IRR für alle Beteiligten
-- Lokale automatische Speicherung, Rückgängig/Wiederholen und Suche
-- CSV-Import und -Export für Backups
+- Exit-Simulation mit vereinfachtem LiqPref-Waterfall, Multiple und IRR
+- Export der gerade ausgewählten und optional gefilterten Cap Table
+- Lokale automatische Speicherung, Rückgängig/Wiederholen, Suche sowie CSV-Backups
 
 ## Dokumentation und Beispiel
 
@@ -22,5 +25,5 @@ Lokale Single-Page-App für Cap Tables, Finanzierungsrunden, Wandeldarlehen, VSO
 
 ## Daten und Backups
 
-Die Eingaben werden lokal im Browser gespeichert. Über **CSV exportieren** und **CSV laden** lassen sich Versionen sichern und wiederherstellen. Verwende möglichst immer dieselbe Adresse und denselben Port, da Browserdaten an die Adresse gebunden sind.
+Die Eingaben werden lokal im Browser gespeichert. Über **CSV exportieren** und **CSV laden** lassen sich vollständige Versionen sichern und wiederherstellen. **Ansicht exportieren** lädt ausschließlich den aktuell ausgewählten Cap Table-Stand herunter und berücksichtigt den Suchfilter. Verwende möglichst immer dieselbe Adresse und denselben Port, da Browserdaten an die Adresse gebunden sind.
 
