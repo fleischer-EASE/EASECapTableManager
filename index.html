@@ -776,8 +776,7 @@ html>body{padding:0}</style>
     #equity-round-manager th { color:var(--muted-foreground); font-weight:400; }
     #equity-round-manager th:not(:first-child), #equity-round-manager td:not(:first-child) { text-align:right; }
     #equity-round-manager .erm-name { display:flex; align-items:flex-start; gap:7px; }
-    #equity-round-manager .erm-financing-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; direction:rtl; }
-    #equity-round-manager .erm-financing-grid > * { direction:ltr; }
+    #equity-round-manager .erm-financing-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; direction:ltr; }
     #equity-round-manager .erm-round { display:grid; gap:8px; padding:14px 0; border-bottom:1px solid var(--border); }
     #equity-round-manager .erm-round:first-child { padding-top:0; }
     #equity-round-manager .erm-round-top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
@@ -791,16 +790,23 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-exit-summary > span { display:grid; gap:3px; padding:12px 0; border-bottom:1px solid var(--border); min-width:0; }
     #equity-round-manager .erm-exit-summary strong { font-weight:500; font-variant-numeric:tabular-nums; }
     #equity-round-manager dialog { color:var(--popover-foreground); background:var(--popover); border:1px solid var(--border); border-radius:var(--radius); padding:20px; width:min(480px,calc(100% - 28px)); }
+    #equity-round-manager #erm-transaction-dialog { width:min(760px,calc(100% - 28px)); }
     #equity-round-manager dialog::backdrop { background:color-mix(in srgb, var(--foreground) 30%, transparent); }
     #equity-round-manager .erm-form { display:grid; gap:14px; }
     #equity-round-manager .erm-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     #equity-round-manager .erm-form-actions { display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
     #equity-round-manager .erm-error { min-height:1.2em; }
+    #equity-round-manager [hidden] { display:none !important; }
     #equity-round-manager .erm-panel-tools { display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
     #equity-round-manager .erm-search { width:min(240px,100%); min-height:38px; }
     #equity-round-manager .erm-check-card { grid-column:1 / -1; display:flex; align-items:flex-start; gap:10px; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--muted); cursor:pointer; }
     #equity-round-manager .erm-check-card input { width:17px; height:17px; margin:2px 0 0; accent-color:var(--primary); flex:0 0 auto; }
     #equity-round-manager .erm-check-copy { display:grid; gap:3px; }
+    #equity-round-manager .erm-transaction-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    #equity-round-manager .erm-transaction-option { display:grid; grid-template-columns:1fr; min-height:132px; align-content:start; justify-items:start; gap:9px; padding:15px; text-align:left; white-space:normal; }
+    #equity-round-manager .erm-transaction-option i { width:20px; height:20px; color:var(--primary); }
+    #equity-round-manager .erm-transaction-option strong { font-size:13px; }
+    #equity-round-manager .erm-transaction-option span { color:var(--muted-foreground); font-size:11px; line-height:1.45; }
     #equity-round-manager .erm-autosave { display:inline-flex; align-items:center; gap:6px; color:rgb(240 245 242 / 58%); }
     #equity-round-manager .erm-autosave::before { width:7px; height:7px; border-radius:50%; background:#8eb49f; content:""; }
     #equity-round-manager .erm-mobile-label { display:none; }
@@ -822,7 +828,7 @@ html>body{padding:0}</style>
       #equity-round-manager .erm-head { align-items:flex-start; }
       #equity-round-manager .erm-create-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; }
       #equity-round-manager .erm-kpis { grid-template-columns:1fr; }
-      #equity-round-manager .erm-fields, #equity-round-manager .erm-exit-controls { grid-template-columns:1fr; }
+      #equity-round-manager .erm-fields, #equity-round-manager .erm-exit-controls, #equity-round-manager .erm-transaction-options { grid-template-columns:1fr; }
       #equity-round-manager .erm-exit-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
       #equity-round-manager .erm-responsive-table thead { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
       #equity-round-manager .erm-responsive-table, #equity-round-manager .erm-responsive-table tbody { display:block; width:100%; }
@@ -990,14 +996,17 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-round:first-child { padding-top:14px; }
     #equity-round-manager .erm-round:last-child { border-bottom:1px solid #e8e2da; }
     #equity-round-manager .erm-financing-grid { gap:14px; }
-    #equity-round-manager .erm-financing-card { position:relative; min-height:100%; padding:17px; overflow:hidden; border-color:#e4ded5; background:#f8f4ed; box-shadow:0 7px 22px rgb(29 48 65 / 5%); }
-    #equity-round-manager .erm-financing-card:nth-child(odd) { background:#eef4f0; }
+    #equity-round-manager .erm-financing-card { position:relative; min-height:100%; padding:17px; overflow:hidden; border-color:#e4ded5; background:#eef4f0; box-shadow:0 7px 22px rgb(29 48 65 / 5%); }
+    #equity-round-manager .erm-financing-card.is-convertible { background:#f3eff8; }
+    #equity-round-manager .erm-financing-card.is-secondary { background:#fff1e9; }
     #equity-round-manager .erm-financing-card::before { position:absolute; top:0; right:0; width:44px; height:4px; border-radius:0 0 0 4px; background:var(--sage); content:""; }
     #equity-round-manager .erm-financing-card.is-convertible::before { background:var(--violet); }
+    #equity-round-manager .erm-financing-card.is-secondary::before { background:var(--coral); }
     #equity-round-manager .erm-financing-card .erm-round-meta { margin-top:4px; padding-top:10px; border-top:1px solid rgb(218 211 201 / 70%); }
     #equity-round-manager .erm-financing-index { color:#9aa39d; font-size:10px; font-weight:750; letter-spacing:.08em; }
     #equity-round-manager .erm-type-badge { color:#496558; background:var(--sage-soft); }
     #equity-round-manager .is-convertible .erm-type-badge { color:#665487; background:var(--violet-soft); }
+    #equity-round-manager .is-secondary .erm-type-badge { color:#9a4d35; background:var(--coral-soft); }
     #equity-round-manager #erm-financing-list > .erm-empty { grid-column:1 / -1; direction:ltr; }
     #equity-round-manager .viz-badge { color:#496558; background:var(--sage-soft); }
     #equity-round-manager .erm-exit { padding-top:24px; border-top:1px solid rgb(213 205 194 / 88%); }
@@ -1084,11 +1093,10 @@ html>body{padding:0}</style>
           <h2>Cap Table &amp; Finanzierungen</h2>
         </div>
         <div class="viz-row erm-create-actions" aria-label="Einträge hinzufügen">
-          <button type="button" class="btn" id="erm-add-convertible"><i data-lucide="file-plus-2" aria-hidden="true"></i> Wandeldarlehen</button>
           <button type="button" class="btn" id="erm-add-pool"><i data-lucide="layers-3" aria-hidden="true"></i> VSOP-Pool</button>
           <button type="button" class="btn" id="erm-add-vsop"><i data-lucide="badge-plus" aria-hidden="true"></i> VSOP-Person</button>
           <button type="button" class="btn" id="erm-add-person"><i data-lucide="user-plus" aria-hidden="true"></i> Beteiligte</button>
-          <button type="button" class="btn btn-primary" id="erm-add-round"><i data-lucide="plus" aria-hidden="true"></i> Finanzierungsrunde</button>
+          <button type="button" class="btn btn-primary" id="erm-add-transaction"><i data-lucide="plus" aria-hidden="true"></i> Neue Transaktion</button>
         </div>
       </header>
 
@@ -1107,7 +1115,7 @@ html>body{padding:0}</style>
       </div>
     </section>
     <section class="erm-section" id="erm-cap-table" aria-labelledby="erm-cap-heading">
-      <div class="erm-section-head"><h3 id="erm-cap-heading">Cap Table</h3><div class="erm-panel-tools"><input class="form-control erm-search" id="erm-cap-search" type="search" placeholder="Beteiligte suchen…" aria-label="Cap Table durchsuchen"><span class="text-small text-muted" id="erm-total-shares"></span></div></div>
+      <div class="erm-section-head"><h3 id="erm-cap-heading">Cap Table</h3><div class="erm-panel-tools"><input class="form-control erm-search" id="erm-cap-search" type="search" placeholder="Beteiligte suchen…" aria-label="Cap Table durchsuchen"><button type="button" class="btn" id="erm-export-current-cap"><i data-lucide="table-properties" aria-hidden="true"></i> Ansicht exportieren</button><span class="text-small text-muted" id="erm-total-shares"></span></div></div>
       <div class="erm-table-wrap">
         <table class="erm-responsive-table">
           <thead><tr><th>Beteiligte</th><th>Anteile</th><th>Ownership</th><th>Wert</th><th><span class="sr-only">Aktionen</span></th></tr></thead>
@@ -1118,7 +1126,7 @@ html>body{padding:0}</style>
   </div>
 
   <section class="erm-section" id="erm-financing" aria-labelledby="erm-rounds-heading">
-    <div class="erm-section-head"><h3 id="erm-rounds-heading">Finanzierungen</h3><span class="text-small text-muted">Chronologisch · von rechts nach links</span></div>
+    <div class="erm-section-head"><h3 id="erm-rounds-heading">Finanzierungen</h3><span class="text-small text-muted">Chronologisch · von links nach rechts · Farben nach Typ</span></div>
     <div class="erm-financing-grid" id="erm-financing-list"></div>
   </section>
 
@@ -1138,7 +1146,7 @@ html>body{padding:0}</style>
   <section class="erm-section erm-exit" id="erm-exit" aria-labelledby="erm-exit-heading">
     <div class="erm-section-head">
       <h3 id="erm-exit-heading">Exit-Simulation</h3>
-      <span class="text-small text-muted">Pro rata · ohne Liquidationspräferenzen und Steuern</span>
+      <span class="text-small text-muted">Vereinfachter LiqPref-Waterfall · pari passu · ohne Steuern</span>
     </div>
     <div class="viz-controls erm-exit-controls" aria-label="Exit-Annahmen">
       <label class="form-label">Unternehmensverkauf (€)<input class="form-control" id="erm-exit-value" data-exit-input="value" data-money type="text" inputmode="numeric"></label>
@@ -1185,15 +1193,30 @@ html>body{padding:0}</style>
     </form>
   </dialog>
 
+  <dialog id="erm-transaction-dialog">
+    <form method="dialog" class="erm-form">
+      <h3>Neue Transaktion</h3>
+      <p class="text-small text-muted">Wähle das Instrument. Alle Transaktionen werden gemeinsam chronologisch dargestellt.</p>
+      <div class="erm-transaction-options">
+        <button type="button" class="btn erm-transaction-option" data-transaction="round"><i data-lucide="landmark" aria-hidden="true"></i><strong>Eigenkapitalrunde</strong><span>Neue Anteile, Bewertung, Investment und Liquidationspräferenz.</span></button>
+        <button type="button" class="btn erm-transaction-option" data-transaction="convertible"><i data-lucide="file-plus-2" aria-hidden="true"></i><strong>Wandeldarlehen</strong><span>Wandlung mit Zins, Discount, Cap und wählbarer Basis.</span></button>
+        <button type="button" class="btn erm-transaction-option" data-transaction="secondary"><i data-lucide="arrow-left-right" aria-hidden="true"></i><strong>Secondary</strong><span>Anteile zwischen Verkäufer und Käufer übertragen.</span></button>
+      </div>
+      <div class="erm-form-actions"><button class="btn" value="cancel">Abbrechen</button></div>
+    </form>
+  </dialog>
+
   <dialog id="erm-round-dialog">
     <form method="dialog" class="erm-form" id="erm-round-form">
-      <h3 id="erm-round-form-title">Finanzierungsrunde</h3>
+      <h3 id="erm-round-form-title">Eigenkapitalrunde</h3>
       <div class="erm-fields">
         <label class="form-label">Runde<input class="form-control" id="erm-round-name" required placeholder="z. B. Series A"></label>
         <label class="form-label">Investor<input class="form-control" id="erm-investor" required placeholder="z. B. Horizon VC"></label>
         <label class="form-label">Pre-Money (€)<input class="form-control" id="erm-premoney" data-money type="text" inputmode="numeric" value="8.000.000" required></label>
         <label class="form-label">Investment (€)<input class="form-control" id="erm-investment" data-money type="text" inputmode="numeric" value="2.000.000" required></label>
         <label class="form-label">Closing-Datum<input class="form-control" id="erm-round-date" type="date" required></label>
+        <label class="form-label">Liquidationspräferenz<select class="form-select" id="erm-round-liq-pref"><option value="none">Keine</option><option value="non-participating">Nicht partizipierend</option><option value="participating">Partizipierend</option></select></label>
+        <label class="form-label">LiqPref-Multiple (×)<input class="form-control" id="erm-round-liq-multiple" type="number" min="0.1" step="0.1" value="1"></label>
         <label class="form-label">Zusätzliche Pool-Anteile<input class="form-control" id="erm-round-pool-refresh" type="number" min="0" step="1" value="0"></label>
         <label class="form-label">Zielpool<select class="form-select" id="erm-round-pool-id"></select></label>
         <label class="form-label">Pool-Auffrischung<select class="form-select" id="erm-round-pool-timing"><option value="pre">Pre-Money</option><option value="post">Post-Money</option></select></label>
@@ -1226,6 +1249,30 @@ html>body{padding:0}</style>
       <h3>Wandeldarlehen löschen?</h3>
       <p id="erm-delete-convertible-message"></p>
       <div class="erm-form-actions"><button class="btn" value="cancel" formnovalidate>Abbrechen</button><button type="button" class="btn btn-primary" id="erm-confirm-delete-convertible">Endgültig löschen</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="erm-secondary-dialog">
+    <form method="dialog" class="erm-form" id="erm-secondary-form">
+      <h3 id="erm-secondary-form-title">Secondary</h3>
+      <div class="erm-fields">
+        <label class="form-label">Bezeichnung<input class="form-control" id="erm-secondary-name" required placeholder="z. B. Founder Secondary"></label>
+        <label class="form-label">Transaktionsdatum<input class="form-control" id="erm-secondary-date" type="date" required></label>
+        <label class="form-label">Verkäufer<select class="form-select" id="erm-secondary-seller" required></select></label>
+        <label class="form-label">Käufer<input class="form-control" id="erm-secondary-buyer" required placeholder="z. B. Horizon VC"></label>
+        <label class="form-label">Anteile<input class="form-control" id="erm-secondary-shares" type="number" min="1" step="1" required></label>
+        <label class="form-label">Preis je Anteil (€)<input class="form-control" id="erm-secondary-price" type="number" min="0.0001" step="0.0001" required></label>
+      </div>
+      <div class="text-small text-destructive erm-error" id="erm-secondary-error"></div>
+      <div class="erm-form-actions"><button type="button" class="btn text-destructive" id="erm-delete-secondary" hidden><i data-lucide="trash-2" aria-hidden="true"></i> Löschen</button><button class="btn" value="cancel" formnovalidate>Abbrechen</button><button class="btn btn-primary" value="default" id="erm-save-secondary">Speichern</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="erm-delete-secondary-dialog">
+    <form method="dialog" class="erm-form">
+      <h3>Secondary löschen?</h3>
+      <p id="erm-delete-secondary-message"></p>
+      <div class="erm-form-actions"><button class="btn" value="cancel" formnovalidate>Abbrechen</button><button type="button" class="btn btn-primary" id="erm-confirm-delete-secondary">Endgültig löschen</button></div>
     </form>
   </dialog>
 
@@ -1300,6 +1347,7 @@ html>body{padding:0}</style>
       ],
       rounds:[],
       convertibles:[],
+      secondaries:[],
       vsopParticipants:[],
       exit:{value:0,debt:0,costs:0,date:''}
     };
@@ -1309,6 +1357,7 @@ html>body{padding:0}</style>
     if(!Array.isArray(state.holders)||!state.holders.length)state.holders=structuredClone(defaults.holders);
     if(!Array.isArray(state.rounds))state.rounds=[];
     if(!Array.isArray(state.convertibles))state.convertibles=[];
+    if(!Array.isArray(state.secondaries))state.secondaries=[];
     if(!Array.isArray(state.vsopParticipants))state.vsopParticipants=[];
     if(!state.exit)state.exit=structuredClone(defaults.exit);
     state.holders.forEach(h=>{
@@ -1320,15 +1369,18 @@ html>body{padding:0}</style>
     });
     state.holders.forEach(h=>{if(h.isVirtual||h.id==='vsop-pool'){h.isVirtual=true;h.type='VSOP-Pool';}});
     const migratedPoolId=(state.holders.find(h=>h.isVirtual)||{}).id||'';
-    state.rounds.forEach(r=>{if(r.date===undefined)r.date=r.id==='seed'&&r.name==='Seed'?'2024-01-15':r.id==='series-a'&&r.name==='Series A'?'2025-07-01':'';if(r.poolRefresh===undefined)r.poolRefresh=0;if(!r.poolRefreshTiming)r.poolRefreshTiming='pre';if(r.poolId===undefined)r.poolId=migratedPoolId;});
+    state.rounds.forEach(r=>{if(r.date===undefined)r.date=r.id==='seed'&&r.name==='Seed'?'2024-01-15':r.id==='series-a'&&r.name==='Series A'?'2025-07-01':'';if(r.poolRefresh===undefined)r.poolRefresh=0;if(!r.poolRefreshTiming)r.poolRefreshTiming='pre';if(r.poolId===undefined)r.poolId=migratedPoolId;if(!['none','non-participating','participating'].includes(r.liquidationPreferenceType))r.liquidationPreferenceType='none';if(!(Number(r.liquidationPreferenceMultiple)>0))r.liquidationPreferenceMultiple=1;});
     state.convertibles.forEach(c=>{if(typeof c.fullyDilutedConversion!=='boolean')c.fullyDilutedConversion=typeof c.includeGrantedVsop==='boolean'?c.includeGrantedVsop:true;});
     state.vsopParticipants.forEach(g=>{if(!g.poolId)g.poolId=migratedPoolId;});
-    let stage = state.rounds.length;
+    const transactionStageCount = () => state.rounds.length+state.secondaries.length;
+    let stage = transactionStageCount();
     let editRound = null;
     let editHolder = null;
     let pendingDeleteHolder = null;
     let editConvertible = null;
     let pendingDeleteConvertible = null;
+    let editSecondary = null;
+    let pendingDeleteSecondary = null;
     let editVsop = null;
     let pendingDeleteVsop = null;
     let editPool = null;
@@ -1339,6 +1391,7 @@ html>body{padding:0}</style>
     let lastSavedState=JSON.stringify(state);
     const colors = ['#2f6b5b','#4f74c8','#d27a55','#8a63b8','#d2a23c','#2d8aa1','#b65c78','#6b8e4e','#4c5d8f','#c45d4d','#3e9a80','#a16b45','#6d72cf','#c27fa7','#678c9d','#9a8f3a'];
     const euro = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:n>=1000000?1:0,notation:n>=1000000?'compact':'standard'}).format(n);
+    const euroPerShare = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',minimumFractionDigits:2,maximumFractionDigits:4}).format(Number(n)||0);
     const num = n => new Intl.NumberFormat('de-DE',{maximumFractionDigits:0}).format(n);
     const moneyInputValue = n => new Intl.NumberFormat('de-DE',{maximumFractionDigits:0}).format(Math.max(0,Number(n)||0));
     const parseMoney = value => Number(String(value??'').replace(/[^0-9]/g,''))||0;
@@ -1356,6 +1409,10 @@ html>body{padding:0}</style>
     const uid = () => Math.random().toString(36).slice(2,10);
     const validDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s||'') && !Number.isNaN(Date.parse(s+'T00:00:00Z'));
     const chronologicalRounds = () => state.rounds.map((round,index)=>({round,index})).sort((a,b)=>(a.round.date||'9999-12-31').localeCompare(b.round.date||'9999-12-31')||a.index-b.index);
+    const chronologicalTransactions = () => [
+      ...state.rounds.map((item,index)=>({kind:'round',date:item.date||'',item,index})),
+      ...state.secondaries.map((item,index)=>({kind:'secondary',date:item.date||'',item,index}))
+    ].sort((a,b)=>(a.date||'9999-12-31').localeCompare(b.date||'9999-12-31')||(a.kind==='round'?-1:1)-(b.kind==='round'?-1:1)||a.index-b.index);
     const loanClaim = (c,toDate) => {
       const principal=Math.max(0,Number(c.principal)||0);
       if(!validDate(c.date)||!validDate(toDate)) return principal;
@@ -1404,7 +1461,9 @@ html>body{padding:0}</style>
       state=JSON.parse(source.pop());
       lastSavedState=JSON.stringify(state);
       localStorage.setItem(key,lastSavedState);
-      stage=Math.min(stage,state.rounds.length);
+      if(!Array.isArray(state.secondaries))state.secondaries=[];
+      state.rounds.forEach(r=>{if(!['none','non-participating','participating'].includes(r.liquidationPreferenceType))r.liquidationPreferenceType='none';if(!(Number(r.liquidationPreferenceMultiple)>0))r.liquidationPreferenceMultiple=1;});
+      stage=Math.min(stage,transactionStageCount());
       $('#erm-save-status').textContent=message;
       updateHistoryButtons();
       render();
@@ -1417,10 +1476,11 @@ html>body{padding:0}</style>
         holders:[{id:'founder',name:'Founder',type:'Gründer',shares:1,costBasis:0,investmentDate:''}],
         rounds:[],
         convertibles:[],
+        secondaries:[],
         vsopParticipants:[],
         exit:{value:0,debt:0,costs:0,date:''}
       };
-      stage=0;editRound=null;editHolder=null;pendingDeleteHolder=null;editConvertible=null;pendingDeleteConvertible=null;editVsop=null;pendingDeleteVsop=null;editPool=null;
+      stage=0;editRound=null;editHolder=null;pendingDeleteHolder=null;editConvertible=null;pendingDeleteConvertible=null;editSecondary=null;pendingDeleteSecondary=null;editVsop=null;pendingDeleteVsop=null;editPool=null;
       save();
       $('#erm-reset-dialog').close();
       $('#erm-csv-status').textContent='Eingaben zurückgesetzt: Founder hält 100 %.';
@@ -1428,20 +1488,34 @@ html>body{padding:0}</style>
       $('#erm-csv-status').classList.add('text-muted');
       render();
     }
-    const csvHeaders=['schema_version','record_type','id','name','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','fully_diluted_conversion','pool_id','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
+    const csvHeaders=['schema_version','record_type','id','name','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','fully_diluted_conversion','liquidation_preference_type','liquidation_preference_multiple','seller','buyer','secondary_price_per_share_eur','pool_id','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
     const csvCell=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
+    function downloadCsv(csv,filename){
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+      a.href=url;a.download=filename;a.hidden=true;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }
     function exportCsv(){
       const rows=[];
       const add=(record_type,data={})=>rows.push({schema_version:1,record_type,...data});
       state.holders.forEach(h=>add('holder',{id:h.id,name:h.name,category:h.type,shares:h.shares,cost_basis_eur:h.costBasis||0,investment_date:h.investmentDate||'',is_virtual:h.isVirtual?'true':'false'}));
-      state.rounds.forEach(r=>add('round',{id:r.id,name:r.name,counterparty:r.investor,pool_id:r.poolId||'',pre_money_eur:r.preMoney,investment_eur:r.investment,closing_date:r.date,pool_refresh_shares:r.poolRefresh||0,pool_refresh_timing:r.poolRefreshTiming||'pre'}));
+      state.rounds.forEach(r=>add('round',{id:r.id,name:r.name,counterparty:r.investor,liquidation_preference_type:r.liquidationPreferenceType||'none',liquidation_preference_multiple:r.liquidationPreferenceMultiple||1,pool_id:r.poolId||'',pre_money_eur:r.preMoney,investment_eur:r.investment,closing_date:r.date,pool_refresh_shares:r.poolRefresh||0,pool_refresh_timing:r.poolRefreshTiming||'pre'}));
       state.convertibles.forEach(c=>add('convertible',{id:c.id,name:c.name,counterparty:c.lender,principal_eur:c.principal,investment_date:c.date,interest_pct:c.interest||0,discount_pct:c.discount||0,valuation_cap_eur:c.valuationCap||0,fully_diluted_conversion:c.fullyDilutedConversion?'true':'false'}));
+      state.secondaries.forEach(s=>add('secondary',{id:s.id,name:s.name,shares:s.shares,seller:s.seller,buyer:s.buyer,secondary_price_per_share_eur:s.pricePerShare,closing_date:s.date}));
       state.vsopParticipants.forEach(g=>add('vsop',{id:g.id,name:g.name,pool_id:g.poolId||'',shares:g.shares,planned_shares:g.plannedShares||0,grant_date:g.grantDate,vesting_start:g.startDate,vesting_months:g.vestingMonths,cliff_months:g.cliffMonths,strike_price_eur:g.hurdle||0,status:g.status,leaver_date:g.leaverDate||'',expiry_date:g.expiryDate||''}));
       add('exit',{exit_value_eur:state.exit.value||0,exit_debt_eur:state.exit.debt||0,exit_costs_eur:state.exit.costs||0,exit_date:state.exit.date||''});
       const csv='\ufeff'+csvHeaders.map(csvCell).join(';')+'\r\n'+rows.map(row=>csvHeaders.map(header=>csvCell(row[header])).join(';')).join('\r\n');
-      const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a'),now=new Date(),stamp=now.toISOString().slice(0,16).replace(/[:T]/g,'-');
-      a.href=url;a.download=`cap-table-${stamp}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      const now=new Date(),stamp=now.toISOString().slice(0,16).replace(/[:T]/g,'-');
+      downloadCsv(csv,`cap-table-backup-${stamp}.csv`);
       $('#erm-csv-status').textContent='CSV-Version exportiert.';$('#erm-csv-status').classList.remove('text-destructive');$('#erm-csv-status').classList.add('text-muted');
+    }
+    function exportCurrentCapTable(){
+      const snaps=snapshots(),snap=snaps[Math.min(stage,snaps.length-1)],total=snap.cap.reduce((sum,h)=>sum+(Number(h.shares)||0),0),companyValue=snap.valuation||0;
+      const rows=snap.cap.filter(h=>!capQuery||`${h.name} ${h.type}`.toLocaleLowerCase('de-DE').includes(capQuery)).sort((a,b)=>b.shares-a.shares);
+      const headers=['stand','datum','beteiligte','typ','anteile','ownership_pct','wert_eur'];
+      const lines=rows.map(h=>[snap.label,snap.asOfDate||'',h.name,h.type,h.shares,total?h.shares/total*100:0,companyValue&&total?companyValue*h.shares/total:''].map(csvCell).join(';'));
+      const safeLabel=(snap.label||'gruendung').toLocaleLowerCase('de-DE').replace(/[^a-z0-9äöüß]+/gi,'-').replace(/^-|-$/g,'');
+      downloadCsv('\ufeff'+headers.map(csvCell).join(';')+'\r\n'+lines.join('\r\n'),`cap-table-ansicht-${safeLabel||'stand'}.csv`);
+      $('#erm-csv-status').textContent=`Cap Table „${snap.label}“${capQuery?' (gefiltert)':''} exportiert.`;$('#erm-csv-status').classList.remove('text-destructive');$('#erm-csv-status').classList.add('text-muted');
     }
     function parseCsv(text){
       const source=String(text||'').replace(/^\ufeff/,''),firstLine=source.split(/\r?\n/,1)[0],semicolon=(firstLine.match(/;/g)||[]).length,comma=(firstLine.match(/,/g)||[]).length,delimiter=semicolon>=comma?';':',';
@@ -1458,65 +1532,78 @@ html>body{padding:0}</style>
     function importCsv(text){
       const matrix=parseCsv(text);if(matrix.length<2)throw new Error('Die CSV enthält keine Datensätze.');
       const headers=matrix[0].map(h=>h.trim().toLowerCase()),typeIndex=headers.indexOf('record_type');if(typeIndex<0)throw new Error('Spalte record_type fehlt.');
-      const imported={founderSetVersion:'mf-ch-ng-jb-v3',financingSetVersion:'preseed-seed-v1',vsopSetVersion:'vsop-2500-v2',holders:[],rounds:[],convertibles:[],vsopParticipants:[],exit:{...state.exit}};
+      const imported={founderSetVersion:'mf-ch-ng-jb-v3',financingSetVersion:'preseed-seed-v1',vsopSetVersion:'vsop-2500-v2',holders:[],rounds:[],convertibles:[],secondaries:[],vsopParticipants:[],exit:{...state.exit}};
       matrix.slice(1).forEach((values,rowIndex)=>{const r={};headers.forEach((h,i)=>r[h]=values[i]??'');const type=(r.record_type||'').trim().toLowerCase(),id=(r.id||'').trim()||uid(),n=(field)=>csvNumber(r[field]);
         if(type==='holder'){if(!r.name.trim()||!(n('shares')>0))throw new Error(`Ungültiger holder in Zeile ${rowIndex+2}.`);const isVirtual=['true','1','ja','yes'].includes(r.is_virtual.trim().toLowerCase());imported.holders.push({id,name:r.name.trim(),type:isVirtual?'VSOP-Pool':r.category.trim()||'Sonstige',shares:n('shares'),costBasis:Math.max(0,n('cost_basis_eur')||0),investmentDate:r.investment_date.trim(),isVirtual});}
-        else if(type==='round'){if(!r.name.trim()||!r.counterparty.trim()||!(n('pre_money_eur')>0)||!(n('investment_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültige round in Zeile ${rowIndex+2}.`);imported.rounds.push({id,name:r.name.trim(),investor:r.counterparty.trim(),preMoney:n('pre_money_eur'),investment:n('investment_eur'),date:r.closing_date.trim(),poolRefresh:Math.max(0,n('pool_refresh_shares')||0),poolRefreshTiming:r.pool_refresh_timing.trim()==='post'?'post':'pre',poolId:String(r.pool_id??'').trim()});}
+        else if(type==='round'){if(!r.name.trim()||!r.counterparty.trim()||!(n('pre_money_eur')>0)||!(n('investment_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültige round in Zeile ${rowIndex+2}.`);const prefType=['non-participating','participating'].includes(r.liquidation_preference_type.trim())?r.liquidation_preference_type.trim():'none';imported.rounds.push({id,name:r.name.trim(),investor:r.counterparty.trim(),preMoney:n('pre_money_eur'),investment:n('investment_eur'),date:r.closing_date.trim(),liquidationPreferenceType:prefType,liquidationPreferenceMultiple:Math.max(.1,n('liquidation_preference_multiple')||1),poolRefresh:Math.max(0,n('pool_refresh_shares')||0),poolRefreshTiming:r.pool_refresh_timing.trim()==='post'?'post':'pre',poolId:String(r.pool_id??'').trim()});}
         else if(type==='convertible'){if(!r.name.trim()||!r.counterparty.trim()||!(n('principal_eur')>0)||!validDate(r.investment_date.trim()))throw new Error(`Ungültiges convertible in Zeile ${rowIndex+2}.`);const fullyDiluted=String(r.fully_diluted_conversion??r.include_granted_vsop??'').trim().toLowerCase();imported.convertibles.push({id,name:r.name.trim(),lender:r.counterparty.trim(),principal:n('principal_eur'),date:r.investment_date.trim(),interest:Math.max(0,n('interest_pct')||0),discount:Math.max(0,n('discount_pct')||0),valuationCap:Math.max(0,n('valuation_cap_eur')||0),fullyDilutedConversion:fullyDiluted===''||['true','1','ja','yes'].includes(fullyDiluted)});}
+        else if(type==='secondary'){if(!r.name.trim()||!r.seller.trim()||!r.buyer.trim()||!(n('shares')>0)||!(n('secondary_price_per_share_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültiges secondary in Zeile ${rowIndex+2}.`);imported.secondaries.push({id,name:r.name.trim(),seller:r.seller.trim(),buyer:r.buyer.trim(),shares:n('shares'),pricePerShare:n('secondary_price_per_share_eur'),date:r.closing_date.trim()});}
         else if(type==='vsop'){if(!r.name.trim()||!(n('shares')>0)||!validDate(r.grant_date.trim())||!validDate(r.vesting_start.trim()))throw new Error(`Ungültiger vsop-Datensatz in Zeile ${rowIndex+2}.`);imported.vsopParticipants.push({id,name:r.name.trim(),poolId:String(r.pool_id??'').trim(),shares:n('shares'),plannedShares:Math.max(0,n('planned_shares')||0),grantDate:r.grant_date.trim(),startDate:r.vesting_start.trim(),vestingMonths:Math.max(1,n('vesting_months')||48),cliffMonths:Math.max(0,n('cliff_months')||0),hurdle:Math.max(0,n('strike_price_eur')||0),status:r.status.trim()||'Aktiv',leaverDate:r.leaver_date.trim(),expiryDate:r.expiry_date.trim()});}
         else if(type==='exit')imported.exit={value:Math.max(0,n('exit_value_eur')||0),debt:Math.max(0,n('exit_debt_eur')||0),costs:Math.max(0,n('exit_costs_eur')||0),date:r.exit_date.trim()};
       });
       if(!imported.holders.length)throw new Error('Mindestens ein holder wird benötigt.');
-      const ids=[...imported.holders,...imported.rounds,...imported.convertibles,...imported.vsopParticipants].map(x=>x.id);if(new Set(ids).size!==ids.length)throw new Error('IDs müssen über alle Datensätze eindeutig sein.');
+      const ids=[...imported.holders,...imported.rounds,...imported.convertibles,...imported.secondaries,...imported.vsopParticipants].map(x=>x.id);if(new Set(ids).size!==ids.length)throw new Error('IDs müssen über alle Datensätze eindeutig sein.');
       const pools=imported.holders.filter(h=>h.isVirtual),poolIds=new Set(pools.map(p=>p.id));
       if(imported.vsopParticipants.length&&!pools.length)throw new Error('Für VSOP-Datensätze fehlt ein VSOP-Pool.');
       imported.vsopParticipants.forEach(g=>{if(!g.poolId&&pools.length===1)g.poolId=pools[0].id;if(!poolIds.has(g.poolId))throw new Error(`VSOP-Zuteilung ${g.name} verweist auf keinen gültigen Pool.`);});
       imported.rounds.forEach(r=>{if(r.poolRefresh>0&&!r.poolId&&pools.length===1)r.poolId=pools[0].id;if(r.poolRefresh>0&&!poolIds.has(r.poolId))throw new Error(`Pool-Auffrischung in ${r.name} benötigt einen gültigen Zielpool.`);});
-      state=imported;stage=state.rounds.length;save();render();
+      const importedSnapshots=snapshots(imported),invalidSecondary=importedSnapshots.find(snapshot=>snapshot.secondaryError);
+      if(invalidSecondary)throw new Error(invalidSecondary.secondaryError);
+      state=imported;stage=importedSnapshots.length-1;save();render();
     }
-    function snapshots(){
-      let cap = state.holders.map(h=>({...h}));
-      let raised=state.convertibles.reduce((sum,c)=>sum+(Number(c.principal)||0),0);
-      const out=[{label:'Gründung',cap:cap.map(x=>({...x})),valuation:null,raised}];
-      const converted=new Set();
-      chronologicalRounds().forEach(({round:r})=>{
-        const poolRefresh=Math.max(0,Number(r.poolRefresh)||0),pool=cap.find(h=>h.id===r.poolId&&h.isVirtual);
+    function snapshots(source=state){
+      let cap=source.holders.map(h=>({...h}));
+      let raised=source.convertibles.reduce((sum,c)=>sum+(Number(c.principal)||0),0),valuation=null;
+      const out=[{label:'Gründung',cap:cap.map(x=>({...x})),valuation,raised,price:null,conversions:[],activeRoundIds:[],activeSecondaryIds:[],eventType:'founding',eventId:'',asOfDate:''}];
+      const converted=new Set(),activeRoundIds=[],activeSecondaryIds=[];
+      const transactions=[
+        ...source.rounds.map((item,index)=>({kind:'round',date:item.date||'',item,index})),
+        ...source.secondaries.map((item,index)=>({kind:'secondary',date:item.date||'',item,index}))
+      ].sort((a,b)=>(a.date||'9999-12-31').localeCompare(b.date||'9999-12-31')||(a.kind==='round'?-1:1)-(b.kind==='round'?-1:1)||a.index-b.index);
+      transactions.forEach(entry=>{
+        if(entry.kind==='secondary'){
+          const s=entry.item,seller=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===s.seller.trim().toLocaleLowerCase('de-DE'));
+          const error=!seller?`Secondary „${s.name}“: Verkäufer ${s.seller} ist am Transaktionsdatum nicht in der Cap Table.`:seller.shares+0.000001<Number(s.shares)?`Secondary „${s.name}“: ${s.seller} verfügt nur über ${num(seller.shares)} Anteile.`:'';
+          if(!error){
+            seller.shares-=Number(s.shares);
+            const buyer=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===s.buyer.trim().toLocaleLowerCase('de-DE'));
+            if(buyer)buyer.shares+=Number(s.shares);else cap.push({id:'sec-'+s.id,name:s.buyer,type:'Investor',shares:Number(s.shares)});
+            activeSecondaryIds.push(s.id);
+          }
+          out.push({label:s.name,cap:cap.map(x=>({...x})),valuation,raised,price:null,conversions:[],activeRoundIds:[...activeRoundIds],activeSecondaryIds:[...activeSecondaryIds],eventType:'secondary',eventId:s.id,asOfDate:s.date,secondaryError:error||''});
+          return;
+        }
+        const r=entry.item,poolRefresh=Math.max(0,Number(r.poolRefresh)||0),pool=cap.find(h=>h.id===r.poolId&&h.isVirtual);
         if(pool&&poolRefresh>0&&r.poolRefreshTiming==='pre')pool.shares+=poolRefresh;
-        const equityTotal=cap.filter(h=>!h.isVirtual).reduce((a,h)=>a+h.shares,0);
+        const equityTotal=cap.filter(h=>!h.isVirtual).reduce((a,h)=>a+(Number(h.shares)||0),0);
         const fullyDilutedTotal=cap.reduce((sum,h)=>sum+(Number(h.shares)||0),0);
-        const price=r.preMoney/equityTotal;
-        const conversions=[];
-        state.convertibles.forEach(c=>{
-          if(converted.has(c.id)||!validDate(c.date)||!validDate(r.date)||c.date>r.date) return;
-          const conversionBaseTotal=c.fullyDilutedConversion?fullyDilutedTotal:equityTotal;
-          const discount=Math.min(99,Math.max(0,Number(c.discount)||0));
-          const discountPrice=(r.preMoney*(1-discount/100))/conversionBaseTotal;
-          const capPrice=Number(c.valuationCap)>0?Number(c.valuationCap)/conversionBaseTotal:Infinity;
-          const conversionPrice=Math.min(discountPrice,capPrice);
-          const claim=loanClaim(c,r.date), shares=claim/Math.max(0.000001,conversionPrice);
-          const existing=cap.find(h=>h.name.trim().toLowerCase()===c.lender.trim().toLowerCase()&&h.type==='Investor');
-          if(existing) existing.shares+=shares; else cap.push({id:'conv-'+c.id,name:c.lender,type:'Investor',shares});
-          converted.add(c.id); conversions.push({id:c.id,price:conversionPrice,claim,shares});
+        const price=Number(r.preMoney)/Math.max(.000001,equityTotal),conversions=[];
+        source.convertibles.forEach(c=>{
+          if(converted.has(c.id)||!validDate(c.date)||!validDate(r.date)||c.date>r.date)return;
+          const conversionBaseTotal=Math.max(.000001,c.fullyDilutedConversion?fullyDilutedTotal:equityTotal),discount=Math.min(99,Math.max(0,Number(c.discount)||0));
+          const discountPrice=(Number(r.preMoney)*(1-discount/100))/conversionBaseTotal,capPrice=Number(c.valuationCap)>0?Number(c.valuationCap)/conversionBaseTotal:Infinity,conversionPrice=Math.min(discountPrice,capPrice);
+          const claim=loanClaim(c,r.date),shares=claim/Math.max(.000001,conversionPrice),existing=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===c.lender.trim().toLocaleLowerCase('de-DE'));
+          if(existing)existing.shares+=shares;else cap.push({id:'conv-'+c.id,name:c.lender,type:'Investor',shares});
+          converted.add(c.id);conversions.push({id:c.id,price:conversionPrice,claim,shares});
         });
-        const shares=r.investment/price;
-        const existing=cap.find(h=>h.name.trim().toLowerCase()===r.investor.trim().toLowerCase() && h.type==='Investor');
-        if(existing) existing.shares+=shares; else cap.push({id:'inv-'+r.id,name:r.investor,type:'Investor',shares});
+        const shares=Number(r.investment)/price,existing=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===r.investor.trim().toLocaleLowerCase('de-DE'));
+        if(existing)existing.shares+=shares;else cap.push({id:'inv-'+r.id,name:r.investor,type:'Investor',shares});
         if(pool&&poolRefresh>0&&r.poolRefreshTiming==='post')pool.shares+=poolRefresh;
-        raised+=r.investment;
-        out.push({label:r.name,cap:cap.map(x=>({...x})),valuation:r.preMoney+r.investment,raised,price,conversions});
+        raised+=Number(r.investment)||0;valuation=Number(r.preMoney)+Number(r.investment);activeRoundIds.push(r.id);
+        out.push({label:r.name,cap:cap.map(x=>({...x})),valuation,raised,price,conversions,activeRoundIds:[...activeRoundIds],activeSecondaryIds:[...activeSecondaryIds],eventType:'round',eventId:r.id,asOfDate:r.date,secondaryError:''});
       });
       return out;
     }
     function render(){
       const snaps=snapshots(); stage=Math.min(stage,snaps.length-1); const snap=snaps[stage];
-      const roundEntries=chronologicalRounds(),activeRounds=roundEntries.slice(0,stage).map(entry=>entry.round);
+      const roundEntries=chronologicalRounds(),activeRounds=state.rounds.filter(round=>snap.activeRoundIds.includes(round.id)),activeSecondaries=state.secondaries.filter(secondary=>snap.activeSecondaryIds.includes(secondary.id));
       const total=snap.cap.reduce((a,h)=>a+h.shares,0);
       const initialFounder=state.holders.filter(h=>h.type==='Gründer').reduce((a,h)=>a+h.shares,0)/state.holders.reduce((a,h)=>a+h.shares,0)*100;
       const founder=snap.cap.filter(h=>h.type==='Gründer').reduce((a,h)=>a+h.shares,0)/total*100;
       $('#erm-valuation').textContent=snap.valuation?euro(snap.valuation):'–';
       $('#erm-valuation-note').textContent=snap.valuation?'nach '+snap.label:'noch keine Bewertung';
       $('#erm-raised').textContent=euro(snap.raised);
-      $('#erm-round-count').textContent=stage+' von '+state.rounds.length+' Runden · '+state.convertibles.length+' Wandeldarlehen';
+      $('#erm-round-count').textContent=`${activeRounds.length} ${activeRounds.length===1?'Eigenkapitalrunde':'Eigenkapitalrunden'} · ${state.convertibles.length} Wandeldarlehen · ${activeSecondaries.length} ${activeSecondaries.length===1?'Secondary':'Secondaries'}`;
       $('#erm-founder-share').textContent=pct(founder);
       $('#erm-founder-dilution').textContent=stage?pct(founder-initialFounder)+' seit Gründung':'Ausgangsanteil';
       $('#erm-total-shares').textContent=num(total)+' Anteile';
@@ -1538,15 +1625,21 @@ html>body{padding:0}</style>
       }).join('')||'<tr><td colspan="5" class="erm-empty">Keine Beteiligten für diese Suche gefunden.</td></tr>';
       const financingItems=[
         ...state.convertibles.map((item,index)=>({kind:'convertible',date:item.date||'',item,index})),
-        ...roundEntries.map((entry,roundPosition)=>({kind:'round',date:entry.round.date||'',item:entry.round,index:entry.index,roundPosition}))
-      ].sort((a,b)=>(a.date||'9999-12-31').localeCompare(b.date||'9999-12-31')||a.kind.localeCompare(b.kind)||a.index-b.index);
+        ...state.rounds.map((item,index)=>({kind:'round',date:item.date||'',item,index})),
+        ...state.secondaries.map((item,index)=>({kind:'secondary',date:item.date||'',item,index}))
+      ].sort((a,b)=>(a.date||'9999-12-31').localeCompare(b.date||'9999-12-31')||({convertible:0,round:1,secondary:2}[a.kind]-{convertible:0,round:1,secondary:2}[b.kind])||a.index-b.index);
       $('#erm-financing-list').innerHTML=financingItems.length?financingItems.map((entry,displayIndex)=>{
         if(entry.kind==='convertible'){
           const c=entry.item,conversionEntry=roundEntries.find(({round:r})=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date),converted=Boolean(conversionEntry),targetDate=converted?conversionEntry.round.date:today,claim=loanClaim(c,targetDate),status=converted?'Konvertiert in '+conversionEntry.round.name:'Ausstehend';
           return `<article class="erm-round erm-financing-card is-convertible"><div class="viz-row"><span class="viz-badge erm-type-badge">Wandeldarlehen</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${entry.index}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${entry.index}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(c.date+'T00:00:00Z'))}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap)>0?euro(c.valuationCap):'–'}</span><span class="text-muted">Wandlungsbasis</span><span>${c.fullyDilutedConversion?'Fully Diluted':'Nur Equity-Anteile'}</span></div></article>`;
         }
-        const r=entry.item,before=snaps[entry.roundPosition].cap.reduce((a,h)=>a+h.shares,0),after=snaps[entry.roundPosition+1].cap.reduce((a,h)=>a+h.shares,0),dilution=(1-before/after)*100,poolName=(state.holders.find(h=>h.id===r.poolId)||{}).name||'Kein Zielpool';
-        return `<article class="erm-round erm-financing-card"><div class="viz-row"><span class="viz-badge erm-type-badge">Equity-Runde</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(r.investor)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date?esc(new Intl.DateTimeFormat('de-DE').format(new Date(r.date+'T00:00:00Z'))):'Datum fehlt'}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(r.investment)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euro(snaps[entry.roundPosition+1].price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh||0)} · ${esc(poolName)} · ${r.poolRefreshTiming==='post'?'Post-Money':'Pre-Money'}</span></div></article>`;
+        if(entry.kind==='secondary'){
+          const s=entry.item,volume=Number(s.shares)*Number(s.pricePerShare),secondarySnap=snaps.find(snapshot=>snapshot.eventType==='secondary'&&snapshot.eventId===s.id);
+          return `<article class="erm-round erm-financing-card is-secondary"><div class="viz-row"><span class="viz-badge erm-type-badge">Secondary</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(s.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-secondary="${entry.index}" aria-label="${esc(s.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-secondary="${entry.index}" aria-label="${esc(s.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(s.seller)} → ${esc(s.buyer)}</span><div class="erm-round-meta text-small"><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(s.date+'T00:00:00Z'))}</span><span class="text-muted">Anteile</span><span>${num(s.shares)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(s.pricePerShare)}</span><span class="text-muted">Volumen</span><span>${euro(volume)}</span>${secondarySnap?.secondaryError?`<span class="text-destructive">Hinweis</span><span class="text-destructive">${esc(secondarySnap.secondaryError)}</span>`:''}</div></article>`;
+        }
+        const r=entry.item,roundSnapIndex=snaps.findIndex(snapshot=>snapshot.eventType==='round'&&snapshot.eventId===r.id),before=snaps[Math.max(0,roundSnapIndex-1)].cap.reduce((a,h)=>a+h.shares,0),roundSnap=snaps[roundSnapIndex],after=roundSnap.cap.reduce((a,h)=>a+h.shares,0),dilution=(1-before/after)*100,poolName=(state.holders.find(h=>h.id===r.poolId)||{}).name||'Kein Zielpool';
+        const preferenceLabel=r.liquidationPreferenceType==='participating'?`${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× partizipierend`:r.liquidationPreferenceType==='non-participating'?`${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× nicht partizipierend`:'Keine';
+        return `<article class="erm-round erm-financing-card is-equity"><div class="viz-row"><span class="viz-badge erm-type-badge">Eigenkapitalrunde</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(r.investor)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date?esc(new Intl.DateTimeFormat('de-DE').format(new Date(r.date+'T00:00:00Z'))):'Datum fehlt'}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(r.investment)}</span><span class="text-muted">LiqPref</span><span>${esc(preferenceLabel)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euro(roundSnap.price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh||0)} · ${esc(poolName)} · ${r.poolRefreshTiming==='post'?'Post-Money':'Pre-Money'}</span></div></article>`;
       }).join(''):'<div class="erm-empty">Noch keine Finanzierungen.</div>';
       const exitValue=Math.max(0,Number(state.exit.value)||0);
       const exitDebt=Math.max(0,Number(state.exit.debt)||0);
@@ -1559,18 +1652,35 @@ html>body{padding:0}</style>
       state.holders.forEach(h=>{if(Number(h.costBasis)>0)addCashflow(h.name,-Number(h.costBasis),h.investmentDate||'');});
       activeRounds.forEach(r=>addCashflow(r.investor,-r.investment,r.date||''));
       state.convertibles.forEach(c=>{if(activeRounds.some(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date))addCashflow(c.lender,-c.principal,c.date);});
+      const secondaryProceedsByName={};
+      activeSecondaries.forEach(s=>{const volume=Number(s.shares)*Number(s.pricePerShare),sellerKey=s.seller.trim().toLocaleLowerCase('de-DE');addCashflow(s.buyer,-volume,s.date);addCashflow(s.seller,volume,s.date);secondaryProceedsByName[sellerKey]=(secondaryProceedsByName[sellerKey]||0)+volume;});
       const poolSizeAtStage=snap.cap.filter(h=>h.isVirtual).reduce((sum,h)=>sum+(Number(h.shares)||0),0),fullyDilutedValuePerShare=total?exitNet/total:0;
       const vsopExitRows=state.vsopParticipants.map(g=>{const eligible=!validDate(g.expiryDate)||!validDate(exitDate)||exitDate<=g.expiryDate,vested=eligible?vestedShares(g,exitDate):0,payout=Math.max(0,(fullyDilutedValuePerShare-(Number(g.hurdle)||0))*vested);return{grant:g,vested,payout};});
       const vsopPayout=vsopExitRows.reduce((sum,row)=>sum+row.payout,0),vestedPoolShares=vsopExitRows.reduce((sum,row)=>sum+row.vested,0),restPoolShares=Math.max(0,poolSizeAtStage-vestedPoolShares),equityRemainder=Math.max(0,exitNet-vsopPayout);
       const actualHolders=snap.cap.filter(h=>!h.isVirtual),actualShares=actualHolders.reduce((sum,h)=>sum+h.shares,0);
+      const preferences={};
+      activeRounds.forEach(r=>{
+        const type=r.liquidationPreferenceType||'none';if(type==='none')return;
+        const key=r.investor.trim().toLocaleLowerCase('de-DE'),pref=preferences[key]||(preferences[key]={participating:0,nonParticipating:0});
+        const claim=Math.max(0,Number(r.investment))*Math.max(.1,Number(r.liquidationPreferenceMultiple)||1);
+        if(type==='participating')pref.participating+=claim;else pref.nonParticipating+=claim;
+      });
+      const baselineByName={};actualHolders.forEach(h=>baselineByName[h.name.trim().toLocaleLowerCase('de-DE')]=actualShares?equityRemainder*h.shares/actualShares:0);
+      const electedNonParticipating=new Set(Object.entries(preferences).filter(([name,pref])=>pref.nonParticipating>(baselineByName[name]||0)).map(([name])=>name));
+      const preferenceClaims={};Object.entries(preferences).forEach(([name,pref])=>preferenceClaims[name]=pref.participating+(electedNonParticipating.has(name)?pref.nonParticipating:0));
+      const totalPreferenceClaims=Object.values(preferenceClaims).reduce((sum,claim)=>sum+claim,0),preferenceScale=totalPreferenceClaims>equityRemainder&&totalPreferenceClaims>0?equityRemainder/totalPreferenceClaims:1;
+      const preferencePaid={};Object.entries(preferenceClaims).forEach(([name,claim])=>preferencePaid[name]=claim*preferenceScale);
+      const preferencePool=Object.values(preferencePaid).reduce((sum,claim)=>sum+claim,0),residualPool=Math.max(0,equityRemainder-preferencePool);
+      const participatesInResidual=h=>{const key=h.name.trim().toLocaleLowerCase('de-DE'),pref=preferences[key];return!electedNonParticipating.has(key)||Boolean(pref&&pref.participating>0);};
+      const residualShares=actualHolders.filter(participatesInResidual).reduce((sum,h)=>sum+h.shares,0);
       const angelNames=new Set(state.convertibles.filter(c=>activeRounds.some(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date)).map(c=>c.lender.trim().toLowerCase()));
       let founderPayout=0, angelPayout=0, investorPayout=0;
       const holderRows=actualHolders.slice().sort((a,b)=>b.shares-a.shares).map(h=>{
-        const ownership=h.shares/total,payout=actualShares?equityRemainder*h.shares/actualShares:0,flows=cashflowsByName[h.name.trim().toLowerCase()]||[],invested=Math.max(0,-flows.reduce((sum,f)=>sum+Math.min(0,f.amount),0));
-        const dated=validDate(exitDate)&&flows.length>0&&flows.every(f=>validDate(f.date)&&f.date<exitDate),irr=invested?(payout===0?-1:dated?xirr([...flows,{amount:payout,date:exitDate}]):null):null;
-        const group=h.type==='Gründer'?'founders':angelNames.has(h.name.trim().toLowerCase())?'angels':'investors';
+        const key=h.name.trim().toLocaleLowerCase('de-DE'),ownership=h.shares/total,prefPayout=preferencePaid[key]||0,residualPayout=participatesInResidual(h)&&residualShares?residualPool*h.shares/residualShares:0,payout=prefPayout+residualPayout,realized=secondaryProceedsByName[key]||0,totalReturn=payout+realized,flows=cashflowsByName[key]||[],invested=Math.max(0,-flows.reduce((sum,f)=>sum+Math.min(0,f.amount),0));
+        const dated=validDate(exitDate)&&flows.length>0&&flows.every(f=>validDate(f.date)&&f.date<=exitDate),irr=invested?(totalReturn===0?-1:dated?xirr([...flows,{amount:payout,date:exitDate}]):null):null;
+        const group=h.type==='Gründer'?'founders':angelNames.has(key)?'angels':'investors',details=[esc(h.type)];if(prefPayout>0)details.push(`LiqPref ${euro(prefPayout)}`);if(realized>0)details.push(`Secondary-Erlöse ${euro(realized)}`);
         if(group==='founders')founderPayout+=payout;else if(group==='angels')angelPayout+=payout;else investorPayout+=payout;
-        return {group,html:`<tr><td data-label="Beteiligte">${esc(h.name)}<br><span class="text-small text-muted">${esc(h.type)}</span></td><td data-label="Ownership">${pct(ownership*100)}</td><td data-label="Auszahlung">${euro(payout)}</td><td data-label="Investiert">${euro(invested)}</td><td data-label="Multiple">${multipleLabel(payout,invested)}</td><td data-label="IRR p. a.">${irr===null?'–':pct(irr*100)}</td></tr>`};
+        return {group,html:`<tr><td data-label="Beteiligte">${esc(h.name)}<br><span class="text-small text-muted">${details.join(' · ')}</span></td><td data-label="Ownership">${pct(ownership*100)}</td><td data-label="Auszahlung">${euro(payout)}</td><td data-label="Investiert">${euro(invested)}</td><td data-label="Multiple">${multipleLabel(totalReturn,invested)}</td><td data-label="IRR p. a.">${irr===null?'–':pct(irr*100)}</td></tr>`};
       });
       const personRows=vsopExitRows.map(row=>{const invested=Math.max(0,Number(row.grant.hurdle)||0)*row.vested;return`<tr><td data-label="Beteiligte">${esc(row.grant.name)}<br><span class="text-small text-muted">VSOP · ${num(row.vested)} gevestet · Strike ${euro(row.grant.hurdle||0)}</span></td><td data-label="Ownership">${pct(total?row.vested/total*100:0)}</td><td data-label="Auszahlung">${euro(row.payout)}</td><td data-label="Investiert">${euro(invested)}</td><td data-label="Multiple">${multipleLabel(row.payout,invested)}</td><td data-label="IRR p. a.">–</td></tr>`;});
       const restRow=`<tr><td data-label="Beteiligte">Restlicher VSOP-Pool<br><span class="text-small text-muted">${num(restPoolShares)} unvestete, geplante oder freie Anteile verfallen beim Exit; der Wert verbleibt bei den Gesellschaftern.</span></td><td data-label="Ownership">${pct(total?restPoolShares/total*100:0)}</td><td data-label="Auszahlung">${euro(0)}</td><td data-label="Investiert">–</td><td data-label="Multiple">–</td><td data-label="IRR p. a.">–</td></tr>`;
@@ -1589,7 +1699,7 @@ html>body{padding:0}</style>
       if(window.lucide) lucide.createIcons({attrs:{width:16,height:16}});
     }
     $('#erm-tabs').addEventListener('click',e=>{const b=e.target.closest('[data-stage]'); if(b){stage=Number(b.dataset.stage);render();}});
-    $('#erm-latest-stage').addEventListener('click',()=>{stage=state.rounds.length;render();});
+    $('#erm-latest-stage').addEventListener('click',()=>{stage=snapshots().length-1;render();});
     $('#erm-cap-search').addEventListener('input',e=>{capQuery=e.target.value.trim().toLocaleLowerCase('de-DE');render();});
     $('#erm-undo').addEventListener('click',()=>restoreHistory(undoStack,redoStack,'Änderung rückgängig gemacht'));
     $('#erm-redo').addEventListener('click',()=>restoreHistory(redoStack,undoStack,'Änderung wiederhergestellt'));
@@ -1665,7 +1775,11 @@ html>body{padding:0}</style>
     }
     $('#erm-delete-person').addEventListener('click',()=>requestHolderDelete(editHolder));
     $('#erm-confirm-delete-person').addEventListener('click',()=>{
-      if(pendingDeleteHolder!==null&&state.holders[pendingDeleteHolder]) state.holders.splice(pendingDeleteHolder,1);
+      if(pendingDeleteHolder!==null&&state.holders[pendingDeleteHolder]){
+        const holders=state.holders.filter((_,index)=>index!==pendingDeleteHolder),invalid=snapshots({...state,holders}).find(snapshot=>snapshot.secondaryError);
+        if(invalid){$('#erm-delete-person-message').textContent=invalid.secondaryError+' Lösche oder bearbeite zuerst die abhängige Secondary.';return;}
+        state.holders=holders;
+      }
       pendingDeleteHolder=null; save(); $('#erm-delete-person-dialog').close(); render();
     });
     $('#erm-save-person').addEventListener('click',e=>{
@@ -1673,7 +1787,9 @@ html>body{padding:0}</style>
       if(!name||!Number.isFinite(shares)||shares<=0){$('#erm-person-error').textContent='Bitte Name und gültige Anzahl Anteile eingeben.';return;}
       if(costBasis>0&&!validDate(investmentDate)){$('#erm-person-error').textContent='Für die IRR wird ein Investitionsdatum benötigt.';return;}
       const holder={id:editHolder===null?uid():state.holders[editHolder].id,name,type:$('#erm-person-type').value,shares,costBasis,investmentDate};
-      if(editHolder===null) state.holders.push(holder); else state.holders[editHolder]=holder;
+      const holders=state.holders.slice();if(editHolder===null)holders.push(holder);else holders[editHolder]=holder;
+      const invalid=snapshots({...state,holders}).find(snapshot=>snapshot.secondaryError);if(invalid){$('#erm-person-error').textContent=invalid.secondaryError;return;}
+      state.holders=holders;
       save(); $('#erm-person-dialog').close(); render();
     });
     $('#erm-cap-body').addEventListener('click',e=>{
@@ -1697,7 +1813,6 @@ html>body{padding:0}</style>
       $('#erm-delete-convertible-message').textContent=`${c.name} von ${c.lender} wird aus allen Berechnungen entfernt.`;
       $('#erm-delete-convertible-dialog').showModal();
     }
-    $('#erm-add-convertible').addEventListener('click',()=>openConvertible());
     $('#erm-delete-convertible').addEventListener('click',()=>requestConvertibleDelete(editConvertible));
     $('#erm-confirm-delete-convertible').addEventListener('click',()=>{
       if(pendingDeleteConvertible!==null&&state.convertibles[pendingDeleteConvertible])state.convertibles.splice(pendingDeleteConvertible,1);
@@ -1710,26 +1825,55 @@ html>body{padding:0}</style>
       if(editConvertible===null)state.convertibles.push(c);else state.convertibles[editConvertible]=c;
       save(); $('#erm-convertible-dialog').close(); render();
     });
-    function openRound(i=null){
-      editRound=i; const pools=vsopPools(),r=i===null?{name:'Series '+String.fromCharCode(65+state.rounds.length),investor:'',preMoney:8000000,investment:2000000,date:today,poolRefresh:0,poolRefreshTiming:'pre',poolId:pools[0]?.id||''}:state.rounds[i];
-      $('#erm-round-form-title').textContent=i===null?'Finanzierungsrunde hinzufügen':'Finanzierungsrunde bearbeiten';
-      $('#erm-round-name').value=r.name; $('#erm-investor').value=r.investor; $('#erm-premoney').value=moneyInputValue(r.preMoney); $('#erm-investment').value=moneyInputValue(r.investment); $('#erm-round-date').value=r.date||''; $('#erm-round-pool-refresh').value=r.poolRefresh||0; $('#erm-round-pool-id').innerHTML=poolSelectOptions(r.poolId,true); $('#erm-round-pool-id').value=r.poolId||''; $('#erm-round-pool-timing').value=r.poolRefreshTiming||'pre'; $('#erm-round-error').textContent=''; $('#erm-round-dialog').showModal();
+    function secondarySellerOptions(selected=''){
+      const names=new Map();snapshots().forEach(snapshot=>snapshot.cap.filter(h=>!h.isVirtual&&h.shares>0).forEach(h=>names.set(h.name.trim().toLocaleLowerCase('de-DE'),h.name)));
+      if(selected&&!names.has(selected.trim().toLocaleLowerCase('de-DE')))names.set(selected.trim().toLocaleLowerCase('de-DE'),selected);
+      return [...names.values()].sort((a,b)=>a.localeCompare(b,'de')).map(name=>`<option value="${esc(name)}" ${name===selected?'selected':''}>${esc(name)}</option>`).join('');
     }
-    $('#erm-add-round').addEventListener('click',()=>openRound());
-    $('#erm-save-round').addEventListener('click',e=>{
-      e.preventDefault(); const r={id:editRound===null?uid():state.rounds[editRound].id,name:$('#erm-round-name').value.trim(),investor:$('#erm-investor').value.trim(),preMoney:parseMoney($('#erm-premoney').value),investment:parseMoney($('#erm-investment').value),date:$('#erm-round-date').value,poolRefresh:Math.max(0,Number($('#erm-round-pool-refresh').value)||0),poolId:$('#erm-round-pool-id').value,poolRefreshTiming:$('#erm-round-pool-timing').value};
-      if(!r.name||!r.investor||r.preMoney<=0||r.investment<=0||!validDate(r.date)){$('#erm-round-error').textContent='Bitte alle Felder mit gültigen Werten ausfüllen.';return;}
-      if(r.poolRefresh>0&&!r.poolId){$('#erm-round-error').textContent='Für zusätzliche Pool-Anteile wird ein Zielpool benötigt.';return;}
-      if(editRound===null) state.rounds.push(r); else state.rounds[editRound]=r; stage=state.rounds.length; save(); $('#erm-round-dialog').close(); render();
+    function openSecondary(i=null){
+      editSecondary=i;const fallback=snapshots().at(-1).cap.find(h=>!h.isVirtual&&h.shares>0),s=i===null?{name:'Founder Secondary',seller:fallback?.name||'',buyer:'',shares:10000,pricePerShare:1,date:today}:state.secondaries[i];
+      $('#erm-secondary-form-title').textContent=i===null?'Secondary hinzufügen':'Secondary bearbeiten';$('#erm-delete-secondary').hidden=i===null;
+      $('#erm-secondary-name').value=s.name;$('#erm-secondary-date').value=s.date||'';$('#erm-secondary-seller').innerHTML=secondarySellerOptions(s.seller);$('#erm-secondary-seller').value=s.seller;$('#erm-secondary-buyer').value=s.buyer;$('#erm-secondary-shares').value=s.shares;$('#erm-secondary-price').value=s.pricePerShare;$('#erm-secondary-error').textContent='';$('#erm-secondary-dialog').showModal();
+    }
+    function requestSecondaryDelete(i){
+      const s=state.secondaries[i];if(!s)return;pendingDeleteSecondary=i;if($('#erm-secondary-dialog').open)$('#erm-secondary-dialog').close();$('#erm-delete-secondary-message').textContent=`${s.name}: Die Übertragung von ${num(s.shares)} Anteilen wird aus allen Cap Table-Ständen entfernt.`;$('#erm-delete-secondary-dialog').showModal();
+    }
+    $('#erm-delete-secondary').addEventListener('click',()=>requestSecondaryDelete(editSecondary));
+    $('#erm-confirm-delete-secondary').addEventListener('click',()=>{if(pendingDeleteSecondary!==null&&state.secondaries[pendingDeleteSecondary])state.secondaries.splice(pendingDeleteSecondary,1);pendingDeleteSecondary=null;stage=snapshots().length-1;save();$('#erm-delete-secondary-dialog').close();render();});
+    $('#erm-save-secondary').addEventListener('click',e=>{
+      e.preventDefault();const s={id:editSecondary===null?uid():state.secondaries[editSecondary].id,name:$('#erm-secondary-name').value.trim(),seller:$('#erm-secondary-seller').value.trim(),buyer:$('#erm-secondary-buyer').value.trim(),shares:Number($('#erm-secondary-shares').value),pricePerShare:Number($('#erm-secondary-price').value),date:$('#erm-secondary-date').value};
+      if(!s.name||!s.seller||!s.buyer||s.seller.toLocaleLowerCase('de-DE')===s.buyer.toLocaleLowerCase('de-DE')||!(s.shares>0)||!(s.pricePerShare>0)||!validDate(s.date)){$('#erm-secondary-error').textContent='Bitte unterschiedliche Parteien, positive Anteile, Preis und ein gültiges Datum eingeben.';return;}
+      const secondaries=state.secondaries.slice();if(editSecondary===null)secondaries.push(s);else secondaries[editSecondary]=s;const candidateSnapshots=snapshots({...state,secondaries}),invalid=candidateSnapshots.find(snapshot=>snapshot.secondaryError);if(invalid){$('#erm-secondary-error').textContent=invalid.secondaryError;return;}
+      state.secondaries=secondaries;stage=candidateSnapshots.length-1;save();$('#erm-secondary-dialog').close();render();
     });
+    function openRound(i=null){
+      editRound=i; const pools=vsopPools(),r=i===null?{name:'Series '+String.fromCharCode(65+state.rounds.length),investor:'',preMoney:8000000,investment:2000000,date:today,liquidationPreferenceType:'non-participating',liquidationPreferenceMultiple:1,poolRefresh:0,poolRefreshTiming:'pre',poolId:pools[0]?.id||''}:state.rounds[i];
+      $('#erm-round-form-title').textContent=i===null?'Eigenkapitalrunde hinzufügen':'Eigenkapitalrunde bearbeiten';
+      $('#erm-round-name').value=r.name; $('#erm-investor').value=r.investor; $('#erm-premoney').value=moneyInputValue(r.preMoney); $('#erm-investment').value=moneyInputValue(r.investment); $('#erm-round-date').value=r.date||'';$('#erm-round-liq-pref').value=r.liquidationPreferenceType||'none';$('#erm-round-liq-multiple').value=r.liquidationPreferenceMultiple||1;$('#erm-round-liq-multiple').disabled=$('#erm-round-liq-pref').value==='none'; $('#erm-round-pool-refresh').value=r.poolRefresh||0; $('#erm-round-pool-id').innerHTML=poolSelectOptions(r.poolId,true); $('#erm-round-pool-id').value=r.poolId||''; $('#erm-round-pool-timing').value=r.poolRefreshTiming||'pre'; $('#erm-round-error').textContent=''; $('#erm-round-dialog').showModal();
+    }
+    $('#erm-round-liq-pref').addEventListener('change',e=>{$('#erm-round-liq-multiple').disabled=e.target.value==='none';});
+    $('#erm-save-round').addEventListener('click',e=>{
+      e.preventDefault(); const r={id:editRound===null?uid():state.rounds[editRound].id,name:$('#erm-round-name').value.trim(),investor:$('#erm-investor').value.trim(),preMoney:parseMoney($('#erm-premoney').value),investment:parseMoney($('#erm-investment').value),date:$('#erm-round-date').value,liquidationPreferenceType:$('#erm-round-liq-pref').value,liquidationPreferenceMultiple:Number($('#erm-round-liq-multiple').value),poolRefresh:Math.max(0,Number($('#erm-round-pool-refresh').value)||0),poolId:$('#erm-round-pool-id').value,poolRefreshTiming:$('#erm-round-pool-timing').value};
+      if(!r.name||!r.investor||r.preMoney<=0||r.investment<=0||!validDate(r.date)){$('#erm-round-error').textContent='Bitte alle Felder mit gültigen Werten ausfüllen.';return;}
+      if(r.liquidationPreferenceType!=='none'&&!(r.liquidationPreferenceMultiple>0)){$('#erm-round-error').textContent='Für die Liquidationspräferenz wird ein positives Multiple benötigt.';return;}
+      if(r.liquidationPreferenceType==='none')r.liquidationPreferenceMultiple=1;
+      if(r.poolRefresh>0&&!r.poolId){$('#erm-round-error').textContent='Für zusätzliche Pool-Anteile wird ein Zielpool benötigt.';return;}
+      const rounds=state.rounds.slice();if(editRound===null)rounds.push(r);else rounds[editRound]=r;const candidateSnapshots=snapshots({...state,rounds}),invalid=candidateSnapshots.find(snapshot=>snapshot.secondaryError);if(invalid){$('#erm-round-error').textContent=invalid.secondaryError;return;}
+      state.rounds=rounds;stage=candidateSnapshots.length-1;save(); $('#erm-round-dialog').close(); render();
+    });
+    $('#erm-add-transaction').addEventListener('click',()=>$('#erm-transaction-dialog').showModal());
+    $('#erm-transaction-dialog').addEventListener('click',e=>{const choice=e.target.closest('[data-transaction]');if(!choice)return;$('#erm-transaction-dialog').close();queueMicrotask(()=>{if(choice.dataset.transaction==='round')openRound();else if(choice.dataset.transaction==='convertible')openConvertible();else openSecondary();});});
     $('#erm-financing-list').addEventListener('click',e=>{
-      const editConvertibleButton=e.target.closest('[data-edit-convertible]'),deleteConvertibleButton=e.target.closest('[data-delete-convertible]'),editRoundButton=e.target.closest('[data-edit]'),deleteRoundButton=e.target.closest('[data-delete]');
+      const editConvertibleButton=e.target.closest('[data-edit-convertible]'),deleteConvertibleButton=e.target.closest('[data-delete-convertible]'),editSecondaryButton=e.target.closest('[data-edit-secondary]'),deleteSecondaryButton=e.target.closest('[data-delete-secondary]'),editRoundButton=e.target.closest('[data-edit]'),deleteRoundButton=e.target.closest('[data-delete]');
       if(editConvertibleButton)openConvertible(Number(editConvertibleButton.dataset.editConvertible));
       if(deleteConvertibleButton)requestConvertibleDelete(Number(deleteConvertibleButton.dataset.deleteConvertible));
+      if(editSecondaryButton)openSecondary(Number(editSecondaryButton.dataset.editSecondary));
+      if(deleteSecondaryButton)requestSecondaryDelete(Number(deleteSecondaryButton.dataset.deleteSecondary));
       if(editRoundButton)openRound(Number(editRoundButton.dataset.edit));
-      if(deleteRoundButton){const i=Number(deleteRoundButton.dataset.delete);state.rounds.splice(i,1);stage=Math.min(stage,state.rounds.length);save();render();}
+      if(deleteRoundButton){const i=Number(deleteRoundButton.dataset.delete),rounds=state.rounds.filter((_,index)=>index!==i),candidateSnapshots=snapshots({...state,rounds}),invalid=candidateSnapshots.find(snapshot=>snapshot.secondaryError);if(invalid){$('#erm-csv-status').textContent=invalid.secondaryError;$('#erm-csv-status').classList.add('text-destructive');return;}state.rounds=rounds;stage=Math.min(stage,candidateSnapshots.length-1);save();render();}
     });
     $('#erm-export-csv').addEventListener('click',exportCsv);
+    $('#erm-export-current-cap').addEventListener('click',exportCurrentCapTable);
     $('#erm-import-csv').addEventListener('click',()=>$('#erm-csv-file').click());
     $('#erm-reset').addEventListener('click',()=>{$('#erm-reset-dialog').showModal();queueMicrotask(()=>$('#erm-reset-save').focus());});
     $('#erm-reset-cancel').addEventListener('click',()=>$('#erm-reset-dialog').close());
