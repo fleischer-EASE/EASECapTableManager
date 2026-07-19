@@ -17,7 +17,6 @@ Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Seco
 
 ## Dokumentation und Beispiel
 
-- [Bebilderte Bedienungsanleitung](docs/bedienungsanleitung.md)
 - [Importierbare Beispiel-CSV](examples/ease-cap-table-example.csv)
 
 ## Starten
@@ -29,10 +28,10 @@ Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Seco
 Die regressionskritischen Berechnungen lassen sich ohne Installation mit Node.js prüfen:
 
 ```powershell
-node tests/calculation-scenarios.js
+node tests/test-scenarios.js
 ```
 
-Die Suite deckt 32 benannte Szenarien und 250 deterministisch erzeugte Waterfalls ab.
+Die Suite deckt 50 unabhängig berechnete und menschenlesbar dokumentierte Szenarien für Waterfalls, Präferenzansprüche, Finanzierungsrunden, Vesting, Wandeldarlehen und CSV-Importe ab.
 
 ## Daten und Backups
 

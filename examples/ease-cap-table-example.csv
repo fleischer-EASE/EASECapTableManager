@@ -1,11 +1,19 @@
 schema_version;record_type;id;round_id;name;share_class;category;shares;planned_shares;cost_basis_eur;investment_date;is_virtual;counterparty;principal_eur;interest_pct;discount_pct;valuation_cap_eur;fully_diluted_conversion;liquidation_preference_type;liquidation_preference_multiple;liquidation_seniority;participation_cap_multiple;conversion_ratio;cumulative_dividend_rate_pct;redemption_enabled;redemption_date;redemption_multiple;seller;buyer;secondary_price_per_share_eur;source_round_id;pool_id;pre_money_eur;investment_eur;closing_date;pool_refresh_shares;pool_refresh_timing;grant_date;vesting_start;vesting_months;cliff_months;strike_price_eur;status;leaver_date;expiry_date;exit_value_eur;exit_debt_eur;exit_costs_eur;exit_date
-2;holder;founder-alex;;Alex Beispiel;;Gründer;700000;;25000;2023-01-02;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-2;holder;founder-sam;;Sam Beispiel;;Gründer;200000;;10000;2023-01-02;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-2;holder;vsop-pool;;Employee Pool 2024;;VSOP-Pool;100000;;0;;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-2;convertible;convertible-pre-seed;;Pre-Seed Wandeldarlehen;;;;;;2024-02-01;;EASE Angel;200000;6;20;3000000;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-2;round;round-seed;;Seed-Runde;Seed Preferred;;;;;;;;;;;;;non-participating;1;1;0;1;8;true;2029-01-15;1.5;;;;;vsop-pool;5000000;1000000;2025-01-15;50000;pre;;;;;;;;;;;;
-2;round_investor;seed-ease;round-seed;;;;;;;;;EASE Ventures;;;;;;;;;;;;;;;;;;;;;600000;;;;;;;;;;;;;;;
-2;round_investor;seed-north;round-seed;;;;;;;;;Northstar Capital;;;;;;;;;;;;;;;;;;;;;400000;;;;;;;;;;;;;;;
-2;secondary;secondary-founder;;Founder Secondary;;;40000;;;;;;;;;;;;;;;;;;;;Alex Beispiel;Horizon Growth GmbH;6.5;common;;;;2025-06-01;;;;;;;;;;;;;;
-2;vsop;vsop-anna;;Anna Beispiel;;;25000;5000;;;;;;;;;;;;;;;;;;;;;;;vsop-pool;;;;;;2024-06-01;2024-06-01;48;12;1;Aktiv;;2034-06-01;;;;
-2;exit;exit-example;;Exit-Annahme;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4000000;500000;300000;2028-12-31
+2;holder;founder-lea;;Lea König;;Gründer;550000;;15000;2021-01-04;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+2;holder;founder-jonas;;Jonas Weber;;Gründer;350000;;10000;2021-01-04;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+2;holder;vsop-pool;;Employee Pool;;VSOP-Pool;100000;;0;;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+2;convertible;convertible-angel-anna;;Pre-Seed Angel Note Anna;;;;;;2021-09-15;;Anna Schneider;150000;6;20;3000000;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+2;convertible;convertible-angel-michael;;Pre-Seed Angel Note Michael;;;;;;2021-09-15;;Michael Braun;150000;6;20;3000000;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+2;round;round-bridge;;Bridge-Runde;Bridge Preferred;;;;;;;;;;;;;non-participating;1;3;0;1;0;false;;1;;;;;vsop-pool;5000000;1000000;2022-06-30;50000;pre;;;;;;;;;;;;
+2;round_investor;bridge-angel-anna;round-bridge;;;;;;;;;Anna Schneider;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
+2;round_investor;bridge-angel-michael;round-bridge;;;;;;;;;Michael Braun;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
+2;round_investor;bridge-nordstern;round-bridge;;;;;;;;;Nordstern Ventures;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
+2;round_investor;bridge-rheinland;round-bridge;;;;;;;;;Rheinland Ventures;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
+2;round;round-seed;;Seed-Runde;Seed Preferred;;;;;;;;;;;;;non-participating;1;2;0;1;0;false;;1;;;;;vsop-pool;12000000;3000000;2023-09-29;75000;pre;;;;;;;;;;;;
+2;round_investor;seed-nordstern;round-seed;;;;;;;;;Nordstern Ventures;;;;;;;;;;;;;;;;;;;;;1000000;;;;;;;;;;;;;;;
+2;round_investor;seed-hanseatic;round-seed;;;;;;;;;Hanseatic Ventures;;;;;;;;;;;;;;;;;;;;;2000000;;;;;;;;;;;;;;;
+2;round;round-series-a;;Series A;Series A Preferred;;;;;;;;;;;;;non-participating;1;1;0;1;0;false;;1;;;;;vsop-pool;32000000;8000000;2025-10-01;125000;pre;;;;;;;;;;;;
+2;round_investor;series-a-hanseatic;round-series-a;;;;;;;;;Hanseatic Ventures;;;;;;;;;;;;;;;;;;;;;3000000;;;;;;;;;;;;;;;
+2;round_investor;series-a-alpine;round-series-a;;;;;;;;;Alpine Growth Fund;;;;;;;;;;;;;;;;;;;;;5000000;;;;;;;;;;;;;;;
+2;vsop;vsop-mira;;Mira Hoffmann;;;40000;10000;;;;;;;;;;;;;;;;;;;;;;;vsop-pool;;;;;;2022-01-03;2022-01-03;48;12;0.5;Aktiv;;2032-01-03;;;;
+2;exit;exit-example;;Exit-Annahme;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;120000000;4000000;6000000;2029-10-01

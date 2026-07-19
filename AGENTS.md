@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This is a dependency-free, browser-based single-page application. `index.html` contains the complete UI, styles, state management, calculations, CSV import/export, and persistence logic. `README.md` provides the quick start and feature overview. User documentation lives in `docs/bedienungsanleitung.md`, with screenshots under `docs/images/`. Keep importable sample data in `examples/`; update `examples/ease-cap-table-example.csv` when the CSV schema changes.
+This is a dependency-free, browser-based single-page application. `index.html` contains the complete UI, styles, state management, calculations, CSV import/export, and persistence logic. `README.md` provides the quick start and feature overview. Keep importable sample data in `examples/`; update `examples/ease-cap-table-example.csv` when the CSV schema changes.
 
 ## Build, Test, and Development Commands
 
@@ -20,7 +20,7 @@ Keep HTML, CSS, and JavaScript self-contained in `index.html`; do not introduce 
 
 ## Testing Guidelines
 
-There is currently no automated test suite or coverage threshold. Test changes manually in both light and dark themes and at desktop and narrow viewport widths. For calculation or data-model changes, exercise equity rounds, convertibles, secondaries, VSOP pools, and exit payouts. Verify undo/redo, browser reload persistence, blank reset, and a CSV export/import round-trip using the example file. Check the browser console for errors.
+Run `node tests/test-scenarios.js` for the 50 independently calculated scenarios covering Waterfalls, preference claims, equity rounds, convertibles, secondaries, vesting, and CSV imports. There is no coverage threshold. Also test changes manually in both light and dark themes and at desktop and narrow viewport widths. For calculation or data-model changes, exercise equity rounds, convertibles, secondaries, VSOP pools, and exit payouts. Verify undo/redo, browser reload persistence, blank reset, and a CSV export/import round-trip using the example file. Check the browser console for errors.
 
 ## Commit & Pull Request Guidelines
 
