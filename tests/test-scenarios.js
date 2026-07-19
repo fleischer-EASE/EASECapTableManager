@@ -16,19 +16,22 @@ const marker = text => {
   return index;
 };
 
-const validDateStart = marker('    const validDate =');
-const validDateEnd = marker('    const roundInvestors =');
+const declarationMarker = name => marker(`const ${name} =`);
+const functionMarker = name => marker(`function ${name}(`);
+
+const validDateStart = declarationMarker('validDate');
+const validDateEnd = declarationMarker('roundInvestors');
 const roundHelpersStart = validDateEnd;
-const roundHelpersEnd = marker('    const chronologicalRounds =');
-const financeStart = marker('    const loanClaim =');
-const financeEnd = marker('    const reservedVsopShares =');
-const waterfallStart = marker('    const aggregateLots =');
-const snapshotsStart = marker('    function snapshots(source=state){');
-const renderStart = marker('    function render(){');
-const normalizeStart = marker('    const normalizeRound =');
-const normalizeEnd = marker('    const migratedPoolId=');
-const csvStart = marker('    function parseCsv(text){');
-const csvEnd = marker('    const holderKey =');
+const roundHelpersEnd = declarationMarker('chronologicalRounds');
+const financeStart = declarationMarker('loanClaim');
+const financeEnd = declarationMarker('reservedVsopShares');
+const waterfallStart = declarationMarker('aggregateLots');
+const snapshotsStart = functionMarker('snapshots');
+const renderStart = functionMarker('render');
+const normalizeStart = declarationMarker('normalizeRound');
+const normalizeEnd = marker('// State lifecycle');
+const csvStart = functionMarker('parseCsv');
+const csvEnd = declarationMarker('holderKey');
 
 const validDate = new Function(
   source.slice(validDateStart, validDateEnd) + '\nreturn validDate;'
