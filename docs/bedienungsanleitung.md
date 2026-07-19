@@ -68,14 +68,23 @@ Das Darlehen wandelt bei der ersten Eigenkapitalrunde, deren Closing-Datum am od
 ![Eigenkapitalrunde mit LiqPref-Optionen](images/03-equity-dialog.png)
 
 1. Öffne **Neue Transaktion** und wähle **Eigenkapitalrunde**.
-2. Erfasse Investor, Pre-Money-Bewertung, Investment und Closing-Datum.
-3. Wähle die Liquidationspräferenz:
+2. Erfasse Rundenname, Anteilsklasse, Pre-Money-Bewertung und Closing-Datum.
+3. Erfasse einen oder mehrere Investoren mit ihrem jeweiligen Investment. **Investor hinzufügen** ergänzt weitere Zeichnungen; alle Investoren derselben Runde erhalten denselben Preis je Anteil und dieselben Anteilsklassenbedingungen.
+4. Wähle die Liquidationspräferenz:
    - **Keine:** Der Investor erhält ausschließlich seinen pro-rata Anteil.
    - **Nicht partizipierend:** Der Investor erhält den höheren Wert aus Präferenzbetrag und pro-rata Auszahlung.
    - **Partizipierend:** Der Investor erhält zuerst den Präferenzbetrag und nimmt danach zusätzlich an der Restverteilung teil.
-4. Lege das **LiqPref-Multiple** fest, beispielsweise `1,0×`.
-5. Optional kannst du zusätzliche VSOP-Pool-Anteile, den Zielpool und Pre- oder Post-Money-Auffrischung festlegen.
-6. Klicke auf **Speichern**.
+5. Lege die Bedingungen der Anteilsklasse fest:
+   - **LiqPref-Multiple:** Präferenzanspruch bezogen auf das Investment, beispielsweise `1,0×`.
+   - **Senioritätsrang:** Rang `1` wird zuerst bedient. Anteilsklassen mit demselben Rang werden pari passu und bei Unterdeckung proportional bedient.
+   - **Participation Cap:** maximale Gesamtauszahlung der partizipierenden Vorzugsanteile als Multiple des Investments; `0` bedeutet unbegrenzt. Ist eine vollständige Konversion wirtschaftlich besser, wird stattdessen konvertiert.
+   - **Conversion Ratio:** Fully-Diluted-Anteile je rechtlichem Vorzugsanteil. `1` entspricht einer 1:1-Konversion.
+   - **Kumulative Dividende:** einfacher jährlicher Zuwachs des Präferenzanspruchs ab Closing.
+   - **Redemption-Floor:** optionaler Mindest-Präferenzanspruch ab einem Stichtag. Die App verwendet dann den höheren Wert aus LiqPref und Redemption-Multiple.
+6. Optional kannst du zusätzliche VSOP-Pool-Anteile, den Zielpool und Pre- oder Post-Money-Auffrischung festlegen.
+7. Klicke auf **Speichern**.
+
+Der Preis je neuem Anteil ergibt sich einmal pro Runde aus der Pre-Money-Bewertung geteilt durch alle Fully-Diluted-Anteile. Die einzelnen Investments werden nicht nacheinander neu bepreist. Eine Pre-Money-Pool-Auffrischung zählt bereits zur Preisbasis und verwässert damit die bisherigen Beteiligten vor der Runde. Eine Post-Money-Auffrischung wird erst nach Ausgabe der neuen Investor-Anteile hinzugefügt.
 
 ## 6. Secondary erfassen
 
@@ -83,10 +92,11 @@ Das Darlehen wandelt bei der ersten Eigenkapitalrunde, deren Closing-Datum am od
 
 1. Öffne **Neue Transaktion** und wähle **Secondary**.
 2. Wähle den Verkäufer aus der zu diesem Zeitpunkt verfügbaren Cap Table.
-3. Erfasse Käufer, Anzahl der übertragenen Anteile, Preis je Anteil und Transaktionsdatum.
-4. Klicke auf **Speichern**.
+3. Wähle die **übertragene Anteilsklasse**. Du kannst Common-Anteile oder die Anteile einer bestimmten Eigenkapitalrunde auswählen. **Automatisch** verwendet zuerst Common-Anteile und danach die ältesten Finanzierungsrunden.
+4. Erfasse Käufer, Anzahl der übertragenen Anteile, Preis je Anteil und Transaktionsdatum.
+5. Klicke auf **Speichern**.
 
-Die App prüft die chronologische Verfügbarkeit der Anteile. Der Käufer wird bei Bedarf automatisch als Investor angelegt. Kaufpreis und Verkaufserlös fließen in Multiple und IRR ein; sie zählen nicht als von der Gesellschaft aufgenommenes Kapital.
+Die App prüft die chronologische Verfügbarkeit innerhalb der gewählten Anteilsklasse. Der Käufer wird bei Bedarf automatisch als Investor angelegt. Mit Anteilen einer Finanzierungsrunde werden deren Liquidationspräferenzrechte proportional übertragen. Kaufpreis und Verkaufserlös fließen in Multiple und IRR ein; sie zählen nicht als von der Gesellschaft aufgenommenes Kapital.
 
 ![Chronologische Transaktionen im Drei-Spalten-Raster](images/03-financing-grid.jpg)
 
@@ -102,7 +112,7 @@ Alle Instrumente erscheinen gemeinsam von links nach rechts und anschließend in
 4. Optional kannst du Basispreis, Ablaufdatum, Status und Austrittsdatum ergänzen.
 5. Klicke auf **Speichern**.
 
-Die App prüft die Kapazität für jeden Pool getrennt und berücksichtigt zugeordnete Auffrischungen. Bei ausgeschiedenen Personen werden nur die bis zum Austritt gevesteten Anteile weiter berücksichtigt; stornierte Zuteilungen belegen den Pool nicht.
+Die App prüft die Kapazität für jeden Pool getrennt und berücksichtigt zugeordnete Auffrischungen. Vesting wird anhand vollständig abgelaufener Kalendermonate berechnet. Monatsenden werden auf den letzten gültigen Tag des Zielmonats begrenzt, sodass beispielsweise der Zeitraum vom 31. Januar bis zum 28. oder 29. Februar als voller Monat zählt. Bei ausgeschiedenen Personen werden nur die bis zum Austritt gevesteten Anteile weiter berücksichtigt; stornierte Zuteilungen belegen den Pool nicht.
 
 ## 8. Exit simulieren
 
@@ -113,9 +123,9 @@ Die App prüft die Kapazität für jeden Pool getrennt und berücksichtigt zugeo
 3. Prüfe Nettoerlös, Gruppen- und Einzelauszahlungen sowie ausgewiesene LiqPref-Beträge.
 4. Vergleiche das **Multiple** aus Exit-Auszahlung plus bereits realisierten Secondary-Erlösen geteilt durch alle erfassten Investments. Bei positiver Auszahlung ohne Investment zeigt die App `∞×`.
 
-Der vereinfachte Waterfall bedient Präferenzansprüche pari passu. Reicht der Nettoerlös nicht aus, werden alle fälligen Präferenzen proportional gekürzt. Nicht partizipierende Investoren wählen automatisch die wirtschaftlich bessere Alternative. Partizipierende Investoren erhalten Präferenz und Restbeteiligung. Bei VSOP-Personen gilt der Strike der gevesteten Anteile als Investment.
+Der Waterfall bedient Präferenzansprüche nach aufsteigendem Senioritätsrang. Innerhalb desselben Rangs werden Ansprüche pari passu bedient und bei Unterdeckung proportional gekürzt. Nicht partizipierende Anteilspakete wählen iterativ die wirtschaftlich bessere Alternative aus Präferenz und Konversion. Partizipierende Anteilspakete erhalten Präferenz und Restbeteiligung bis zu ihrem Participation Cap; ist die vollständige Konversion wirtschaftlich besser, wird konvertiert. Conversion Ratio, zeitanteilige einfache kumulative Dividenden und ein zum Exit-Datum erreichter Redemption-Floor fließen in die Berechnung ein. Common-Anteile desselben Investors bleiben auch dann an der Restverteilung beteiligt, wenn dessen Vorzugsanteile die Präferenz wählen. Bei VSOP-Personen gilt der Strike der gevesteten Anteile als Investment.
 
-> Die Simulation bildet keine Anteilsklassen, Senioritäten, Caps, Steuern oder individuellen Vertragsklauseln ab. Eine LiqPref bleibt dem in der Eigenkapitalrunde erfassten Investor zugeordnet; die Übertragung von Präferenzrechten in einer Secondary wird nicht modelliert.
+> Die Simulation bildet keine automatische Anti-Dilution-Anpassung, Pay-to-play-Regelung, Dividendenverzinsung oder -kapitalisierung, tatsächliche Ausübung eines Rücknahmerechts, Steuern oder frei formulierte Vertragsklauseln ab. Der Redemption-Wert ist bewusst nur ein Floor im Exit-Waterfall. Prüfe deshalb die Simulation gegen die tatsächlichen Beteiligungsverträge.
 
 ## 9. Cap Table exportieren, speichern und wiederherstellen
 
@@ -137,12 +147,13 @@ Die Beispieldatei enthält folgende `record_type`-Datensätze:
 | --- | --- |
 | `holder` | Zwei Gründer und der virtuelle Pool `Employee Pool 2024` |
 | `convertible` | Wandeldarlehen mit Zins, Discount, Cap und Fully-Diluted-Wandlung |
-| `round` | Eigenkapitalrunde mit 1× nicht partizipierender LiqPref und Pool-Auffrischung |
-| `secondary` | Anteilsübertragung von einem Gründer an einen neuen Investor |
+| `round` | Eigenkapitalrunde, Anteilsklasse, Bewertung und gemeinsame Präferenzbedingungen |
+| `round_investor` | Einzelne Zeichnung mit Round-ID, Investor und Investment |
+| `secondary` | Übertragung von Common-Anteilen eines Gründers an einen neuen Investor |
 | `vsop` | Dem Pool zugeordnete aktive Zuteilung |
 | `exit` | Beispielhafte Exit-Annahmen, bei denen die LiqPref sichtbar greift |
 
-`liquidation_preference_type` akzeptiert `none`, `non-participating` oder `participating`; das Multiple steht in `liquidation_preference_multiple`. Eine Secondary verwendet `seller`, `buyer`, `shares`, `secondary_price_per_share_eur` und `closing_date`. `pool_id` verbindet VSOP-Personen und Pool-Auffrischungen mit ihrem Pool. `fully_diluted_conversion` steuert die Wandlungsbasis eines Darlehens. Datumswerte verwenden `JJJJ-MM-TT`; die Datei ist semikolongetrennt und UTF-8-codiert.
+`round_id` verbindet jeden `round_investor` mit seiner Runde. `liquidation_preference_type` akzeptiert `none`, `non-participating` oder `participating`; die weiteren Bedingungen stehen in `liquidation_preference_multiple`, `liquidation_seniority`, `participation_cap_multiple`, `conversion_ratio`, `cumulative_dividend_rate_pct`, `redemption_enabled`, `redemption_date` und `redemption_multiple`. CSV-Dateien des bisherigen Ein-Investor-Schemas bleiben importierbar. Eine Secondary verwendet `seller`, `buyer`, `shares`, `secondary_price_per_share_eur`, `closing_date` und optional `source_round_id`. Der Wert `common` überträgt ausschließlich Common-Anteile, eine Round-ID überträgt Anteile dieser Finanzierungsrunde und ein leerer Wert verwendet die automatische Reihenfolge. `pool_id` verbindet VSOP-Personen und Pool-Auffrischungen mit ihrem Pool. `fully_diluted_conversion` steuert die Wandlungsbasis eines Darlehens. Datumswerte verwenden `JJJJ-MM-TT`; die Datei ist semikolongetrennt und UTF-8-codiert.
 
 ## Wichtiger Hinweis
 

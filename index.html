@@ -790,7 +790,7 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-exit-summary > span { display:grid; gap:3px; padding:12px 0; border-bottom:1px solid var(--border); min-width:0; }
     #equity-round-manager .erm-exit-summary strong { font-weight:500; font-variant-numeric:tabular-nums; }
     #equity-round-manager dialog { color:var(--popover-foreground); background:var(--popover); border:1px solid var(--border); border-radius:var(--radius); padding:20px; width:min(480px,calc(100% - 28px)); }
-    #equity-round-manager #erm-transaction-dialog { width:min(760px,calc(100% - 28px)); }
+    #equity-round-manager #erm-transaction-dialog, #equity-round-manager #erm-round-dialog { width:min(760px,calc(100% - 28px)); }
     #equity-round-manager dialog::backdrop { background:color-mix(in srgb, var(--foreground) 30%, transparent); }
     #equity-round-manager .erm-form { display:grid; gap:14px; }
     #equity-round-manager .erm-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -802,6 +802,11 @@ html>body{padding:0}</style>
     #equity-round-manager .erm-check-card { grid-column:1 / -1; display:flex; align-items:flex-start; gap:10px; padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--muted); cursor:pointer; }
     #equity-round-manager .erm-check-card input { width:17px; height:17px; margin:2px 0 0; accent-color:var(--primary); flex:0 0 auto; }
     #equity-round-manager .erm-check-copy { display:grid; gap:3px; }
+    #equity-round-manager .erm-round-investors { grid-column:1 / -1; display:grid; gap:9px; padding:12px; border:1px solid var(--border); border-radius:10px; }
+    #equity-round-manager .erm-round-investor-list { display:grid; gap:8px; }
+    #equity-round-manager .erm-round-investor-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(140px,.45fr) auto; gap:8px; align-items:end; }
+    #equity-round-manager .erm-round-investor-row .btn { min-width:38px; padding-inline:10px; }
+    #equity-round-manager .erm-round-investor-tools { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
     #equity-round-manager .erm-transaction-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
     #equity-round-manager .btn.erm-transaction-option { display:grid; grid-template-columns:1fr; min-height:132px; align-content:start; justify-items:start; gap:9px; padding:24px; text-align:left; white-space:normal; }
     #equity-round-manager .erm-transaction-option i { width:20px; height:20px; color:var(--primary); }
@@ -828,7 +833,7 @@ html>body{padding:0}</style>
       #equity-round-manager .erm-head { align-items:flex-start; }
       #equity-round-manager .erm-create-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; }
       #equity-round-manager .erm-kpis { grid-template-columns:1fr; }
-      #equity-round-manager .erm-fields, #equity-round-manager .erm-exit-controls, #equity-round-manager .erm-transaction-options { grid-template-columns:1fr; }
+      #equity-round-manager .erm-fields, #equity-round-manager .erm-exit-controls, #equity-round-manager .erm-transaction-options, #equity-round-manager .erm-round-investor-row { grid-template-columns:1fr; }
       #equity-round-manager .erm-exit-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
       #equity-round-manager .erm-responsive-table thead { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
       #equity-round-manager .erm-responsive-table, #equity-round-manager .erm-responsive-table tbody { display:block; width:100%; }
@@ -1118,7 +1123,7 @@ html>body{padding:0}</style>
       <div class="erm-section-head"><h3 id="erm-cap-heading">Cap Table</h3><div class="erm-panel-tools"><input class="form-control erm-search" id="erm-cap-search" type="search" placeholder="Beteiligte suchen…" aria-label="Cap Table durchsuchen"><button type="button" class="btn" id="erm-export-current-cap"><i data-lucide="table-properties" aria-hidden="true"></i> Ansicht exportieren</button><span class="text-small text-muted" id="erm-total-shares"></span></div></div>
       <div class="erm-table-wrap">
         <table class="erm-responsive-table">
-          <thead><tr><th>Beteiligte</th><th>Anteile</th><th>Ownership</th><th>Wert</th><th><span class="sr-only">Aktionen</span></th></tr></thead>
+          <thead><tr><th>Beteiligte</th><th>FD-Anteile</th><th>Ownership</th><th>Wert</th><th><span class="sr-only">Aktionen</span></th></tr></thead>
           <tbody id="erm-cap-body"></tbody>
         </table>
       </div>
@@ -1211,12 +1216,23 @@ html>body{padding:0}</style>
       <h3 id="erm-round-form-title">Eigenkapitalrunde</h3>
       <div class="erm-fields">
         <label class="form-label">Runde<input class="form-control" id="erm-round-name" required placeholder="z. B. Series A"></label>
-        <label class="form-label">Investor<input class="form-control" id="erm-investor" required placeholder="z. B. Horizon VC"></label>
+        <label class="form-label">Anteilsklasse<input class="form-control" id="erm-round-class-name" required placeholder="z. B. Series A Preferred"></label>
         <label class="form-label">Pre-Money (€)<input class="form-control" id="erm-premoney" data-money type="text" inputmode="numeric" value="8.000.000" required></label>
-        <label class="form-label">Investment (€)<input class="form-control" id="erm-investment" data-money type="text" inputmode="numeric" value="2.000.000" required></label>
         <label class="form-label">Closing-Datum<input class="form-control" id="erm-round-date" type="date" required></label>
+        <section class="erm-round-investors" aria-labelledby="erm-round-investors-title">
+          <div class="viz-row"><strong id="erm-round-investors-title">Investoren</strong><span class="text-small text-muted" id="erm-round-investment-total"></span></div>
+          <div class="erm-round-investor-list" id="erm-round-investor-list"></div>
+          <div class="erm-round-investor-tools"><button type="button" class="btn" id="erm-add-round-investor"><i data-lucide="plus" aria-hidden="true"></i> Investor hinzufügen</button><span class="text-small text-muted">Alle Zeichnungen verwenden denselben Preis je Anteil.</span></div>
+        </section>
         <label class="form-label">Liquidationspräferenz<select class="form-select" id="erm-round-liq-pref"><option value="none">Keine</option><option value="non-participating">Nicht partizipierend</option><option value="participating">Partizipierend</option></select></label>
         <label class="form-label">LiqPref-Multiple (×)<input class="form-control" id="erm-round-liq-multiple" type="number" min="0.1" step="0.1" value="1"></label>
+        <label class="form-label">Senioritätsrang<input class="form-control" id="erm-round-seniority" type="number" min="1" step="1" value="1"><span class="text-small text-muted">1 wird zuerst bedient; gleicher Rang ist pari passu.</span></label>
+        <label class="form-label">Participation Cap (×)<input class="form-control" id="erm-round-participation-cap" type="number" min="0" step="0.1" value="0"><span class="text-small text-muted">0 bedeutet unbegrenzt.</span></label>
+        <label class="form-label">Conversion Ratio<input class="form-control" id="erm-round-conversion-ratio" type="number" min="0.0001" step="0.0001" value="1"></label>
+        <label class="form-label">Kumulative Dividende p. a. (%)<input class="form-control" id="erm-round-dividend-rate" type="number" min="0" step="0.1" value="0"></label>
+        <label class="erm-check-card"><input id="erm-round-redemption-enabled" type="checkbox"><span class="erm-check-copy"><strong>Redemption-Floor simulieren</strong><span class="text-small text-muted">Ab dem Stichtag gilt der Rückzahlungsbetrag als Mindest-Präferenzanspruch.</span></span></label>
+        <label class="form-label">Redemption-Stichtag<input class="form-control" id="erm-round-redemption-date" type="date"></label>
+        <label class="form-label">Redemption-Multiple (×)<input class="form-control" id="erm-round-redemption-multiple" type="number" min="0.1" step="0.1" value="1"></label>
         <label class="form-label">Zusätzliche Pool-Anteile<input class="form-control" id="erm-round-pool-refresh" type="number" min="0" step="1" value="0"></label>
         <label class="form-label">Zielpool<select class="form-select" id="erm-round-pool-id"></select></label>
         <label class="form-label">Pool-Auffrischung<select class="form-select" id="erm-round-pool-timing"><option value="pre">Pre-Money</option><option value="post">Post-Money</option></select></label>
@@ -1259,6 +1275,7 @@ html>body{padding:0}</style>
         <label class="form-label">Bezeichnung<input class="form-control" id="erm-secondary-name" required placeholder="z. B. Founder Secondary"></label>
         <label class="form-label">Transaktionsdatum<input class="form-control" id="erm-secondary-date" type="date" required></label>
         <label class="form-label">Verkäufer<select class="form-select" id="erm-secondary-seller" required></select></label>
+        <label class="form-label">Übertragene Anteilsklasse<select class="form-select" id="erm-secondary-source-round"><option value="">Automatisch</option></select></label>
         <label class="form-label">Käufer<input class="form-control" id="erm-secondary-buyer" required placeholder="z. B. Horizon VC"></label>
         <label class="form-label">Anteile<input class="form-control" id="erm-secondary-shares" type="number" min="1" step="1" required></label>
         <label class="form-label">Preis je Anteil (€)<input class="form-control" id="erm-secondary-price" type="number" min="0.0001" step="0.0001" required></label>
@@ -1368,9 +1385,25 @@ html>body{padding:0}</style>
       if(h.investmentDate===undefined) h.investmentDate='';
     });
     state.holders.forEach(h=>{if(h.isVirtual||h.id==='vsop-pool'){h.isVirtual=true;h.type='VSOP-Pool';}});
+    const normalizeRound = r => {
+      const legacyInvestor=String(r.investor||'').trim(),legacyInvestment=Math.max(0,Number(r.investment)||0);
+      if(!Array.isArray(r.investors)||!r.investors.length)r.investors=legacyInvestor&&legacyInvestment>0?[{id:r.id+'-investor-1',name:legacyInvestor,investment:legacyInvestment}]:[];
+      r.investors=r.investors.map((investor,index)=>({id:investor.id||r.id+'-investor-'+(index+1),name:String(investor.name||investor.investor||'').trim(),investment:Math.max(0,Number(investor.investment)||0)}));
+      r.investment=r.investors.reduce((sum,investor)=>sum+investor.investment,0);r.investor=r.investors[0]?.name||'';
+      if(!r.className)r.className=r.name+(r.liquidationPreferenceType&&r.liquidationPreferenceType!=='none'?' Preferred':' Common');
+      r.liquidationSeniority=Math.max(1,Math.round(Number(r.liquidationSeniority)||1));
+      r.participationCapMultiple=Math.max(0,Number(r.participationCapMultiple)||0);
+      r.conversionRatio=Math.max(.0001,Number(r.conversionRatio)||1);
+      r.cumulativeDividendRate=Math.max(0,Number(r.cumulativeDividendRate)||0);
+      r.redemptionEnabled=Boolean(r.redemptionEnabled);r.redemptionDate=r.redemptionDate||'';r.redemptionMultiple=Math.max(.1,Number(r.redemptionMultiple)||1);
+      if(r.liquidationPreferenceType==='none'){r.liquidationSeniority=999999;r.participationCapMultiple=0;r.cumulativeDividendRate=0;r.redemptionEnabled=false;r.redemptionDate='';r.redemptionMultiple=1;}
+      if(r.liquidationPreferenceType!=='participating')r.participationCapMultiple=0;
+      return r;
+    };
     const migratedPoolId=(state.holders.find(h=>h.isVirtual)||{}).id||'';
-    state.rounds.forEach(r=>{if(r.date===undefined)r.date=r.id==='seed'&&r.name==='Seed'?'2024-01-15':r.id==='series-a'&&r.name==='Series A'?'2025-07-01':'';if(r.poolRefresh===undefined)r.poolRefresh=0;if(!r.poolRefreshTiming)r.poolRefreshTiming='pre';if(r.poolId===undefined)r.poolId=migratedPoolId;if(!['none','non-participating','participating'].includes(r.liquidationPreferenceType))r.liquidationPreferenceType='none';if(!(Number(r.liquidationPreferenceMultiple)>0))r.liquidationPreferenceMultiple=1;});
+    state.rounds.forEach(r=>{if(r.date===undefined)r.date=r.id==='seed'&&r.name==='Seed'?'2024-01-15':r.id==='series-a'&&r.name==='Series A'?'2025-07-01':'';if(r.poolRefresh===undefined)r.poolRefresh=0;if(!r.poolRefreshTiming)r.poolRefreshTiming='pre';if(r.poolId===undefined)r.poolId=migratedPoolId;if(!['none','non-participating','participating'].includes(r.liquidationPreferenceType))r.liquidationPreferenceType='none';if(!(Number(r.liquidationPreferenceMultiple)>0))r.liquidationPreferenceMultiple=1;normalizeRound(r);});
     state.convertibles.forEach(c=>{if(typeof c.fullyDilutedConversion!=='boolean')c.fullyDilutedConversion=typeof c.includeGrantedVsop==='boolean'?c.includeGrantedVsop:true;});
+    state.secondaries.forEach(s=>{if(s.sourceRoundId===undefined)s.sourceRoundId='';});
     state.vsopParticipants.forEach(g=>{if(!g.poolId)g.poolId=migratedPoolId;});
     const transactionStageCount = () => state.rounds.length+state.secondaries.length;
     let stage = transactionStageCount();
@@ -1408,6 +1441,8 @@ html>body{padding:0}</style>
     const esc = s => String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
     const uid = () => Math.random().toString(36).slice(2,10);
     const validDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s||'') && !Number.isNaN(Date.parse(s+'T00:00:00Z'));
+    const roundInvestors = round => Array.isArray(round.investors)&&round.investors.length?round.investors:(round.investor&&Number(round.investment)>0?[{id:round.id+'-investor-1',name:round.investor,investment:Number(round.investment)}]:[]);
+    const roundInvestment = round => roundInvestors(round).reduce((sum,investor)=>sum+(Number(investor.investment)||0),0);
     const chronologicalRounds = () => state.rounds.map((round,index)=>({round,index})).sort((a,b)=>(a.round.date||'9999-12-31').localeCompare(b.round.date||'9999-12-31')||a.index-b.index);
     const chronologicalTransactions = () => [
       ...state.rounds.map((item,index)=>({kind:'round',date:item.date||'',item,index})),
@@ -1419,14 +1454,25 @@ html>body{padding:0}</style>
       const days=Math.max(0,(Date.parse(toDate+'T00:00:00Z')-Date.parse(c.date+'T00:00:00Z'))/86400000);
       return principal*(1+(Math.max(0,Number(c.interest)||0)/100)*(days/365));
     };
-    const addMonths = (date,months) => {const d=new Date(date+'T00:00:00Z');d.setUTCMonth(d.getUTCMonth()+Number(months||0));return d;};
+    const addMonths = (date,months) => {
+      const d=new Date(date+'T00:00:00Z'),day=d.getUTCDate();
+      d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+Number(months||0));
+      const lastDay=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate();
+      d.setUTCDate(Math.min(day,lastDay));return d;
+    };
+    const completedMonths = (startDate,endDate) => {
+      const start=new Date(startDate+'T00:00:00Z');
+      let months=(endDate.getUTCFullYear()-start.getUTCFullYear())*12+endDate.getUTCMonth()-start.getUTCMonth();
+      if(endDate<addMonths(startDate,months))months--;
+      return Math.max(0,months);
+    };
     const vestedShares = (grant,asOf=today) => {
       if(grant.status==='Storniert'||!validDate(grant.startDate))return 0;
       let endDate=validDate(asOf)?new Date(asOf+'T00:00:00Z'):new Date(today+'T00:00:00Z');
       if(grant.status==='Ausgeschieden'&&validDate(grant.leaverDate)){const leave=new Date(grant.leaverDate+'T00:00:00Z');if(leave<endDate)endDate=leave;}
-      const start=new Date(grant.startDate+'T00:00:00Z'),cliff=addMonths(grant.startDate,grant.cliffMonths),finish=addMonths(grant.startDate,grant.vestingMonths);
-      if(endDate<cliff)return 0;if(endDate>=finish)return Number(grant.shares)||0;
-      return Math.max(0,Math.min(Number(grant.shares)||0,(Number(grant.shares)||0)*((endDate-start)/(finish-start))));
+      const elapsedMonths=completedMonths(grant.startDate,endDate),vestingMonths=Math.max(1,Number(grant.vestingMonths)||1);
+      if(elapsedMonths<Math.max(0,Number(grant.cliffMonths)||0))return 0;
+      return (Number(grant.shares)||0)*Math.min(vestingMonths,elapsedMonths)/vestingMonths;
     };
     const reservedVsopShares = grant => grant.status==='Storniert'?0:grant.status==='Ausgeschieden'?vestedShares(grant):(Number(grant.shares)||0)+(Number(grant.plannedShares)||0);
     const vsopPools = () => state.holders.filter(h=>h.isVirtual);
@@ -1462,7 +1508,7 @@ html>body{padding:0}</style>
       lastSavedState=JSON.stringify(state);
       localStorage.setItem(key,lastSavedState);
       if(!Array.isArray(state.secondaries))state.secondaries=[];
-      state.rounds.forEach(r=>{if(!['none','non-participating','participating'].includes(r.liquidationPreferenceType))r.liquidationPreferenceType='none';if(!(Number(r.liquidationPreferenceMultiple)>0))r.liquidationPreferenceMultiple=1;});
+      state.rounds.forEach(r=>{if(!['none','non-participating','participating'].includes(r.liquidationPreferenceType))r.liquidationPreferenceType='none';if(!(Number(r.liquidationPreferenceMultiple)>0))r.liquidationPreferenceMultiple=1;normalizeRound(r);});
       stage=Math.min(stage,transactionStageCount());
       $('#erm-save-status').textContent=message;
       updateHistoryButtons();
@@ -1488,7 +1534,7 @@ html>body{padding:0}</style>
       $('#erm-csv-status').classList.add('text-muted');
       render();
     }
-    const csvHeaders=['schema_version','record_type','id','name','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','fully_diluted_conversion','liquidation_preference_type','liquidation_preference_multiple','seller','buyer','secondary_price_per_share_eur','pool_id','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
+    const csvHeaders=['schema_version','record_type','id','round_id','name','share_class','category','shares','planned_shares','cost_basis_eur','investment_date','is_virtual','counterparty','principal_eur','interest_pct','discount_pct','valuation_cap_eur','fully_diluted_conversion','liquidation_preference_type','liquidation_preference_multiple','liquidation_seniority','participation_cap_multiple','conversion_ratio','cumulative_dividend_rate_pct','redemption_enabled','redemption_date','redemption_multiple','seller','buyer','secondary_price_per_share_eur','source_round_id','pool_id','pre_money_eur','investment_eur','closing_date','pool_refresh_shares','pool_refresh_timing','grant_date','vesting_start','vesting_months','cliff_months','strike_price_eur','status','leaver_date','expiry_date','exit_value_eur','exit_debt_eur','exit_costs_eur','exit_date'];
     const csvCell=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
     function downloadCsv(csv,filename){
       const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
@@ -1496,11 +1542,14 @@ html>body{padding:0}</style>
     }
     function exportCsv(){
       const rows=[];
-      const add=(record_type,data={})=>rows.push({schema_version:1,record_type,...data});
+      const add=(record_type,data={})=>rows.push({schema_version:2,record_type,...data});
       state.holders.forEach(h=>add('holder',{id:h.id,name:h.name,category:h.type,shares:h.shares,cost_basis_eur:h.costBasis||0,investment_date:h.investmentDate||'',is_virtual:h.isVirtual?'true':'false'}));
-      state.rounds.forEach(r=>add('round',{id:r.id,name:r.name,counterparty:r.investor,liquidation_preference_type:r.liquidationPreferenceType||'none',liquidation_preference_multiple:r.liquidationPreferenceMultiple||1,pool_id:r.poolId||'',pre_money_eur:r.preMoney,investment_eur:r.investment,closing_date:r.date,pool_refresh_shares:r.poolRefresh||0,pool_refresh_timing:r.poolRefreshTiming||'pre'}));
+      state.rounds.forEach(r=>{
+        add('round',{id:r.id,name:r.name,share_class:r.className||r.name,liquidation_preference_type:r.liquidationPreferenceType||'none',liquidation_preference_multiple:r.liquidationPreferenceMultiple||1,liquidation_seniority:r.liquidationSeniority||1,participation_cap_multiple:r.participationCapMultiple||0,conversion_ratio:r.conversionRatio||1,cumulative_dividend_rate_pct:r.cumulativeDividendRate||0,redemption_enabled:r.redemptionEnabled?'true':'false',redemption_date:r.redemptionDate||'',redemption_multiple:r.redemptionMultiple||1,pool_id:r.poolId||'',pre_money_eur:r.preMoney,investment_eur:roundInvestment(r),closing_date:r.date,pool_refresh_shares:r.poolRefresh||0,pool_refresh_timing:r.poolRefreshTiming||'pre'});
+        roundInvestors(r).forEach(investor=>add('round_investor',{id:investor.id,round_id:r.id,counterparty:investor.name,investment_eur:investor.investment}));
+      });
       state.convertibles.forEach(c=>add('convertible',{id:c.id,name:c.name,counterparty:c.lender,principal_eur:c.principal,investment_date:c.date,interest_pct:c.interest||0,discount_pct:c.discount||0,valuation_cap_eur:c.valuationCap||0,fully_diluted_conversion:c.fullyDilutedConversion?'true':'false'}));
-      state.secondaries.forEach(s=>add('secondary',{id:s.id,name:s.name,shares:s.shares,seller:s.seller,buyer:s.buyer,secondary_price_per_share_eur:s.pricePerShare,closing_date:s.date}));
+      state.secondaries.forEach(s=>add('secondary',{id:s.id,name:s.name,shares:s.shares,seller:s.seller,buyer:s.buyer,secondary_price_per_share_eur:s.pricePerShare,source_round_id:s.sourceRoundId||'',closing_date:s.date}));
       state.vsopParticipants.forEach(g=>add('vsop',{id:g.id,name:g.name,pool_id:g.poolId||'',shares:g.shares,planned_shares:g.plannedShares||0,grant_date:g.grantDate,vesting_start:g.startDate,vesting_months:g.vestingMonths,cliff_months:g.cliffMonths,strike_price_eur:g.hurdle||0,status:g.status,leaver_date:g.leaverDate||'',expiry_date:g.expiryDate||''}));
       add('exit',{exit_value_eur:state.exit.value||0,exit_debt_eur:state.exit.debt||0,exit_costs_eur:state.exit.costs||0,exit_date:state.exit.date||''});
       const csv='\ufeff'+csvHeaders.map(csvCell).join(';')+'\r\n'+rows.map(row=>csvHeaders.map(header=>csvCell(row[header])).join(';')).join('\r\n');
@@ -1511,7 +1560,7 @@ html>body{padding:0}</style>
     function exportCurrentCapTable(){
       const snaps=snapshots(),snap=snaps[Math.min(stage,snaps.length-1)],total=snap.cap.reduce((sum,h)=>sum+(Number(h.shares)||0),0),companyValue=snap.valuation||0;
       const rows=snap.cap.filter(h=>!capQuery||`${h.name} ${h.type}`.toLocaleLowerCase('de-DE').includes(capQuery)).sort((a,b)=>b.shares-a.shares);
-      const headers=['stand','datum','beteiligte','typ','anteile','ownership_pct','wert_eur'];
+      const headers=['stand','datum','beteiligte','typ','fully_diluted_shares','ownership_pct','wert_eur'];
       const lines=rows.map(h=>[snap.label,snap.asOfDate||'',h.name,h.type,h.shares,total?h.shares/total*100:0,companyValue&&total?companyValue*h.shares/total:''].map(csvCell).join(';'));
       const safeLabel=(snap.label||'gruendung').toLocaleLowerCase('de-DE').replace(/[^a-z0-9äöüß]+/gi,'-').replace(/^-|-$/g,'');
       downloadCsv('\ufeff'+headers.map(csvCell).join(';')+'\r\n'+lines.join('\r\n'),`cap-table-ansicht-${safeLabel||'stand'}.csv`);
@@ -1532,65 +1581,152 @@ html>body{padding:0}</style>
     function importCsv(text){
       const matrix=parseCsv(text);if(matrix.length<2)throw new Error('Die CSV enthält keine Datensätze.');
       const headers=matrix[0].map(h=>h.trim().toLowerCase()),typeIndex=headers.indexOf('record_type');if(typeIndex<0)throw new Error('Spalte record_type fehlt.');
-      const imported={founderSetVersion:'mf-ch-ng-jb-v3',financingSetVersion:'preseed-seed-v1',vsopSetVersion:'vsop-2500-v2',holders:[],rounds:[],convertibles:[],secondaries:[],vsopParticipants:[],exit:{...state.exit}};
+      const imported={founderSetVersion:'mf-ch-ng-jb-v3',financingSetVersion:'preseed-seed-v1',vsopSetVersion:'vsop-2500-v2',holders:[],rounds:[],convertibles:[],secondaries:[],vsopParticipants:[],exit:{...state.exit}},importedRoundInvestors=[];
       matrix.slice(1).forEach((values,rowIndex)=>{const r={};headers.forEach((h,i)=>r[h]=values[i]??'');const type=(r.record_type||'').trim().toLowerCase(),id=(r.id||'').trim()||uid(),n=(field)=>csvNumber(r[field]);
         if(type==='holder'){if(!r.name.trim()||!(n('shares')>0))throw new Error(`Ungültiger holder in Zeile ${rowIndex+2}.`);const isVirtual=['true','1','ja','yes'].includes(r.is_virtual.trim().toLowerCase());imported.holders.push({id,name:r.name.trim(),type:isVirtual?'VSOP-Pool':r.category.trim()||'Sonstige',shares:n('shares'),costBasis:Math.max(0,n('cost_basis_eur')||0),investmentDate:r.investment_date.trim(),isVirtual});}
-        else if(type==='round'){if(!r.name.trim()||!r.counterparty.trim()||!(n('pre_money_eur')>0)||!(n('investment_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültige round in Zeile ${rowIndex+2}.`);const prefType=['non-participating','participating'].includes(r.liquidation_preference_type.trim())?r.liquidation_preference_type.trim():'none';imported.rounds.push({id,name:r.name.trim(),investor:r.counterparty.trim(),preMoney:n('pre_money_eur'),investment:n('investment_eur'),date:r.closing_date.trim(),liquidationPreferenceType:prefType,liquidationPreferenceMultiple:Math.max(.1,n('liquidation_preference_multiple')||1),poolRefresh:Math.max(0,n('pool_refresh_shares')||0),poolRefreshTiming:r.pool_refresh_timing.trim()==='post'?'post':'pre',poolId:String(r.pool_id??'').trim()});}
+        else if(type==='round'){if(!r.name.trim()||!(n('pre_money_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültige round in Zeile ${rowIndex+2}.`);const prefType=['non-participating','participating'].includes(r.liquidation_preference_type.trim())?r.liquidation_preference_type.trim():'none',redemptionEnabled=['true','1','ja','yes'].includes(String(r.redemption_enabled||'').trim().toLowerCase()),legacyInvestor=r.counterparty.trim(),legacyInvestment=n('investment_eur');if(legacyInvestor&&!(legacyInvestment>0))throw new Error(`Ungültiges Investment in Zeile ${rowIndex+2}.`);const round=normalizeRound({id,name:r.name.trim(),className:String(r.share_class||'').trim()||r.name.trim()+(prefType==='none'?' Common':' Preferred'),investors:legacyInvestor?[{id:id+'-investor-1',name:legacyInvestor,investment:legacyInvestment}]:[],preMoney:n('pre_money_eur'),date:r.closing_date.trim(),liquidationPreferenceType:prefType,liquidationPreferenceMultiple:Math.max(.1,n('liquidation_preference_multiple')||1),liquidationSeniority:Math.max(1,Math.round(n('liquidation_seniority')||1)),participationCapMultiple:Math.max(0,n('participation_cap_multiple')||0),conversionRatio:Math.max(.0001,n('conversion_ratio')||1),cumulativeDividendRate:Math.max(0,n('cumulative_dividend_rate_pct')||0),redemptionEnabled,redemptionDate:String(r.redemption_date||'').trim(),redemptionMultiple:Math.max(.1,n('redemption_multiple')||1),poolRefresh:Math.max(0,n('pool_refresh_shares')||0),poolRefreshTiming:r.pool_refresh_timing.trim()==='post'?'post':'pre',poolId:String(r.pool_id??'').trim()});if(round.redemptionEnabled&&(!validDate(round.redemptionDate)||round.redemptionDate<round.date))throw new Error(`Ungültiger Redemption-Stichtag in Zeile ${rowIndex+2}.`);imported.rounds.push(round);}
+        else if(type==='round_investor'){const roundId=String(r.round_id||'').trim(),name=String(r.counterparty||r.name||'').trim(),investment=n('investment_eur');if(!roundId||!name||!(investment>0))throw new Error(`Ungültiger round_investor in Zeile ${rowIndex+2}.`);importedRoundInvestors.push({id,roundId,name,investment,row:rowIndex+2});}
         else if(type==='convertible'){if(!r.name.trim()||!r.counterparty.trim()||!(n('principal_eur')>0)||!validDate(r.investment_date.trim()))throw new Error(`Ungültiges convertible in Zeile ${rowIndex+2}.`);const fullyDiluted=String(r.fully_diluted_conversion??r.include_granted_vsop??'').trim().toLowerCase();imported.convertibles.push({id,name:r.name.trim(),lender:r.counterparty.trim(),principal:n('principal_eur'),date:r.investment_date.trim(),interest:Math.max(0,n('interest_pct')||0),discount:Math.max(0,n('discount_pct')||0),valuationCap:Math.max(0,n('valuation_cap_eur')||0),fullyDilutedConversion:fullyDiluted===''||['true','1','ja','yes'].includes(fullyDiluted)});}
-        else if(type==='secondary'){if(!r.name.trim()||!r.seller.trim()||!r.buyer.trim()||!(n('shares')>0)||!(n('secondary_price_per_share_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültiges secondary in Zeile ${rowIndex+2}.`);imported.secondaries.push({id,name:r.name.trim(),seller:r.seller.trim(),buyer:r.buyer.trim(),shares:n('shares'),pricePerShare:n('secondary_price_per_share_eur'),date:r.closing_date.trim()});}
+        else if(type==='secondary'){if(!r.name.trim()||!r.seller.trim()||!r.buyer.trim()||!(n('shares')>0)||!(n('secondary_price_per_share_eur')>0)||!validDate(r.closing_date.trim()))throw new Error(`Ungültiges secondary in Zeile ${rowIndex+2}.`);imported.secondaries.push({id,name:r.name.trim(),seller:r.seller.trim(),buyer:r.buyer.trim(),shares:n('shares'),pricePerShare:n('secondary_price_per_share_eur'),date:r.closing_date.trim(),sourceRoundId:String(r.source_round_id??'').trim()});}
         else if(type==='vsop'){if(!r.name.trim()||!(n('shares')>0)||!validDate(r.grant_date.trim())||!validDate(r.vesting_start.trim()))throw new Error(`Ungültiger vsop-Datensatz in Zeile ${rowIndex+2}.`);imported.vsopParticipants.push({id,name:r.name.trim(),poolId:String(r.pool_id??'').trim(),shares:n('shares'),plannedShares:Math.max(0,n('planned_shares')||0),grantDate:r.grant_date.trim(),startDate:r.vesting_start.trim(),vestingMonths:Math.max(1,n('vesting_months')||48),cliffMonths:Math.max(0,n('cliff_months')||0),hurdle:Math.max(0,n('strike_price_eur')||0),status:r.status.trim()||'Aktiv',leaverDate:r.leaver_date.trim(),expiryDate:r.expiry_date.trim()});}
         else if(type==='exit')imported.exit={value:Math.max(0,n('exit_value_eur')||0),debt:Math.max(0,n('exit_debt_eur')||0),costs:Math.max(0,n('exit_costs_eur')||0),date:r.exit_date.trim()};
       });
+      importedRoundInvestors.forEach(investor=>{const round=imported.rounds.find(item=>item.id===investor.roundId);if(!round)throw new Error(`round_investor in Zeile ${investor.row} verweist auf keine gültige Runde.`);});
+      imported.rounds.forEach(round=>{const subscriptions=importedRoundInvestors.filter(investor=>investor.roundId===round.id).map(({id,name,investment})=>({id,name,investment}));if(subscriptions.length)round.investors=subscriptions;normalizeRound(round);if(!round.investors.length||roundInvestment(round)<=0)throw new Error(`Runde ${round.name} enthält keine gültigen Investoren.`);if(new Set(round.investors.map(investor=>holderKey(investor.name))).size!==round.investors.length)throw new Error(`Investoren in Runde ${round.name} müssen eindeutig sein.`);});
       if(!imported.holders.length)throw new Error('Mindestens ein holder wird benötigt.');
-      const ids=[...imported.holders,...imported.rounds,...imported.convertibles,...imported.secondaries,...imported.vsopParticipants].map(x=>x.id);if(new Set(ids).size!==ids.length)throw new Error('IDs müssen über alle Datensätze eindeutig sein.');
+      const ids=[...imported.holders,...imported.rounds,...imported.convertibles,...imported.secondaries,...imported.vsopParticipants,...imported.rounds.flatMap(round=>round.investors)].map(x=>x.id);if(new Set(ids).size!==ids.length)throw new Error('IDs müssen über alle Datensätze eindeutig sein.');
       const pools=imported.holders.filter(h=>h.isVirtual),poolIds=new Set(pools.map(p=>p.id));
       if(imported.vsopParticipants.length&&!pools.length)throw new Error('Für VSOP-Datensätze fehlt ein VSOP-Pool.');
       imported.vsopParticipants.forEach(g=>{if(!g.poolId&&pools.length===1)g.poolId=pools[0].id;if(!poolIds.has(g.poolId))throw new Error(`VSOP-Zuteilung ${g.name} verweist auf keinen gültigen Pool.`);});
       imported.rounds.forEach(r=>{if(r.poolRefresh>0&&!r.poolId&&pools.length===1)r.poolId=pools[0].id;if(r.poolRefresh>0&&!poolIds.has(r.poolId))throw new Error(`Pool-Auffrischung in ${r.name} benötigt einen gültigen Zielpool.`);});
+      const roundIds=new Set(imported.rounds.map(r=>r.id));
+      imported.secondaries.forEach(s=>{if(s.sourceRoundId&&s.sourceRoundId!=='common'&&!roundIds.has(s.sourceRoundId))throw new Error(`Secondary ${s.name} verweist auf keine gültige Anteilsklasse.`);});
       const importedSnapshots=snapshots(imported),invalidSecondary=importedSnapshots.find(snapshot=>snapshot.secondaryError);
       if(invalidSecondary)throw new Error(invalidSecondary.secondaryError);
       state=imported;stage=importedSnapshots.length-1;save();render();
     }
+    const holderKey = name => String(name||'').trim().toLocaleLowerCase('de-DE');
+    const aggregateLots = lots => {
+      const holders=new Map();
+      lots.forEach(lot=>{
+        const id=lot.holderId,existing=holders.get(id),legalShares=Number(lot.shares)||0,equivalentShares=legalShares*Math.max(.0001,Number(lot.conversionRatio)||1);
+        if(existing){existing.shares+=equivalentShares;existing.legalShares+=legalShares;}
+        else holders.set(id,{id,name:lot.name,type:lot.type,shares:equivalentShares,legalShares,...(lot.isVirtual?{isVirtual:true}:{}),...(lot.costBasis?{costBasis:lot.costBasis}:{}),...(lot.investmentDate?{investmentDate:lot.investmentDate}:{})});
+      });
+      return [...holders.values()];
+    };
+    const copyLots = lots => lots.map(lot=>({...lot}));
+    const lotEquivalentShares = lot => (Number(lot.shares)||0)*Math.max(.0001,Number(lot.conversionRatio)||1);
+    const preferenceClaimAtExit = (lot,exitDate) => {
+      if(lot.preferenceType==='none')return 0;
+      const shares=Number(lot.shares)||0,basePerShare=Math.max(0,Number(lot.preferenceBasePerShare)||0),liquidationPerShare=Math.max(0,Number(lot.preferenceClaimPerShare)||0);
+      const days=validDate(lot.dividendStartDate)&&validDate(exitDate)?Math.max(0,(Date.parse(exitDate+'T00:00:00Z')-Date.parse(lot.dividendStartDate+'T00:00:00Z'))/86400000):0;
+      const dividendPerShare=basePerShare*(Math.max(0,Number(lot.cumulativeDividendRate)||0)/100)*(days/365);
+      const redemptionAvailable=lot.redemptionEnabled&&validDate(lot.redemptionDate)&&validDate(exitDate)&&exitDate>=lot.redemptionDate,redemptionPerShare=redemptionAvailable?basePerShare*Math.max(.1,Number(lot.redemptionMultiple)||1):0;
+      return shares*(Math.max(liquidationPerShare,redemptionPerShare)+dividendPerShare);
+    };
+    function waterfallForElections(lots,proceeds,exitDate,elected,convertedParticipating=new Set()){
+      const preferenceLots=lots.filter(lot=>(lot.preferenceType==='participating'&&!convertedParticipating.has(lot.id))||elected.has(lot.id)),preferencePaid=new Map(),residualPaid=new Map();
+      let available=Math.max(0,Number(proceeds)||0);
+      const ranks=[...new Set(preferenceLots.map(lot=>Math.max(1,Math.round(Number(lot.liquidationSeniority)||1))))].sort((a,b)=>a-b);
+      ranks.forEach(rank=>{
+        if(available<=0)return;
+        const ranked=preferenceLots.filter(lot=>Math.max(1,Math.round(Number(lot.liquidationSeniority)||1))===rank),claims=ranked.map(lot=>({lot,claim:preferenceClaimAtExit(lot,exitDate)})),totalClaims=claims.reduce((sum,item)=>sum+item.claim,0),scale=totalClaims>available&&totalClaims>0?available/totalClaims:1;
+        claims.forEach(item=>preferencePaid.set(item.lot.id,item.claim*scale));available=Math.max(0,available-totalClaims*scale);
+      });
+      let active=lots.filter(lot=>lot.preferenceType!=='non-participating'||!elected.has(lot.id)).map(lot=>{
+        const prefPaid=preferencePaid.get(lot.id)||0,capMultiple=lot.preferenceType==='participating'&&!convertedParticipating.has(lot.id)?Math.max(0,Number(lot.participationCapMultiple)||0):0,capTotal=capMultiple>0?Math.max(prefPaid,(Number(lot.preferenceBasePerShare)||0)*(Number(lot.shares)||0)*capMultiple):Infinity;
+        return{lot,weight:lotEquivalentShares(lot),capacity:Math.max(0,capTotal-prefPaid)};
+      }).filter(item=>item.weight>0&&item.capacity>0);
+      while(available>0.000001&&active.length){
+        const totalWeight=active.reduce((sum,item)=>sum+item.weight,0);if(!totalWeight)break;
+        const perShare=available/totalWeight,capped=active.filter(item=>Number.isFinite(item.capacity)&&item.capacity<perShare*item.weight-0.000001);
+        if(!capped.length){active.forEach(item=>residualPaid.set(item.lot.id,(residualPaid.get(item.lot.id)||0)+perShare*item.weight));available=0;break;}
+        capped.forEach(item=>{residualPaid.set(item.lot.id,(residualPaid.get(item.lot.id)||0)+item.capacity);available-=item.capacity;});
+        const cappedIds=new Set(capped.map(item=>item.lot.id));active=active.filter(item=>!cappedIds.has(item.lot.id));
+      }
+      const payoutByLot=new Map();lots.forEach(lot=>payoutByLot.set(lot.id,(preferencePaid.get(lot.id)||0)+(residualPaid.get(lot.id)||0)));
+      return{payoutByLot,preferencePaid,residualPaid,unallocated:available};
+    }
+    function calculateWaterfall(lots,proceeds,exitDate){
+      const nonParticipating=lots.filter(lot=>lot.preferenceType==='non-participating'),cappedParticipating=lots.filter(lot=>lot.preferenceType==='participating'&&Number(lot.participationCapMultiple)>0),elected=new Set(),convertedParticipating=new Set(),seen=new Set();
+      let result=waterfallForElections(lots,proceeds,exitDate,elected,convertedParticipating);
+      for(let iteration=0;iteration<100;iteration++){
+        const signature=[...elected].sort().join(',')+'|'+[...convertedParticipating].sort().join(',');if(seen.has(signature))break;seen.add(signature);
+        let best=null;
+        nonParticipating.forEach(lot=>{
+          const candidateElected=new Set(elected);if(candidateElected.has(lot.id))candidateElected.delete(lot.id);else candidateElected.add(lot.id);
+          const candidate=waterfallForElections(lots,proceeds,exitDate,candidateElected,convertedParticipating),gain=(candidate.payoutByLot.get(lot.id)||0)-(result.payoutByLot.get(lot.id)||0);
+          if(gain>0.000001&&(!best||gain>best.gain))best={kind:'non-participating',lot,gain,result:candidate};
+        });
+        cappedParticipating.forEach(lot=>{
+          const candidateConverted=new Set(convertedParticipating);if(candidateConverted.has(lot.id))candidateConverted.delete(lot.id);else candidateConverted.add(lot.id);
+          const candidate=waterfallForElections(lots,proceeds,exitDate,elected,candidateConverted),gain=(candidate.payoutByLot.get(lot.id)||0)-(result.payoutByLot.get(lot.id)||0);
+          if(gain>0.000001&&(!best||gain>best.gain))best={kind:'participating',lot,gain,result:candidate};
+        });
+        if(!best)break;
+        if(best.kind==='non-participating'){if(elected.has(best.lot.id))elected.delete(best.lot.id);else elected.add(best.lot.id);}else if(convertedParticipating.has(best.lot.id))convertedParticipating.delete(best.lot.id);else convertedParticipating.add(best.lot.id);
+        result=best.result;
+      }
+      return{...result,elected,convertedParticipating};
+    }
     function snapshots(source=state){
-      let cap=source.holders.map(h=>({...h}));
-      let raised=source.convertibles.reduce((sum,c)=>sum+(Number(c.principal)||0),0),valuation=null;
-      const out=[{label:'Gründung',cap:cap.map(x=>({...x})),valuation,raised,price:null,conversions:[],activeRoundIds:[],activeSecondaryIds:[],eventType:'founding',eventId:'',asOfDate:''}];
+      let lots=source.holders.map(h=>({id:'base-'+h.id,holderId:h.id,name:h.name,type:h.type,shares:Number(h.shares)||0,isVirtual:Boolean(h.isVirtual),costBasis:Number(h.costBasis)||0,investmentDate:h.investmentDate||'',sourceRoundId:'',className:'Common',preferenceType:'none',preferenceBasePerShare:0,preferenceClaimPerShare:0,liquidationSeniority:999999,participationCapMultiple:0,conversionRatio:1,cumulativeDividendRate:0,dividendStartDate:'',redemptionEnabled:false,redemptionDate:'',redemptionMultiple:1}));
+      let cap=aggregateLots(lots),raised=source.convertibles.reduce((sum,c)=>sum+(Number(c.principal)||0),0),valuation=null;
+      const out=[{label:'Gründung',cap:cap.map(x=>({...x})),lots:copyLots(lots),valuation,raised,price:null,conversions:[],activeRoundIds:[],activeSecondaryIds:[],eventType:'founding',eventId:'',asOfDate:''}];
       const converted=new Set(),activeRoundIds=[],activeSecondaryIds=[];
+      const roundOrder=new Map(source.rounds.map((round,index)=>({round,index})).sort((a,b)=>(a.round.date||'9999-12-31').localeCompare(b.round.date||'9999-12-31')||a.index-b.index).map((entry,index)=>[entry.round.id,index]));
       const transactions=[
         ...source.rounds.map((item,index)=>({kind:'round',date:item.date||'',item,index})),
         ...source.secondaries.map((item,index)=>({kind:'secondary',date:item.date||'',item,index}))
       ].sort((a,b)=>(a.date||'9999-12-31').localeCompare(b.date||'9999-12-31')||(a.kind==='round'?-1:1)-(b.kind==='round'?-1:1)||a.index-b.index);
       transactions.forEach(entry=>{
         if(entry.kind==='secondary'){
-          const s=entry.item,seller=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===s.seller.trim().toLocaleLowerCase('de-DE'));
-          const error=!seller?`Secondary „${s.name}“: Verkäufer ${s.seller} ist am Transaktionsdatum nicht in der Cap Table.`:seller.shares+0.000001<Number(s.shares)?`Secondary „${s.name}“: ${s.seller} verfügt nur über ${num(seller.shares)} Anteile.`:'';
+          const s=entry.item,sellerName=holderKey(s.seller),sourceRoundId=String(s.sourceRoundId||''),sellerLots=lots.filter(lot=>!lot.isVirtual&&holderKey(lot.name)===sellerName&&lot.shares>0);
+          let transferable=sourceRoundId==='common'?sellerLots.filter(lot=>!lot.sourceRoundId):sourceRoundId?sellerLots.filter(lot=>lot.sourceRoundId===sourceRoundId):sellerLots.slice().sort((a,b)=>Boolean(a.sourceRoundId)-Boolean(b.sourceRoundId)||(roundOrder.get(a.sourceRoundId)??-1)-(roundOrder.get(b.sourceRoundId)??-1));
+          const available=transferable.reduce((sum,lot)=>sum+(Number(lot.shares)||0),0),requested=Number(s.shares)||0;
+          const sourceRound=source.rounds.find(r=>r.id===sourceRoundId)||{},className=sourceRoundId==='common'?'Common':sourceRound.className||sourceRound.name||'gewählten Anteilsklasse';
+          const error=!sellerLots.length?`Secondary „${s.name}“: Verkäufer ${s.seller} ist am Transaktionsdatum nicht in der Cap Table.`:available+0.000001<requested?`Secondary „${s.name}“: ${s.seller} verfügt in ${sourceRoundId?className:'den verfügbaren Anteilsklassen'} nur über ${num(available)} Anteile.`:'';
           if(!error){
-            seller.shares-=Number(s.shares);
-            const buyer=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===s.buyer.trim().toLocaleLowerCase('de-DE'));
-            if(buyer)buyer.shares+=Number(s.shares);else cap.push({id:'sec-'+s.id,name:s.buyer,type:'Investor',shares:Number(s.shares)});
+            const buyerExisting=cap.find(h=>!h.isVirtual&&holderKey(h.name)===holderKey(s.buyer)),buyerHolderId=buyerExisting?.id||'sec-'+s.id;
+            let remaining=requested;
+            transferable.forEach(lot=>{
+              if(remaining<=0)return;
+              const moved=Math.min(remaining,lot.shares);lot.shares-=moved;remaining-=moved;
+              const buyerLot=lots.find(candidate=>candidate.holderId===buyerHolderId&&candidate.sourceRoundId===lot.sourceRoundId&&candidate.preferenceType===lot.preferenceType&&candidate.preferenceClaimPerShare===lot.preferenceClaimPerShare);
+              if(buyerLot)buyerLot.shares+=moved;
+              else lots.push({...lot,id:'sec-'+s.id+'-'+lot.id,holderId:buyerHolderId,name:s.buyer,type:buyerExisting?.type||'Investor',shares:moved,isVirtual:false,costBasis:0,investmentDate:''});
+            });
             activeSecondaryIds.push(s.id);
           }
-          out.push({label:s.name,cap:cap.map(x=>({...x})),valuation,raised,price:null,conversions:[],activeRoundIds:[...activeRoundIds],activeSecondaryIds:[...activeSecondaryIds],eventType:'secondary',eventId:s.id,asOfDate:s.date,secondaryError:error||''});
+          cap=aggregateLots(lots);
+          out.push({label:s.name,cap:cap.map(x=>({...x})),lots:copyLots(lots),valuation,raised,price:null,conversions:[],activeRoundIds:[...activeRoundIds],activeSecondaryIds:[...activeSecondaryIds],eventType:'secondary',eventId:s.id,asOfDate:s.date,secondaryError:error||''});
           return;
         }
-        const r=entry.item,poolRefresh=Math.max(0,Number(r.poolRefresh)||0),pool=cap.find(h=>h.id===r.poolId&&h.isVirtual);
+        const r=entry.item,poolRefresh=Math.max(0,Number(r.poolRefresh)||0),pool=lots.find(lot=>lot.holderId===r.poolId&&lot.isVirtual);
         if(pool&&poolRefresh>0&&r.poolRefreshTiming==='pre')pool.shares+=poolRefresh;
+        cap=aggregateLots(lots);
         const equityTotal=cap.filter(h=>!h.isVirtual).reduce((a,h)=>a+(Number(h.shares)||0),0);
         const fullyDilutedTotal=cap.reduce((sum,h)=>sum+(Number(h.shares)||0),0);
-        const price=Number(r.preMoney)/Math.max(.000001,equityTotal),conversions=[];
+        const price=Number(r.preMoney)/Math.max(.000001,fullyDilutedTotal),conversions=[];
         source.convertibles.forEach(c=>{
           if(converted.has(c.id)||!validDate(c.date)||!validDate(r.date)||c.date>r.date)return;
           const conversionBaseTotal=Math.max(.000001,c.fullyDilutedConversion?fullyDilutedTotal:equityTotal),discount=Math.min(99,Math.max(0,Number(c.discount)||0));
           const discountPrice=(Number(r.preMoney)*(1-discount/100))/conversionBaseTotal,capPrice=Number(c.valuationCap)>0?Number(c.valuationCap)/conversionBaseTotal:Infinity,conversionPrice=Math.min(discountPrice,capPrice);
-          const claim=loanClaim(c,r.date),shares=claim/Math.max(.000001,conversionPrice),existing=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===c.lender.trim().toLocaleLowerCase('de-DE'));
-          if(existing)existing.shares+=shares;else cap.push({id:'conv-'+c.id,name:c.lender,type:'Investor',shares});
+          const claim=loanClaim(c,r.date),shares=claim/Math.max(.000001,conversionPrice),existing=cap.find(h=>!h.isVirtual&&holderKey(h.name)===holderKey(c.lender));
+          lots.push({id:'conv-'+c.id,holderId:existing?.id||'conv-'+c.id,name:c.lender,type:existing?.type||'Investor',shares,isVirtual:false,costBasis:0,investmentDate:'',sourceRoundId:'',className:'Common',preferenceType:'none',preferenceBasePerShare:0,preferenceClaimPerShare:0,liquidationSeniority:999999,participationCapMultiple:0,conversionRatio:1,cumulativeDividendRate:0,dividendStartDate:'',redemptionEnabled:false,redemptionDate:'',redemptionMultiple:1});
           converted.add(c.id);conversions.push({id:c.id,price:conversionPrice,claim,shares});
         });
-        const shares=Number(r.investment)/price,existing=cap.find(h=>!h.isVirtual&&h.name.trim().toLocaleLowerCase('de-DE')===r.investor.trim().toLocaleLowerCase('de-DE'));
-        if(existing)existing.shares+=shares;else cap.push({id:'inv-'+r.id,name:r.investor,type:'Investor',shares});
+        cap=aggregateLots(lots);
+        const preferenceType=r.liquidationPreferenceType||'none',conversionRatio=Math.max(.0001,Number(r.conversionRatio)||1),allocations=[];
+        roundInvestors(r).forEach((investor,index)=>{
+          const investment=Math.max(0,Number(investor.investment)||0),shares=investment/price,existingLot=lots.find(lot=>!lot.isVirtual&&holderKey(lot.name)===holderKey(investor.name)),preferenceClaim=preferenceType==='none'?0:investment*Math.max(.1,Number(r.liquidationPreferenceMultiple)||1);
+          lots.push({id:'round-'+r.id+'-'+(investor.id||index),holderId:existingLot?.holderId||'inv-'+r.id+'-'+(investor.id||index),name:investor.name,type:existingLot?.type||'Investor',shares,isVirtual:false,costBasis:0,investmentDate:'',sourceRoundId:r.id,className:r.className||r.name,preferenceType,preferenceBasePerShare:shares?investment/shares:0,preferenceClaimPerShare:shares?preferenceClaim/shares:0,liquidationSeniority:Math.max(1,Math.round(Number(r.liquidationSeniority)||1)),participationCapMultiple:Math.max(0,Number(r.participationCapMultiple)||0),conversionRatio,cumulativeDividendRate:Math.max(0,Number(r.cumulativeDividendRate)||0),dividendStartDate:r.date||'',redemptionEnabled:Boolean(r.redemptionEnabled),redemptionDate:r.redemptionDate||'',redemptionMultiple:Math.max(.1,Number(r.redemptionMultiple)||1)});
+          allocations.push({id:investor.id,name:investor.name,investment,shares,equivalentShares:shares*conversionRatio});
+        });
         if(pool&&poolRefresh>0&&r.poolRefreshTiming==='post')pool.shares+=poolRefresh;
-        raised+=Number(r.investment)||0;valuation=Number(r.preMoney)+Number(r.investment);activeRoundIds.push(r.id);
-        out.push({label:r.name,cap:cap.map(x=>({...x})),valuation,raised,price,conversions,activeRoundIds:[...activeRoundIds],activeSecondaryIds:[...activeSecondaryIds],eventType:'round',eventId:r.id,asOfDate:r.date,secondaryError:''});
+        const totalInvestment=roundInvestment(r);cap=aggregateLots(lots);raised+=totalInvestment;valuation=Number(r.preMoney)+totalInvestment;activeRoundIds.push(r.id);
+        out.push({label:r.name,cap:cap.map(x=>({...x})),lots:copyLots(lots),valuation,raised,price,conversions,roundAllocations:allocations,activeRoundIds:[...activeRoundIds],activeSecondaryIds:[...activeSecondaryIds],eventType:'round',eventId:r.id,asOfDate:r.date,secondaryError:''});
       });
       return out;
     }
@@ -1606,7 +1742,7 @@ html>body{padding:0}</style>
       $('#erm-round-count').textContent=`${activeRounds.length} ${activeRounds.length===1?'Eigenkapitalrunde':'Eigenkapitalrunden'} · ${state.convertibles.length} Wandeldarlehen · ${activeSecondaries.length} ${activeSecondaries.length===1?'Secondary':'Secondaries'}`;
       $('#erm-founder-share').textContent=pct(founder);
       $('#erm-founder-dilution').textContent=stage?pct(founder-initialFounder)+' seit Gründung':'Ausgangsanteil';
-      $('#erm-total-shares').textContent=num(total)+' Anteile';
+      $('#erm-total-shares').textContent=num(total)+' FD-Anteile';
       $('#erm-tabs').innerHTML=snaps.map((s,i)=>`<button type="button" class="btn ${i===stage?'is-selected':''}" aria-pressed="${i===stage}" data-stage="${i}">${esc(s.label)}</button>`).join('');
       let chartCursor=0;
       const chartStops=snap.cap.map((h,i)=>{const start=chartCursor;chartCursor+=total?h.shares/total*100:0;return`${colors[i%colors.length]} ${start}% ${chartCursor}%`;});
@@ -1621,7 +1757,7 @@ html>body{padding:0}</style>
         const baseIndex=state.holders.findIndex(x=>x.id===h.id);
         const poolInUse=h.isVirtual&&(state.vsopParticipants.some(g=>g.poolId===h.id)||state.rounds.some(r=>r.poolId===h.id&&Number(r.poolRefresh)>0));
         const actions=baseIndex<0?'–':h.isVirtual?`<div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-pool="${baseIndex}" aria-label="${esc(h.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-holder="${baseIndex}" aria-label="${esc(h.name)} löschen" ${poolInUse?'disabled data-tooltip="Zuerst zugeordnete VSOP-Personen verschieben oder löschen"':''}><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`:`<div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-holder="${baseIndex}" aria-label="${esc(h.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-holder="${baseIndex}" aria-label="${esc(h.name)} löschen" ${state.holders.filter(x=>!x.isVirtual).length<=1?'disabled data-tooltip="Mindestens ein Beteiligter muss verbleiben"':''}><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`;
-        return `<tr><td data-label="Beteiligte"><span class="erm-name"><span class="erm-swatch" style="background:${colors[i%colors.length]}"></span><span>${esc(h.name)}<br><span class="text-small text-muted">${esc(h.type)}</span></span></span></td><td data-label="Anteile">${num(h.shares)}</td><td data-label="Ownership">${pct(p)}</td><td data-label="Wert">${companyValue?euro(companyValue*p/100):'–'}</td><td data-label="Aktionen">${actions}</td></tr>`;
+        return `<tr><td data-label="Beteiligte"><span class="erm-name"><span class="erm-swatch" style="background:${colors[i%colors.length]}"></span><span>${esc(h.name)}<br><span class="text-small text-muted">${esc(h.type)}</span></span></span></td><td data-label="FD-Anteile">${num(h.shares)}</td><td data-label="Ownership">${pct(p)}</td><td data-label="Wert">${companyValue?euro(companyValue*p/100):'–'}</td><td data-label="Aktionen">${actions}</td></tr>`;
       }).join('')||'<tr><td colspan="5" class="erm-empty">Keine Beteiligten für diese Suche gefunden.</td></tr>';
       const financingItems=[
         ...state.convertibles.map((item,index)=>({kind:'convertible',date:item.date||'',item,index})),
@@ -1634,12 +1770,12 @@ html>body{padding:0}</style>
           return `<article class="erm-round erm-financing-card is-convertible"><div class="viz-row"><span class="viz-badge erm-type-badge">Wandeldarlehen</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${entry.index}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${entry.index}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(c.date+'T00:00:00Z'))}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap)>0?euro(c.valuationCap):'–'}</span><span class="text-muted">Wandlungsbasis</span><span>${c.fullyDilutedConversion?'Fully Diluted':'Nur Equity-Anteile'}</span></div></article>`;
         }
         if(entry.kind==='secondary'){
-          const s=entry.item,volume=Number(s.shares)*Number(s.pricePerShare),secondarySnap=snaps.find(snapshot=>snapshot.eventType==='secondary'&&snapshot.eventId===s.id);
-          return `<article class="erm-round erm-financing-card is-secondary"><div class="viz-row"><span class="viz-badge erm-type-badge">Secondary</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(s.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-secondary="${entry.index}" aria-label="${esc(s.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-secondary="${entry.index}" aria-label="${esc(s.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(s.seller)} → ${esc(s.buyer)}</span><div class="erm-round-meta text-small"><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(s.date+'T00:00:00Z'))}</span><span class="text-muted">Anteile</span><span>${num(s.shares)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(s.pricePerShare)}</span><span class="text-muted">Volumen</span><span>${euro(volume)}</span>${secondarySnap?.secondaryError?`<span class="text-destructive">Hinweis</span><span class="text-destructive">${esc(secondarySnap.secondaryError)}</span>`:''}</div></article>`;
+          const s=entry.item,volume=Number(s.shares)*Number(s.pricePerShare),secondarySnap=snaps.find(snapshot=>snapshot.eventType==='secondary'&&snapshot.eventId===s.id),sourceRound=s.sourceRoundId?(state.rounds.find(round=>round.id===s.sourceRoundId)||{}):{},sourceClass=s.sourceRoundId==='common'?'Common / ohne LiqPref':s.sourceRoundId?sourceRound.className||sourceRound.name||s.sourceRoundId:'Automatisch · Common zuerst';
+          return `<article class="erm-round erm-financing-card is-secondary"><div class="viz-row"><span class="viz-badge erm-type-badge">Secondary</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(s.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-secondary="${entry.index}" aria-label="${esc(s.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-secondary="${entry.index}" aria-label="${esc(s.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(s.seller)} → ${esc(s.buyer)}</span><div class="erm-round-meta text-small"><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(s.date+'T00:00:00Z'))}</span><span class="text-muted">Anteilsklasse</span><span>${esc(sourceClass)}</span><span class="text-muted">Anteile</span><span>${num(s.shares)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(s.pricePerShare)}</span><span class="text-muted">Volumen</span><span>${euro(volume)}</span>${secondarySnap?.secondaryError?`<span class="text-destructive">Hinweis</span><span class="text-destructive">${esc(secondarySnap.secondaryError)}</span>`:''}</div></article>`;
         }
-        const r=entry.item,roundSnapIndex=snaps.findIndex(snapshot=>snapshot.eventType==='round'&&snapshot.eventId===r.id),before=snaps[Math.max(0,roundSnapIndex-1)].cap.reduce((a,h)=>a+h.shares,0),roundSnap=snaps[roundSnapIndex],after=roundSnap.cap.reduce((a,h)=>a+h.shares,0),dilution=(1-before/after)*100,poolName=(state.holders.find(h=>h.id===r.poolId)||{}).name||'Kein Zielpool';
-        const preferenceLabel=r.liquidationPreferenceType==='participating'?`${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× partizipierend`:r.liquidationPreferenceType==='non-participating'?`${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× nicht partizipierend`:'Keine';
-        return `<article class="erm-round erm-financing-card is-equity"><div class="viz-row"><span class="viz-badge erm-type-badge">Eigenkapitalrunde</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(r.investor)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date?esc(new Intl.DateTimeFormat('de-DE').format(new Date(r.date+'T00:00:00Z'))):'Datum fehlt'}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(r.investment)}</span><span class="text-muted">LiqPref</span><span>${esc(preferenceLabel)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euro(roundSnap.price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh||0)} · ${esc(poolName)} · ${r.poolRefreshTiming==='post'?'Post-Money':'Pre-Money'}</span></div></article>`;
+        const r=entry.item,roundSnapIndex=snaps.findIndex(snapshot=>snapshot.eventType==='round'&&snapshot.eventId===r.id),before=snaps[Math.max(0,roundSnapIndex-1)].cap.reduce((a,h)=>a+h.shares,0),roundSnap=snaps[roundSnapIndex],after=roundSnap.cap.reduce((a,h)=>a+h.shares,0),dilution=(1-before/after)*100,poolName=(state.holders.find(h=>h.id===r.poolId)||{}).name||'Kein Zielpool',investors=roundInvestors(r),investorNames=investors.map(investor=>investor.name).join(' · ');
+        const capLabel=r.liquidationPreferenceType==='participating'&&Number(r.participationCapMultiple)>0?` · Cap ${Number(r.participationCapMultiple).toLocaleString('de-DE')}×`:'',preferenceLabel=r.liquidationPreferenceType==='participating'?`${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× partizipierend${capLabel}`:r.liquidationPreferenceType==='non-participating'?`${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× nicht partizipierend`:'Keine',redemptionLabel=r.redemptionEnabled&&validDate(r.redemptionDate)?`${Number(r.redemptionMultiple).toLocaleString('de-DE')}× ab ${new Intl.DateTimeFormat('de-DE').format(new Date(r.redemptionDate+'T00:00:00Z'))}`:'Nein';
+        return `<article class="erm-round erm-financing-card is-equity"><div class="viz-row"><span class="viz-badge erm-type-badge">Eigenkapitalrunde</span><span class="erm-financing-index">${String(displayIndex+1).padStart(2,'0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(investorNames)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date?esc(new Intl.DateTimeFormat('de-DE').format(new Date(r.date+'T00:00:00Z'))):'Datum fehlt'}</span><span class="text-muted">Anteilsklasse</span><span>${esc(r.className||r.name)}</span><span class="text-muted">Investoren</span><span>${investors.length}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(roundInvestment(r))}</span><span class="text-muted">LiqPref</span><span>${esc(preferenceLabel)}</span><span class="text-muted">Seniorität</span><span>${r.liquidationPreferenceType==='none'?'–':Number(r.liquidationSeniority).toLocaleString('de-DE')}</span><span class="text-muted">Conversion Ratio</span><span>${Number(r.conversionRatio||1).toLocaleString('de-DE',{maximumFractionDigits:4})}:1</span><span class="text-muted">Kumul. Dividende</span><span>${r.liquidationPreferenceType==='none'?'–':pct(Number(r.cumulativeDividendRate)||0)+' p. a.'}</span><span class="text-muted">Redemption</span><span>${esc(redemptionLabel)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(roundSnap.price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh||0)} · ${esc(poolName)} · ${r.poolRefreshTiming==='post'?'Post-Money':'Pre-Money'}</span></div></article>`;
       }).join(''):'<div class="erm-empty">Noch keine Finanzierungen.</div>';
       const exitValue=Math.max(0,Number(state.exit.value)||0);
       const exitDebt=Math.max(0,Number(state.exit.debt)||0);
@@ -1650,33 +1786,23 @@ html>body{padding:0}</style>
       const cashflowsByName={};
       const addCashflow=(name,amount,date)=>{const k=name.trim().toLowerCase();(cashflowsByName[k]||(cashflowsByName[k]=[])).push({amount,date});};
       state.holders.forEach(h=>{if(Number(h.costBasis)>0)addCashflow(h.name,-Number(h.costBasis),h.investmentDate||'');});
-      activeRounds.forEach(r=>addCashflow(r.investor,-r.investment,r.date||''));
+      activeRounds.forEach(r=>roundInvestors(r).forEach(investor=>addCashflow(investor.name,-investor.investment,r.date||'')));
       state.convertibles.forEach(c=>{if(activeRounds.some(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date))addCashflow(c.lender,-c.principal,c.date);});
       const secondaryProceedsByName={};
       activeSecondaries.forEach(s=>{const volume=Number(s.shares)*Number(s.pricePerShare),sellerKey=s.seller.trim().toLocaleLowerCase('de-DE');addCashflow(s.buyer,-volume,s.date);addCashflow(s.seller,volume,s.date);secondaryProceedsByName[sellerKey]=(secondaryProceedsByName[sellerKey]||0)+volume;});
       const poolSizeAtStage=snap.cap.filter(h=>h.isVirtual).reduce((sum,h)=>sum+(Number(h.shares)||0),0),fullyDilutedValuePerShare=total?exitNet/total:0;
       const vsopExitRows=state.vsopParticipants.map(g=>{const eligible=!validDate(g.expiryDate)||!validDate(exitDate)||exitDate<=g.expiryDate,vested=eligible?vestedShares(g,exitDate):0,payout=Math.max(0,(fullyDilutedValuePerShare-(Number(g.hurdle)||0))*vested);return{grant:g,vested,payout};});
       const vsopPayout=vsopExitRows.reduce((sum,row)=>sum+row.payout,0),vestedPoolShares=vsopExitRows.reduce((sum,row)=>sum+row.vested,0),restPoolShares=Math.max(0,poolSizeAtStage-vestedPoolShares),equityRemainder=Math.max(0,exitNet-vsopPayout);
-      const actualHolders=snap.cap.filter(h=>!h.isVirtual),actualShares=actualHolders.reduce((sum,h)=>sum+h.shares,0);
-      const preferences={};
-      activeRounds.forEach(r=>{
-        const type=r.liquidationPreferenceType||'none';if(type==='none')return;
-        const key=r.investor.trim().toLocaleLowerCase('de-DE'),pref=preferences[key]||(preferences[key]={participating:0,nonParticipating:0});
-        const claim=Math.max(0,Number(r.investment))*Math.max(.1,Number(r.liquidationPreferenceMultiple)||1);
-        if(type==='participating')pref.participating+=claim;else pref.nonParticipating+=claim;
+      const actualHolders=snap.cap.filter(h=>!h.isVirtual);
+      const actualLots=snap.lots.filter(lot=>!lot.isVirtual&&lot.shares>0),waterfall=calculateWaterfall(actualLots,equityRemainder,exitDate),payoutByHolder=new Map(),preferenceByHolder=new Map();
+      actualLots.forEach(lot=>{
+        const payout=waterfall.payoutByLot.get(lot.id)||0,prefPayout=waterfall.preferencePaid.get(lot.id)||0;
+        payoutByHolder.set(lot.holderId,(payoutByHolder.get(lot.holderId)||0)+payout);preferenceByHolder.set(lot.holderId,(preferenceByHolder.get(lot.holderId)||0)+prefPayout);
       });
-      const baselineByName={};actualHolders.forEach(h=>baselineByName[h.name.trim().toLocaleLowerCase('de-DE')]=actualShares?equityRemainder*h.shares/actualShares:0);
-      const electedNonParticipating=new Set(Object.entries(preferences).filter(([name,pref])=>pref.nonParticipating>(baselineByName[name]||0)).map(([name])=>name));
-      const preferenceClaims={};Object.entries(preferences).forEach(([name,pref])=>preferenceClaims[name]=pref.participating+(electedNonParticipating.has(name)?pref.nonParticipating:0));
-      const totalPreferenceClaims=Object.values(preferenceClaims).reduce((sum,claim)=>sum+claim,0),preferenceScale=totalPreferenceClaims>equityRemainder&&totalPreferenceClaims>0?equityRemainder/totalPreferenceClaims:1;
-      const preferencePaid={};Object.entries(preferenceClaims).forEach(([name,claim])=>preferencePaid[name]=claim*preferenceScale);
-      const preferencePool=Object.values(preferencePaid).reduce((sum,claim)=>sum+claim,0),residualPool=Math.max(0,equityRemainder-preferencePool);
-      const participatesInResidual=h=>{const key=h.name.trim().toLocaleLowerCase('de-DE'),pref=preferences[key];return!electedNonParticipating.has(key)||Boolean(pref&&pref.participating>0);};
-      const residualShares=actualHolders.filter(participatesInResidual).reduce((sum,h)=>sum+h.shares,0);
       const angelNames=new Set(state.convertibles.filter(c=>activeRounds.some(r=>validDate(c.date)&&validDate(r.date)&&c.date<=r.date)).map(c=>c.lender.trim().toLowerCase()));
       let founderPayout=0, angelPayout=0, investorPayout=0;
       const holderRows=actualHolders.slice().sort((a,b)=>b.shares-a.shares).map(h=>{
-        const key=h.name.trim().toLocaleLowerCase('de-DE'),ownership=h.shares/total,prefPayout=preferencePaid[key]||0,residualPayout=participatesInResidual(h)&&residualShares?residualPool*h.shares/residualShares:0,payout=prefPayout+residualPayout,realized=secondaryProceedsByName[key]||0,totalReturn=payout+realized,flows=cashflowsByName[key]||[],invested=Math.max(0,-flows.reduce((sum,f)=>sum+Math.min(0,f.amount),0));
+        const key=h.name.trim().toLocaleLowerCase('de-DE'),ownership=h.shares/total,prefPayout=preferenceByHolder.get(h.id)||0,payout=payoutByHolder.get(h.id)||0,realized=secondaryProceedsByName[key]||0,totalReturn=payout+realized,flows=cashflowsByName[key]||[],invested=Math.max(0,-flows.reduce((sum,f)=>sum+Math.min(0,f.amount),0));
         const dated=validDate(exitDate)&&flows.length>0&&flows.every(f=>validDate(f.date)&&f.date<=exitDate),irr=invested?(totalReturn===0?-1:dated?xirr([...flows,{amount:payout,date:exitDate}]):null):null;
         const group=h.type==='Gründer'?'founders':angelNames.has(key)?'angels':'investors',details=[esc(h.type)];if(prefPayout>0)details.push(`LiqPref ${euro(prefPayout)}`);if(realized>0)details.push(`Secondary-Erlöse ${euro(realized)}`);
         if(group==='founders')founderPayout+=payout;else if(group==='angels')angelPayout+=payout;else investorPayout+=payout;
@@ -1830,33 +1956,87 @@ html>body{padding:0}</style>
       if(selected&&!names.has(selected.trim().toLocaleLowerCase('de-DE')))names.set(selected.trim().toLocaleLowerCase('de-DE'),selected);
       return [...names.values()].sort((a,b)=>a.localeCompare(b,'de')).map(name=>`<option value="${esc(name)}" ${name===selected?'selected':''}>${esc(name)}</option>`).join('');
     }
+    function secondarySourceOptions(seller,date,selected=''){
+      const priorSecondaries=state.secondaries.filter((secondary,index)=>secondary.date<date||(secondary.date===date&&(editSecondary===null||index<editSecondary)));
+      const priorRounds=state.rounds.filter(round=>round.date<=date),prior=snapshots({...state,rounds:priorRounds,secondaries:priorSecondaries}).at(-1);
+      const balances=new Map();
+      prior.lots.filter(lot=>!lot.isVirtual&&lot.shares>0&&holderKey(lot.name)===holderKey(seller)).forEach(lot=>{
+        const classId=lot.sourceRoundId||'common';balances.set(classId,(balances.get(classId)||0)+lot.shares);
+      });
+      const options=[`<option value="" ${selected===''?'selected':''}>Automatisch · Common zuerst (${num([...balances.values()].reduce((sum,shares)=>sum+shares,0))})</option>`];
+      if(balances.has('common'))options.push(`<option value="common" ${selected==='common'?'selected':''}>Common / ohne LiqPref · ${num(balances.get('common'))}</option>`);
+      chronologicalRounds().forEach(({round})=>{
+        if(!balances.has(round.id))return;
+        const type=round.liquidationPreferenceType==='participating'?'partizipierend':round.liquidationPreferenceType==='non-participating'?'nicht partizipierend':'ohne LiqPref';
+        options.push(`<option value="${esc(round.id)}" ${selected===round.id?'selected':''}>${esc(round.className||round.name)} · ${esc(type)} · ${num(balances.get(round.id))}</option>`);
+      });
+      if(selected&&selected!=='common'&&!balances.has(selected)){const round=state.rounds.find(item=>item.id===selected);options.push(`<option value="${esc(selected)}" selected>${esc(round?.className||round?.name||selected)} · aktuell nicht verfügbar</option>`);}
+      return options.join('');
+    }
+    function updateSecondarySourceOptions(){
+      const select=$('#erm-secondary-source-round'),selected=select.value;
+      select.innerHTML=secondarySourceOptions($('#erm-secondary-seller').value,$('#erm-secondary-date').value,selected);
+    }
     function openSecondary(i=null){
-      editSecondary=i;const fallback=snapshots().at(-1).cap.find(h=>!h.isVirtual&&h.shares>0),s=i===null?{name:'Founder Secondary',seller:fallback?.name||'',buyer:'',shares:10000,pricePerShare:1,date:today}:state.secondaries[i];
+      editSecondary=i;const fallback=snapshots().at(-1).cap.find(h=>!h.isVirtual&&h.shares>0),s=i===null?{name:'Founder Secondary',seller:fallback?.name||'',buyer:'',shares:10000,pricePerShare:1,date:today,sourceRoundId:''}:state.secondaries[i];
       $('#erm-secondary-form-title').textContent=i===null?'Secondary hinzufügen':'Secondary bearbeiten';$('#erm-delete-secondary').hidden=i===null;
-      $('#erm-secondary-name').value=s.name;$('#erm-secondary-date').value=s.date||'';$('#erm-secondary-seller').innerHTML=secondarySellerOptions(s.seller);$('#erm-secondary-seller').value=s.seller;$('#erm-secondary-buyer').value=s.buyer;$('#erm-secondary-shares').value=s.shares;$('#erm-secondary-price').value=s.pricePerShare;$('#erm-secondary-error').textContent='';$('#erm-secondary-dialog').showModal();
+      $('#erm-secondary-name').value=s.name;$('#erm-secondary-date').value=s.date||'';$('#erm-secondary-seller').innerHTML=secondarySellerOptions(s.seller);$('#erm-secondary-seller').value=s.seller;$('#erm-secondary-source-round').innerHTML=secondarySourceOptions(s.seller,s.date||'',s.sourceRoundId||'');$('#erm-secondary-source-round').value=s.sourceRoundId||'';$('#erm-secondary-buyer').value=s.buyer;$('#erm-secondary-shares').value=s.shares;$('#erm-secondary-price').value=s.pricePerShare;$('#erm-secondary-error').textContent='';$('#erm-secondary-dialog').showModal();
     }
     function requestSecondaryDelete(i){
       const s=state.secondaries[i];if(!s)return;pendingDeleteSecondary=i;if($('#erm-secondary-dialog').open)$('#erm-secondary-dialog').close();$('#erm-delete-secondary-message').textContent=`${s.name}: Die Übertragung von ${num(s.shares)} Anteilen wird aus allen Cap Table-Ständen entfernt.`;$('#erm-delete-secondary-dialog').showModal();
     }
     $('#erm-delete-secondary').addEventListener('click',()=>requestSecondaryDelete(editSecondary));
     $('#erm-confirm-delete-secondary').addEventListener('click',()=>{if(pendingDeleteSecondary!==null&&state.secondaries[pendingDeleteSecondary])state.secondaries.splice(pendingDeleteSecondary,1);pendingDeleteSecondary=null;stage=snapshots().length-1;save();$('#erm-delete-secondary-dialog').close();render();});
+    $('#erm-secondary-seller').addEventListener('change',updateSecondarySourceOptions);
+    $('#erm-secondary-date').addEventListener('change',updateSecondarySourceOptions);
     $('#erm-save-secondary').addEventListener('click',e=>{
-      e.preventDefault();const s={id:editSecondary===null?uid():state.secondaries[editSecondary].id,name:$('#erm-secondary-name').value.trim(),seller:$('#erm-secondary-seller').value.trim(),buyer:$('#erm-secondary-buyer').value.trim(),shares:Number($('#erm-secondary-shares').value),pricePerShare:Number($('#erm-secondary-price').value),date:$('#erm-secondary-date').value};
+      e.preventDefault();const s={id:editSecondary===null?uid():state.secondaries[editSecondary].id,name:$('#erm-secondary-name').value.trim(),seller:$('#erm-secondary-seller').value.trim(),buyer:$('#erm-secondary-buyer').value.trim(),shares:Number($('#erm-secondary-shares').value),pricePerShare:Number($('#erm-secondary-price').value),date:$('#erm-secondary-date').value,sourceRoundId:$('#erm-secondary-source-round').value};
       if(!s.name||!s.seller||!s.buyer||s.seller.toLocaleLowerCase('de-DE')===s.buyer.toLocaleLowerCase('de-DE')||!(s.shares>0)||!(s.pricePerShare>0)||!validDate(s.date)){$('#erm-secondary-error').textContent='Bitte unterschiedliche Parteien, positive Anteile, Preis und ein gültiges Datum eingeben.';return;}
       const secondaries=state.secondaries.slice();if(editSecondary===null)secondaries.push(s);else secondaries[editSecondary]=s;const candidateSnapshots=snapshots({...state,secondaries}),invalid=candidateSnapshots.find(snapshot=>snapshot.secondaryError);if(invalid){$('#erm-secondary-error').textContent=invalid.secondaryError;return;}
       state.secondaries=secondaries;stage=candidateSnapshots.length-1;save();$('#erm-secondary-dialog').close();render();
     });
-    function openRound(i=null){
-      editRound=i; const pools=vsopPools(),r=i===null?{name:'Series '+String.fromCharCode(65+state.rounds.length),investor:'',preMoney:8000000,investment:2000000,date:today,liquidationPreferenceType:'non-participating',liquidationPreferenceMultiple:1,poolRefresh:0,poolRefreshTiming:'pre',poolId:pools[0]?.id||''}:state.rounds[i];
-      $('#erm-round-form-title').textContent=i===null?'Eigenkapitalrunde hinzufügen':'Eigenkapitalrunde bearbeiten';
-      $('#erm-round-name').value=r.name; $('#erm-investor').value=r.investor; $('#erm-premoney').value=moneyInputValue(r.preMoney); $('#erm-investment').value=moneyInputValue(r.investment); $('#erm-round-date').value=r.date||'';$('#erm-round-liq-pref').value=r.liquidationPreferenceType||'none';$('#erm-round-liq-multiple').value=r.liquidationPreferenceMultiple||1;$('#erm-round-liq-multiple').disabled=$('#erm-round-liq-pref').value==='none'; $('#erm-round-pool-refresh').value=r.poolRefresh||0; $('#erm-round-pool-id').innerHTML=poolSelectOptions(r.poolId,true); $('#erm-round-pool-id').value=r.poolId||''; $('#erm-round-pool-timing').value=r.poolRefreshTiming||'pre'; $('#erm-round-error').textContent=''; $('#erm-round-dialog').showModal();
+    function readRoundInvestors(){
+      return [...root.querySelectorAll('.erm-round-investor-row')].map(row=>({id:row.dataset.investorId||uid(),name:row.querySelector('[data-round-investor-name]').value.trim(),investment:parseMoney(row.querySelector('[data-round-investor-investment]').value)}));
     }
-    $('#erm-round-liq-pref').addEventListener('change',e=>{$('#erm-round-liq-multiple').disabled=e.target.value==='none';});
+    function updateRoundInvestmentTotal(){
+      const total=readRoundInvestors().reduce((sum,investor)=>sum+investor.investment,0);
+      $('#erm-round-investment-total').textContent='Gesamt '+euro(total);
+    }
+    function renderRoundInvestors(investors){
+      const rows=investors.length?investors:[{id:uid(),name:'',investment:0}];
+      $('#erm-round-investor-list').innerHTML=rows.map((investor,index)=>`<div class="erm-round-investor-row" data-investor-id="${esc(investor.id||uid())}"><label class="form-label">Investor ${index+1}<input class="form-control" data-round-investor-name required placeholder="z. B. Venture Fund" value="${esc(investor.name||'')}"></label><label class="form-label">Investment (€)<input class="form-control" data-round-investor-investment type="text" inputmode="numeric" value="${esc(moneyInputValue(investor.investment||0))}"></label><button type="button" class="btn btn-ghost text-destructive" data-remove-round-investor aria-label="Investor entfernen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`).join('');
+      root.querySelectorAll('[data-round-investor-investment]').forEach(input=>input.addEventListener('input',()=>{formatMoneyField(input);updateRoundInvestmentTotal();}));
+      updateRoundInvestmentTotal();
+      if(window.lucide)lucide.createIcons({attrs:{width:16,height:16}});
+    }
+    function updateRoundPreferenceFields(){
+      const type=$('#erm-round-liq-pref').value,disabled=type==='none',redemptionEnabled=$('#erm-round-redemption-enabled').checked&&!disabled;
+      $('#erm-round-liq-multiple').disabled=disabled;
+      $('#erm-round-seniority').disabled=disabled;
+      $('#erm-round-participation-cap').disabled=type!=='participating';
+      $('#erm-round-dividend-rate').disabled=disabled;
+      $('#erm-round-redemption-enabled').disabled=disabled;
+      $('#erm-round-redemption-date').disabled=!redemptionEnabled;
+      $('#erm-round-redemption-multiple').disabled=!redemptionEnabled;
+    }
+    function openRound(i=null){
+      editRound=i;const pools=vsopPools(),defaultName='Series '+String.fromCharCode(65+state.rounds.length),r=normalizeRound(i===null?{id:uid(),name:defaultName,className:defaultName+' Preferred',investors:[{id:uid(),name:'',investment:2000000}],preMoney:8000000,date:today,liquidationPreferenceType:'non-participating',liquidationPreferenceMultiple:1,liquidationSeniority:1,participationCapMultiple:0,conversionRatio:1,cumulativeDividendRate:0,redemptionEnabled:false,redemptionDate:'',redemptionMultiple:1,poolRefresh:0,poolRefreshTiming:'pre',poolId:pools[0]?.id||''}:{...state.rounds[i],investors:roundInvestors(state.rounds[i]).map(investor=>({...investor}))});
+      $('#erm-round-form-title').textContent=i===null?'Eigenkapitalrunde hinzufügen':'Eigenkapitalrunde bearbeiten';
+      $('#erm-round-name').value=r.name;$('#erm-round-class-name').value=r.className||r.name;renderRoundInvestors(roundInvestors(r));$('#erm-premoney').value=moneyInputValue(r.preMoney);$('#erm-round-date').value=r.date||'';$('#erm-round-liq-pref').value=r.liquidationPreferenceType||'none';$('#erm-round-liq-multiple').value=r.liquidationPreferenceMultiple||1;$('#erm-round-seniority').value=r.liquidationSeniority||1;$('#erm-round-participation-cap').value=r.participationCapMultiple||0;$('#erm-round-conversion-ratio').value=r.conversionRatio||1;$('#erm-round-dividend-rate').value=r.cumulativeDividendRate||0;$('#erm-round-redemption-enabled').checked=Boolean(r.redemptionEnabled);$('#erm-round-redemption-date').value=r.redemptionDate||'';$('#erm-round-redemption-multiple').value=r.redemptionMultiple||1;$('#erm-round-pool-refresh').value=r.poolRefresh||0;$('#erm-round-pool-id').innerHTML=poolSelectOptions(r.poolId,true);$('#erm-round-pool-id').value=r.poolId||'';$('#erm-round-pool-timing').value=r.poolRefreshTiming||'pre';$('#erm-round-error').textContent='';updateRoundPreferenceFields();$('#erm-round-dialog').showModal();
+    }
+    $('#erm-add-round-investor').addEventListener('click',()=>renderRoundInvestors([...readRoundInvestors(),{id:uid(),name:'',investment:0}]));
+    $('#erm-round-investor-list').addEventListener('click',e=>{const button=e.target.closest('[data-remove-round-investor]');if(!button)return;const investors=readRoundInvestors(),index=[...root.querySelectorAll('.erm-round-investor-row')].indexOf(button.closest('.erm-round-investor-row'));investors.splice(index,1);renderRoundInvestors(investors);});
+    $('#erm-round-liq-pref').addEventListener('change',updateRoundPreferenceFields);
+    $('#erm-round-redemption-enabled').addEventListener('change',updateRoundPreferenceFields);
     $('#erm-save-round').addEventListener('click',e=>{
-      e.preventDefault(); const r={id:editRound===null?uid():state.rounds[editRound].id,name:$('#erm-round-name').value.trim(),investor:$('#erm-investor').value.trim(),preMoney:parseMoney($('#erm-premoney').value),investment:parseMoney($('#erm-investment').value),date:$('#erm-round-date').value,liquidationPreferenceType:$('#erm-round-liq-pref').value,liquidationPreferenceMultiple:Number($('#erm-round-liq-multiple').value),poolRefresh:Math.max(0,Number($('#erm-round-pool-refresh').value)||0),poolId:$('#erm-round-pool-id').value,poolRefreshTiming:$('#erm-round-pool-timing').value};
-      if(!r.name||!r.investor||r.preMoney<=0||r.investment<=0||!validDate(r.date)){$('#erm-round-error').textContent='Bitte alle Felder mit gültigen Werten ausfüllen.';return;}
-      if(r.liquidationPreferenceType!=='none'&&!(r.liquidationPreferenceMultiple>0)){$('#erm-round-error').textContent='Für die Liquidationspräferenz wird ein positives Multiple benötigt.';return;}
-      if(r.liquidationPreferenceType==='none')r.liquidationPreferenceMultiple=1;
+      e.preventDefault();const investors=readRoundInvestors(),rawRound={id:editRound===null?uid():state.rounds[editRound].id,name:$('#erm-round-name').value.trim(),className:$('#erm-round-class-name').value.trim(),investors,preMoney:parseMoney($('#erm-premoney').value),date:$('#erm-round-date').value,liquidationPreferenceType:$('#erm-round-liq-pref').value,liquidationPreferenceMultiple:Number($('#erm-round-liq-multiple').value),liquidationSeniority:Number($('#erm-round-seniority').value),participationCapMultiple:Number($('#erm-round-participation-cap').value),conversionRatio:Number($('#erm-round-conversion-ratio').value),cumulativeDividendRate:Number($('#erm-round-dividend-rate').value),redemptionEnabled:$('#erm-round-redemption-enabled').checked,redemptionDate:$('#erm-round-redemption-date').value,redemptionMultiple:Number($('#erm-round-redemption-multiple').value),poolRefresh:Math.max(0,Number($('#erm-round-pool-refresh').value)||0),poolId:$('#erm-round-pool-id').value,poolRefreshTiming:$('#erm-round-pool-timing').value},r=normalizeRound({...rawRound,investors:investors.map(investor=>({...investor}))});
+      if(!r.name||!r.className||r.preMoney<=0||!validDate(r.date)||!investors.length||investors.some(investor=>!investor.name||!(investor.investment>0))){$('#erm-round-error').textContent='Bitte Runde, Anteilsklasse, Datum und alle Investoren mit positiven Investments ausfüllen.';return;}
+      if(new Set(investors.map(investor=>holderKey(investor.name))).size!==investors.length){$('#erm-round-error').textContent='Jeder Investor darf innerhalb einer Runde nur einmal vorkommen.';return;}
+      if(rawRound.liquidationPreferenceType!=='none'&&!(rawRound.liquidationPreferenceMultiple>0)){$('#erm-round-error').textContent='Für die Liquidationspräferenz wird ein positives Multiple benötigt.';return;}
+      if(!(rawRound.conversionRatio>0)||(rawRound.liquidationPreferenceType!=='none'&&(!(rawRound.liquidationSeniority>=1)||!Number.isInteger(rawRound.liquidationSeniority)||rawRound.cumulativeDividendRate<0))||(rawRound.liquidationPreferenceType==='participating'&&rawRound.participationCapMultiple<0)){$('#erm-round-error').textContent='Seniorität, Cap, Conversion Ratio und Dividende enthalten ungültige Werte.';return;}
+      if(rawRound.liquidationPreferenceType!=='none'&&rawRound.redemptionEnabled&&(!validDate(rawRound.redemptionDate)||rawRound.redemptionDate<rawRound.date||!(rawRound.redemptionMultiple>0))){$('#erm-round-error').textContent='Redemption benötigt einen gültigen Stichtag ab Closing und ein positives Multiple.';return;}
+      if(r.liquidationPreferenceType==='none'){r.liquidationPreferenceMultiple=1;r.liquidationSeniority=999999;r.participationCapMultiple=0;r.cumulativeDividendRate=0;r.redemptionEnabled=false;r.redemptionDate='';r.redemptionMultiple=1;}
+      if(r.liquidationPreferenceType!=='participating')r.participationCapMultiple=0;
       if(r.poolRefresh>0&&!r.poolId){$('#erm-round-error').textContent='Für zusätzliche Pool-Anteile wird ein Zielpool benötigt.';return;}
       const rounds=state.rounds.slice();if(editRound===null)rounds.push(r);else rounds[editRound]=r;const candidateSnapshots=snapshots({...state,rounds}),invalid=candidateSnapshots.find(snapshot=>snapshot.secondaryError);if(invalid){$('#erm-round-error').textContent=invalid.secondaryError;return;}
       state.rounds=rounds;stage=candidateSnapshots.length-1;save(); $('#erm-round-dialog').close(); render();

@@ -6,11 +6,12 @@ Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Seco
 
 - Cap Table über chronologische Eigenkapital- und Secondary-Stände
 - Gemeinsamer Einstieg **Neue Transaktion** für Eigenkapitalrunde, Wandeldarlehen und Secondary
-- Eigenkapitalrunden mit nicht partizipierender oder partizipierender Liquidationspräferenz
+- Eigenkapitalrunden mit mehreren Investoren zu einem gemeinsamen Fully-Diluted-Pre-Money-Preis
+- Anteilsklassen mit Seniorität, pari-passu Rängen, nicht oder voll partizipierender Liquidationspräferenz, Participation Cap, Conversion Ratio, kumulativer Dividende und optionalem Redemption-Floor
 - Wandeldarlehen mit Zins, Discount, Valuation Cap und wählbarer Fully-Diluted-Wandlungsbasis
-- Secondaries mit Verkäufer, Käufer, Anteilen, Stückpreis und Rendite-Cashflows
-- Mehrere VSOP-Pools mit zugeordneten Personen, Vesting, Cliff, Leaver- und Ablaufdatum
-- Exit-Simulation mit vereinfachtem LiqPref-Waterfall, Multiple und IRR
+- Secondaries mit übertragbarer Anteilsklasse, Verkäufer, Käufer, Anteilen, Stückpreis und Rendite-Cashflows
+- Mehrere VSOP-Pools mit monatsbasiertem Vesting, Cliff, Leaver- und Ablaufdatum
+- Exit-Simulation mit senioritätsbasiertem LiqPref-Waterfall, wirtschaftlicher Konversionswahl, Multiple und IRR
 - Export der gerade ausgewählten und optional gefilterten Cap Table
 - Lokale automatische Speicherung, Rückgängig/Wiederholen, Suche sowie CSV-Backups
 
@@ -22,6 +23,16 @@ Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Seco
 ## Starten
 
 Öffne `index.html` direkt in einem modernen Browser. Alternativ kann die Datei über einen beliebigen lokalen Webserver bereitgestellt werden.
+
+## Berechnungen testen
+
+Die regressionskritischen Berechnungen lassen sich ohne Installation mit Node.js prüfen:
+
+```powershell
+node tests/calculation-scenarios.js
+```
+
+Die Suite deckt 32 benannte Szenarien und 250 deterministisch erzeugte Waterfalls ab.
 
 ## Daten und Backups
 
