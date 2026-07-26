@@ -24,7 +24,7 @@ const validDateEnd = declarationMarker('roundInvestors');
 const roundHelpersStart = validDateEnd;
 const roundHelpersEnd = declarationMarker('chronologicalRounds');
 const financeStart = declarationMarker('loanClaim');
-const financeEnd = declarationMarker('reservedVsopShares');
+const financeEnd = declarationMarker('vsopPools');
 const waterfallStart = declarationMarker('aggregateLots');
 const snapshotsStart = functionMarker('snapshots');
 const renderStart = functionMarker('render');
@@ -42,7 +42,7 @@ const projectRoundHelpers = new Function(
 const projectFinance = new Function(
   'validDate',
   'today',
-  source.slice(financeStart, financeEnd) + '\nreturn {loanClaim,addMonths,completedMonths,vestedShares};'
+  source.slice(financeStart, financeEnd) + '\nreturn {loanClaim,addMonths,completedMonths,earnedVsopShares,vestedShares,vsopEntitlement,calculateVsopPayout,reservedVsopShares};'
 )(validDate, '2030-01-01');
 const projectWaterfall = new Function(
   'validDate',
@@ -71,16 +71,21 @@ const snapshots = new Function(
   projectRoundHelpers.roundInvestors,
   projectRoundHelpers.roundInvestment
 );
-const normalizeRound = new Function(
-  source.slice(normalizeStart, normalizeEnd) + '\nreturn normalizeRound;'
+const projectNormalizers = new Function(
+  source.slice(normalizeStart, normalizeEnd) + '\nreturn {normalizeRound,normalizeVsopGrant};'
 )();
+const normalizeRound = projectNormalizers.normalizeRound;
+const normalizeVsopGrant = projectNormalizers.normalizeVsopGrant;
 
 function buildCsvImporter() {
   let generatedId = 0;
   return new Function(
     'validDate',
     'normalizeRound',
+    'normalizeVsopGrant',
     'holderKey',
+    'num',
+    'reservedVsopShares',
     'roundInvestment',
     'snapshots',
     'uid',
@@ -89,7 +94,10 @@ function buildCsvImporter() {
   )(
     validDate,
     normalizeRound,
+    normalizeVsopGrant,
     holderKey,
+    num,
+    projectFinance.reservedVsopShares,
     projectRoundHelpers.roundInvestment,
     snapshots,
     () => `generated-${++generatedId}`,
@@ -362,18 +370,18 @@ const waterfallScenarios = [
   },
   {
     id: 'WF-13',
-    title: 'Senior preference is paid before junior preference',
-    calculation: 'Senior receives €100 first; the remaining €50 partially pays the junior €100 claim.',
+    title: 'Rank 2 is paid before rank 1 regardless of input order',
+    calculation: 'The rank-2 claim receives €100 first; the remaining €50 partially pays the rank-1 claim.',
     input: {
       proceeds: 150,
       exitDate: '2027-01-01',
       lots: [
-        {id: 'senior', kind: 'participating', shares: 20, investment: 100, preference: 100, seniority: 1},
-        {id: 'junior', kind: 'participating', shares: 20, investment: 100, preference: 100, seniority: 2},
+        {id: 'rank-one', kind: 'participating', shares: 20, investment: 100, preference: 100, seniority: 1},
+        {id: 'rank-two', kind: 'participating', shares: 20, investment: 100, preference: 100, seniority: 2},
         {id: 'common', kind: 'common', shares: 60}
       ]
     },
-    expected: {payouts: {senior: 100, junior: 50, common: 0}, preferencePaid: {senior: 100, junior: 50}, elected: [], converted: [], unallocated: 0}
+    expected: {payouts: {'rank-one': 50, 'rank-two': 100, common: 0}, preferencePaid: {'rank-one': 50, 'rank-two': 100}, elected: [], converted: [], unallocated: 0}
   },
   {
     id: 'WF-14',
@@ -576,13 +584,25 @@ const snapshotScenarios = [
   },
   {
     id: 'CT-33',
-    title: 'A convertible uses the better valuation cap price',
-    calculation: '20% discount gives €8/share; the €7m cap gives €7/share, so €100k converts into 14,285.714286 shares.',
+    title: 'Same-name convertible holdings are bundled after separate conversions',
+    calculation: 'One €50k note converts at the €8 discount price into 6,250 shares; another converts at the €7 cap price into 7,142.857143 shares, bundled as 13,392.857143 Angel shares.',
     input: makeState({
-      convertibles: [makeConvertible({id: 'note', name: 'Angel Note', lender: 'Angel', principal: 100000, date: '2024-01-01', discount: 20, valuationCap: 7000000})],
+      convertibles: [
+        makeConvertible({id: 'discount-note', name: 'Discount Note', lender: 'Angel', principal: 50000, date: '2024-01-01', discount: 20}),
+        makeConvertible({id: 'cap-note', name: 'Cap Note', lender: 'Angel', principal: 50000, date: '2024-02-01', valuationCap: 7000000})
+      ],
       rounds: [makeRound({id: 'round-a', name: 'Seed', preMoney: 10000000, date: '2025-01-01', investors: [{id: 'fund', name: 'Fund', investment: 1000000}]})]
     }),
-    expected: {price: 10, raised: 1100000, valuation: 11000000, capShares: {Founder: 1000000, Angel: 14285.7142857143, Fund: 100000}, conversions: {note: {price: 7, claim: 100000, shares: 14285.7142857143}}}
+    expected: {
+      price: 10,
+      raised: 1100000,
+      valuation: 11000000,
+      capShares: {Founder: 1000000, Angel: 13392.8571428571, Fund: 100000},
+      conversions: {
+        'discount-note': {price: 8, claim: 50000, shares: 6250},
+        'cap-note': {price: 7, claim: 50000, shares: 7142.8571428571}
+      }
+    }
   },
   {
     id: 'CT-34',
@@ -614,10 +634,50 @@ const snapshotScenarios = [
   },
   {
     id: 'CT-37',
-    title: 'An existing holder aggregates newly purchased shares',
-    calculation: 'Founder starts with 1,000,000 and buys €1m / €10 = 100,000 more, totaling 1,100,000.',
-    input: makeState({rounds: [makeRound({id: 'round-a', name: 'Series A', preMoney: 10000000, date: '2025-01-01', investors: [{id: 'founder-follow-on', name: 'Founder', investment: 1000000}]})]}),
-    expected: {price: 10, capShares: {Founder: 1100000}, capLegalShares: {Founder: 1100000}}
+    title: 'Same-name investments bundle ownership but retain lot-specific exit terms',
+    calculation: 'Two Fund subscriptions in Series A combine to €100/10 shares; Series B adds 10 shares. At a €150 exit, rank-2 participating Series B receives €100 before rank-1 non-participating Series A receives €50.',
+    input: makeState({
+      holders: [makeHolder('founder', 'Founder', 100)],
+      rounds: [
+        makeRound({
+          id: 'round-a',
+          name: 'Series A',
+          preMoney: 1000,
+          date: '2025-01-01',
+          preferenceType: 'non-participating',
+          seniority: 1,
+          investors: [
+            {id: 'fund-a-1', name: 'Fund', investment: 40},
+            {id: 'fund-a-2', name: ' Fund ', investment: 60}
+          ]
+        }),
+        makeRound({
+          id: 'round-b',
+          name: 'Series B',
+          preMoney: 1100,
+          date: '2026-01-01',
+          preferenceType: 'participating',
+          seniority: 2,
+          investors: [{id: 'fund-b', name: 'fund', investment: 100}]
+        })
+      ]
+    }),
+    expected: {
+      price: 10,
+      capShares: {Founder: 100, Fund: 20},
+      capLegalShares: {Fund: 20},
+      bundledRoundInvestors: {'round-a': {count: 1, investment: 100}},
+      lots: [
+        {name: 'Fund', sourceRoundId: 'round-a', holderId: 'inv-round-a-fund-a-1', shares: 10, preferenceType: 'non-participating', liquidationSeniority: 1},
+        {name: 'fund', sourceRoundId: 'round-b', holderId: 'inv-round-a-fund-a-1', shares: 10, preferenceType: 'participating', liquidationSeniority: 2}
+      ],
+      waterfall: {
+        proceeds: 150,
+        exitDate: '2027-01-01',
+        lotPayouts: {'round-a': 50, 'round-b': 100},
+        holderPayouts: {Fund: 150, Founder: 0}
+      }
+    }
   },
   {
     id: 'CT-38',
@@ -697,6 +757,86 @@ const utilityScenarios = [
     kind: 'loan',
     input: {toDate: '2026-01-01', loan: {principal: 100000, date: '2025-01-01', interest: 8}},
     expected: {claim: 108000}
+  },
+  {
+    id: 'VSOP-51',
+    title: 'A grant cannot vest before its grant date',
+    calculation: 'The vesting start is earlier, but the grant is not issued until 1 January 2025, so the 2024 entitlement is zero.',
+    kind: 'vesting',
+    input: {asOf: '2024-12-31', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2024-01-01', vestingMonths: 48, cliffMonths: 0, status: 'Aktiv'}},
+    expected: {shares: 0}
+  },
+  {
+    id: 'VSOP-52',
+    title: 'Quarterly vesting credits only completed quarters',
+    calculation: 'Thirteen service months round down to twelve under a three-month cadence; 4,800 × 12/48 = 1,200.',
+    kind: 'vesting',
+    input: {asOf: '2026-02-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 0, vestingIntervalMonths: 3, status: 'Aktiv'}},
+    expected: {shares: 1200}
+  },
+  {
+    id: 'VSOP-53',
+    title: 'A vesting pause delays credited service',
+    calculation: 'Fourteen elapsed months less a two-month pause equals twelve credited months; 4,800 × 12/48 = 1,200.',
+    kind: 'vesting',
+    input: {asOf: '2026-03-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, vestingPauseMonths: 2, status: 'Aktiv'}},
+    expected: {shares: 1200}
+  },
+  {
+    id: 'VSOP-54',
+    title: 'A leaver can retain only a contractual share of vested claims',
+    calculation: 'Eighteen months vest 1,800 shares; a 50% retention term leaves 900 payable shares.',
+    kind: 'vesting',
+    input: {asOf: '2028-01-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, status: 'Ausgeschieden', leaverDate: '2026-07-01', leaverType: 'neutral', vestedRetentionPct: 50}},
+    expected: {shares: 900}
+  },
+  {
+    id: 'VSOP-55',
+    title: 'Zero retention removes a bad leaver payout entitlement',
+    calculation: 'Eighteen months have vested, but a 0% entered retention factor results in zero retained shares.',
+    kind: 'vesting',
+    input: {asOf: '2028-01-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, status: 'Ausgeschieden', leaverDate: '2026-07-01', leaverType: 'bad', vestedRetentionPct: 0}},
+    expected: {shares: 0}
+  },
+  {
+    id: 'VSOP-56',
+    title: 'An expired grant has no exit entitlement',
+    calculation: 'The grant expired on 31 December 2026, so its payable balance on 1 January 2027 is zero.',
+    kind: 'vsop-entitlement',
+    input: {asOf: '2027-01-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, status: 'Aktiv', expiryDate: '2026-12-31'}},
+    expected: {payable: 0, expired: true}
+  },
+  {
+    id: 'VSOP-57',
+    title: 'Single-trigger acceleration applies to unvested shares at exit',
+    calculation: 'At month 24, 2,400 shares are vested and 2,400 remain; 50% acceleration adds 1,200 for 3,600 payable shares.',
+    kind: 'vsop-entitlement',
+    input: {asOf: '2027-01-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, status: 'Aktiv', accelerationTrigger: 'single', accelerationPct: 50}},
+    expected: {earned: 2400, accelerated: 1200, payable: 3600}
+  },
+  {
+    id: 'VSOP-58',
+    title: 'Double-trigger acceleration waits for the second event',
+    calculation: 'The good leaver retains 1,800 vested shares, but without a dated second trigger no additional shares accelerate.',
+    kind: 'vsop-entitlement',
+    input: {asOf: '2027-01-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, status: 'Ausgeschieden', leaverDate: '2026-07-01', leaverType: 'good', vestedRetentionPct: 100, accelerationTrigger: 'double', accelerationPct: 100}},
+    expected: {earned: 1800, accelerated: 0, payable: 1800}
+  },
+  {
+    id: 'VSOP-59',
+    title: 'A completed double trigger accelerates the remaining grant',
+    calculation: 'The leaver has 1,800 naturally vested shares and the dated second trigger accelerates all 3,000 unvested shares.',
+    kind: 'vsop-entitlement',
+    input: {asOf: '2027-01-01', grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, status: 'Ausgeschieden', leaverDate: '2026-07-01', leaverType: 'good', vestedRetentionPct: 100, accelerationTrigger: 'double', accelerationPct: 100, secondTriggerDate: '2026-12-01'}},
+    expected: {earned: 1800, accelerated: 3000, payable: 4800}
+  },
+  {
+    id: 'VSOP-60',
+    title: 'The grant-specific strike price reduces the virtual payout',
+    calculation: '100 payable virtual shares × (€10 reference value − €3 strike price) = €700.',
+    kind: 'vsop-payout',
+    input: {asOf: '2027-01-01', valuePerShare: 10, grant: {shares: 100, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 12, cliffMonths: 0, status: 'Aktiv', hurdle: 3}},
+    expected: {payable: 100, spread: 7, payout: 700}
   }
 ];
 
@@ -712,6 +852,15 @@ const csvScenarios = [
       rounds: 3,
       roundInvestments: {'round-bridge': 1000000, 'round-seed': 3000000, 'round-series-a': 8000000},
       roundInvestorCounts: {'round-bridge': 4, 'round-seed': 2, 'round-series-a': 2},
+      vsopGrant: {
+        id: 'vsop-mira',
+        vestingIntervalMonths: 1,
+        vestingPauseMonths: 0,
+        leaverType: 'none',
+        vestedRetentionPct: 100,
+        accelerationTrigger: 'none',
+        accelerationPct: 0
+      },
       exitValue: 120000000,
       exitDate: '2029-10-01'
     }
@@ -757,6 +906,20 @@ const csvScenarios = [
       ]
     )},
     expected: {errorIncludes: 'Ungültiger Redemption-Stichtag'}
+  },
+  {
+    id: 'CSV-61',
+    title: 'CSV import rejects an over-allocated VSOP pool',
+    calculation: 'The grant reserves 150 virtual shares against a pool capacity of only 100 shares.',
+    input: {csv: makeCsv(
+      ['record_type', 'id', 'name', 'category', 'shares', 'planned_shares', 'cost_basis_eur', 'investment_date', 'is_virtual', 'pool_id', 'grant_date', 'vesting_start', 'vesting_months', 'cliff_months', 'strike_price_eur', 'status'],
+      [
+        {record_type: 'holder', id: 'founder', name: 'Founder', category: 'Gründer', shares: 1000, is_virtual: 'false'},
+        {record_type: 'holder', id: 'pool', name: 'Employee Pool', category: 'VSOP-Pool', shares: 100, is_virtual: 'true'},
+        {record_type: 'vsop', id: 'grant', name: 'Employee', shares: 150, pool_id: 'pool', grant_date: '2025-01-01', vesting_start: '2025-01-01', vesting_months: 48, cliff_months: 12, strike_price_eur: 0, status: 'Aktiv'}
+      ]
+    )},
+    expected: {errorIncludes: 'überbelegt'}
   }
 ];
 
@@ -832,6 +995,13 @@ function runSnapshotScenario(scenario) {
     if (!conversion) throw new Error(`${scenario.id}: conversion ${id} missing`);
     Object.entries(values).forEach(([key, value]) => assertNear(conversion[key], value, `${scenario.id} conversion ${id} ${key}`, 0.0001));
   });
+  Object.entries(expected.bundledRoundInvestors || {}).forEach(([roundId, values]) => {
+    const round = scenario.input.rounds.find(item => item.id === roundId);
+    if (!round) throw new Error(`${scenario.id}: round ${roundId} missing`);
+    const investors = projectRoundHelpers.roundInvestors(round);
+    assertEqual(investors.length, values.count, `${scenario.id} ${roundId} bundled investor count`);
+    assertNear(projectRoundHelpers.roundInvestment(round), values.investment, `${scenario.id} ${roundId} bundled investment`);
+  });
   (expected.lots || []).forEach(expectedLot => {
     const actualLot = actual.lots.find(lot => lot.name === expectedLot.name && lot.sourceRoundId === expectedLot.sourceRoundId);
     if (!actualLot) throw new Error(`${scenario.id}: lot ${expectedLot.name}/${expectedLot.sourceRoundId} missing`);
@@ -841,12 +1011,56 @@ function runSnapshotScenario(scenario) {
       else assertEqual(actualLot[key], value, `${scenario.id} lot ${expectedLot.name} ${key}`);
     });
   });
+  if (expected.waterfall) {
+    const exitLots = actual.lots.filter(lot => !lot.isVirtual && lot.shares > 0);
+    const result = projectWaterfall.calculateWaterfall(
+      exitLots,
+      expected.waterfall.proceeds,
+      expected.waterfall.exitDate
+    );
+    Object.entries(expected.waterfall.lotPayouts || {}).forEach(([sourceRoundId, payout]) => {
+      const lot = exitLots.find(item => item.sourceRoundId === sourceRoundId);
+      if (!lot) throw new Error(`${scenario.id}: exit lot ${sourceRoundId} missing`);
+      assertNear(result.payoutByLot.get(lot.id) || 0, payout, `${scenario.id} ${sourceRoundId} lot payout`);
+    });
+    Object.entries(expected.waterfall.holderPayouts || {}).forEach(([name, payout]) => {
+      const holder = findNamed(actual.cap, name, scenario.id, 'cap table');
+      const actualPayout = exitLots
+        .filter(lot => lot.holderId === holder.id)
+        .reduce((sum, lot) => sum + (result.payoutByLot.get(lot.id) || 0), 0);
+      assertNear(actualPayout, payout, `${scenario.id} ${name} bundled exit payout`);
+    });
+  }
 }
 
 function runUtilityScenario(scenario) {
   if (scenario.kind === 'vesting') {
     const actual = projectFinance.vestedShares(scenario.input.grant, scenario.input.asOf);
     assertNear(actual, scenario.expected.shares, `${scenario.id} vested shares`);
+    return;
+  }
+  if (scenario.kind === 'vsop-entitlement') {
+    const actual = projectFinance.vsopEntitlement(
+      scenario.input.grant,
+      scenario.input.asOf,
+      true
+    );
+    Object.entries(scenario.expected).forEach(([key, value]) => {
+      if (typeof value === 'number')
+        assertNear(actual[key], value, `${scenario.id} ${key}`);
+      else assertEqual(actual[key], value, `${scenario.id} ${key}`);
+    });
+    return;
+  }
+  if (scenario.kind === 'vsop-payout') {
+    const actual = projectFinance.calculateVsopPayout(
+      scenario.input.grant,
+      scenario.input.asOf,
+      scenario.input.valuePerShare
+    );
+    Object.entries(scenario.expected).forEach(([key, value]) =>
+      assertNear(actual[key], value, `${scenario.id} ${key}`)
+    );
     return;
   }
   const actual = projectFinance.loanClaim(scenario.input.loan, scenario.input.toDate);
@@ -882,6 +1096,13 @@ function runCsvScenario(scenario) {
     if (!round) throw new Error(`${scenario.id}: round ${id} missing`);
     assertEqual(projectRoundHelpers.roundInvestors(round).length, expected, `${scenario.id} ${id} investor count`);
   });
+  if (scenario.expected.vsopGrant) {
+    const grant = state.vsopParticipants.find(item => item.id === scenario.expected.vsopGrant.id);
+    if (!grant) throw new Error(`${scenario.id}: VSOP grant ${scenario.expected.vsopGrant.id} missing`);
+    Object.entries(scenario.expected.vsopGrant).forEach(([key, expected]) =>
+      assertEqual(grant[key], expected, `${scenario.id} VSOP ${key}`)
+    );
+  }
   if (scenario.expected.exitValue !== undefined) assertNear(state.exit.value, scenario.expected.exitValue, `${scenario.id} exit value`);
   if (scenario.expected.exitDate !== undefined) assertEqual(state.exit.date, scenario.expected.exitDate, `${scenario.id} exit date`);
 }
@@ -890,12 +1111,13 @@ function runScenario(scenario) {
   if (scenario.id.startsWith('WF-')) runWaterfallScenario(scenario);
   else if (scenario.id.startsWith('PC-')) runPreferenceClaimScenario(scenario);
   else if (scenario.id.startsWith('CT-')) runSnapshotScenario(scenario);
-  else if (scenario.id.startsWith('UT-')) runUtilityScenario(scenario);
+  else if (scenario.id.startsWith('UT-') || scenario.id.startsWith('VSOP-'))
+    runUtilityScenario(scenario);
   else if (scenario.id.startsWith('CSV-')) runCsvScenario(scenario);
   else throw new Error(`Unknown scenario category: ${scenario.id}`);
 }
 
-if (scenarios.length !== 50) throw new Error(`Expected exactly 50 scenarios, found ${scenarios.length}.`);
+if (scenarios.length !== 61) throw new Error(`Expected exactly 61 scenarios, found ${scenarios.length}.`);
 
 let passed = 0;
 scenarios.forEach((scenario, index) => {

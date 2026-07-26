@@ -417,6 +417,17 @@
         color: var(--muted-foreground);
       }
 
+      #equity-round-manager input[type='number'] {
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+
+      #equity-round-manager input[type='number']::-webkit-inner-spin-button,
+      #equity-round-manager input[type='number']::-webkit-outer-spin-button {
+        margin: 0;
+        -webkit-appearance: none;
+      }
+
       .form-control[type='file'] {
         padding: 0;
         overflow: hidden;
@@ -911,6 +922,22 @@
       #equity-round-manager .erm-table-wrap {
         min-width: 0;
         overflow-x: auto;
+      }
+      #equity-round-manager .erm-vsop-pools {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 10px;
+      }
+      #equity-round-manager .erm-vsop-pool-card {
+        display: grid;
+        gap: 8px;
+        padding: 13px 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--card);
+      }
+      #equity-round-manager .erm-vsop-pool-card .viz-row {
+        gap: 12px;
       }
       #equity-round-manager table {
         width: 100%;
@@ -1423,16 +1450,55 @@
         font-weight: 500;
         letter-spacing: -0.02em;
       }
-      #equity-round-manager .erm-brand .text-muted {
-        color: rgb(231 240 235 / 57%);
+      #equity-round-manager .erm-brand-meta {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+        flex-wrap: wrap;
       }
-      #equity-round-manager .erm-sidebar-label {
-        padding: 0 10px;
-        color: rgb(231 240 235 / 42%);
+      #equity-round-manager .erm-preference-switches {
+        display: flex;
+        gap: 6px;
+        margin-left: 0;
+      }
+      #equity-round-manager .erm-language-switch,
+      #equity-round-manager .erm-currency-switch {
+        display: inline-flex;
+        gap: 2px;
+        padding: 2px;
+        border: 1px solid rgb(255 255 255 / 10%);
+        border-radius: 8px;
+        background: rgb(255 255 255 / 5%);
+      }
+      #equity-round-manager .erm-language-button,
+      #equity-round-manager .erm-currency-button {
+        min-width: 34px;
+        min-height: 26px;
+        padding: 0 7px;
+        border: 0;
+        border-radius: 6px;
+        color: rgb(240 245 242 / 58%);
+        background: transparent;
+        font: inherit;
         font-size: 10px;
         font-weight: 700;
-        letter-spacing: 0.13em;
-        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+      }
+      #equity-round-manager .erm-language-button:hover,
+      #equity-round-manager .erm-currency-button:hover {
+        color: #fff;
+      }
+      #equity-round-manager .erm-language-button[aria-pressed='true'],
+      #equity-round-manager .erm-currency-button[aria-pressed='true'] {
+        color: var(--navy);
+        background: #fff;
+      }
+      #equity-round-manager .erm-language-button:focus-visible,
+      #equity-round-manager .erm-currency-button:focus-visible {
+        outline: 2px solid var(--sage);
+        outline-offset: 2px;
       }
       #equity-round-manager .erm-nav {
         gap: 5px;
@@ -1985,10 +2051,61 @@
             <div class="erm-brand-lockup">
               <span class="erm-brand-copy">
                 <strong>EASE Cap Table Manager</strong>
-                <span class="text-small text-muted">Cap Table Workspace</span>
               </span>
             </div>
-            <span class="erm-sidebar-label">Workspace</span>
+            <div class="erm-brand-meta">
+              <div class="erm-preference-switches">
+                <div class="erm-language-switch" role="group" aria-label="Sprache">
+                  <button
+                    type="button"
+                    class="erm-language-button"
+                    data-language="de"
+                    aria-label="Deutsch"
+                    aria-pressed="true"
+                    data-i18n-ignore
+                  >
+                    DE
+                  </button>
+                  <button
+                    type="button"
+                    class="erm-language-button"
+                    data-language="en"
+                    aria-label="English"
+                    aria-pressed="false"
+                    data-i18n-ignore
+                  >
+                    EN
+                  </button>
+                </div>
+                <div
+                  class="erm-currency-switch"
+                  role="group"
+                  aria-label="Währungssymbol"
+                  data-tooltip="Ändert nur das angezeigte Symbol; Werte werden nicht umgerechnet."
+                >
+                  <button
+                    type="button"
+                    class="erm-currency-button"
+                    data-currency="EUR"
+                    aria-label="Euro anzeigen"
+                    aria-pressed="true"
+                    data-i18n-ignore
+                  >
+                    €
+                  </button>
+                  <button
+                    type="button"
+                    class="erm-currency-button"
+                    data-currency="USD"
+                    aria-label="US-Dollar anzeigen"
+                    aria-pressed="false"
+                    data-i18n-ignore
+                  >
+                    $
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           <nav class="erm-nav" aria-label="Bereiche">
             <a class="btn btn-ghost is-selected" href="#erm-overview" aria-current="page"
@@ -2143,22 +2260,28 @@
 
           <section class="erm-section erm-exit" id="erm-vsop" aria-labelledby="erm-vsop-heading">
             <div class="erm-section-head">
-              <h3 id="erm-vsop-heading">VSOP-Pool</h3>
+              <div>
+                <h3 id="erm-vsop-heading">VSOP-Pools &amp; Zuteilungen</h3>
+                <span class="text-small text-muted"
+                  >Virtuelle Zahlungsansprüche · Vesting, Leaver und Exit-Bedingungen</span
+                >
+              </div>
               <span class="text-small text-muted" id="erm-vsop-summary"></span>
             </div>
+            <div class="erm-vsop-pools" id="erm-vsop-pools"></div>
             <div class="erm-table-wrap">
               <table class="erm-responsive-table">
                 <thead>
                   <tr>
                     <th>Owner</th>
                     <th>Vested</th>
+                    <th>Auszahlbar</th>
                     <th>Granted</th>
                     <th>Planned</th>
                     <th>Fully Diluted</th>
-                    <th>Date</th>
-                    <th>Expired Date</th>
-                    <th>Strike Price</th>
-                    <th>Cliff</th>
+                    <th>Vesting</th>
+                    <th>Leaver</th>
+                    <th>Basispreis</th>
                     <th><span class="sr-only">Aktionen</span></th>
                   </tr>
                 </thead>
@@ -2266,11 +2389,11 @@
               <div class="erm-fields">
                 <label class="form-label"
                   >Typ<select class="form-select" id="erm-person-type">
-                    <option>Gründer</option>
-                    <option>Mitarbeitende</option>
-                    <option>Advisor</option>
-                    <option>Investor</option>
-                    <option>Sonstige</option>
+                    <option value="Gründer">Gründer</option>
+                    <option value="Mitarbeitende">Mitarbeitende</option>
+                    <option value="Advisor">Advisor</option>
+                    <option value="Investor">Investor</option>
+                    <option value="Sonstige">Sonstige</option>
                   </select></label
                 >
                 <label class="form-label"
@@ -2400,7 +2523,8 @@
                     <button type="button" class="btn" id="erm-add-round-investor">
                       <i data-lucide="plus" aria-hidden="true"></i> Investor hinzufügen</button
                     ><span class="text-small text-muted"
-                      >Alle Zeichnungen verwenden denselben Preis je Anteil.</span
+                      >Alle Zeichnungen verwenden denselben Preis je Anteil. Namensgleiche
+                      Investoren werden gebündelt.</span
                     >
                   </div>
                 </section>
@@ -2429,7 +2553,7 @@
                     step="1"
                     value="1"
                   /><span class="text-small text-muted"
-                    >1 wird zuerst bedient; gleicher Rang ist pari passu.</span
+                    >Höhere Zahlen werden zuerst bedient; gleiche Ränge sind pari passu.</span
                   ></label
                 >
                 <label class="form-label"
@@ -2788,7 +2912,23 @@
                     required
                 /></label>
                 <label class="form-label"
-                  >Basispreis je Anteil (€)<input
+                  >Vesting-Intervall<select class="form-select" id="erm-vsop-interval">
+                    <option value="1">Monatlich</option>
+                    <option value="3">Quartalsweise</option>
+                    <option value="12">Jährlich</option>
+                  </select></label
+                >
+                <label class="form-label"
+                  >Vesting-Pause (Monate)<input
+                    class="form-control"
+                    id="erm-vsop-pause"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value="0"
+                /></label>
+                <label class="form-label"
+                  >Basispreis (Strikepreis) je virtuellem Anteil (€)<input
                     class="form-control"
                     id="erm-vsop-hurdle"
                     data-money
@@ -2801,15 +2941,62 @@
                 /></label>
                 <label class="form-label"
                   >Status<select class="form-select" id="erm-vsop-status">
-                    <option>Aktiv</option>
-                    <option>Ausgeschieden</option>
-                    <option>Storniert</option>
+                    <option value="Aktiv">Aktiv</option>
+                    <option value="Ausgeschieden">Ausgeschieden</option>
+                    <option value="Storniert">Storniert</option>
                   </select></label
                 >
                 <label class="form-label"
                   >Austrittsdatum<input class="form-control" id="erm-vsop-leaver-date" type="date"
                 /></label>
+                <label class="form-label" id="erm-vsop-leaver-type-field"
+                  >Leaver-Kategorie<select class="form-select" id="erm-vsop-leaver-type">
+                    <option value="good">Good Leaver</option>
+                    <option value="neutral">Neutral Leaver</option>
+                    <option value="bad">Bad Leaver</option>
+                  </select></label
+                >
+                <label class="form-label" id="erm-vsop-retention-field"
+                  >Gevestete Ansprüche bleiben erhalten (%)<input
+                    class="form-control"
+                    id="erm-vsop-retention"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value="100"
+                /></label>
+                <label class="form-label"
+                  >Exit-Beschleunigung<select
+                    class="form-select"
+                    id="erm-vsop-acceleration-trigger"
+                  >
+                    <option value="none">Keine</option>
+                    <option value="single">Single Trigger · Exit</option>
+                    <option value="double">Double Trigger · Exit + zweites Ereignis</option>
+                  </select></label
+                >
+                <label class="form-label" id="erm-vsop-acceleration-pct-field"
+                  >Beschleunigtes Vesting (%)<input
+                    class="form-control"
+                    id="erm-vsop-acceleration-pct"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value="0"
+                /></label>
+                <label class="form-label" id="erm-vsop-second-trigger-field"
+                  >Datum des zweiten Triggers<input
+                    class="form-control"
+                    id="erm-vsop-second-trigger-date"
+                    type="date"
+                /></label>
               </div>
+              <p class="text-small text-muted">
+                Vertragliche Modellparameter – keine Rechts- oder Steuerberatung. Bereits gevestete
+                Ansprüche bleiben standardmäßig zu 100 % erhalten.
+              </p>
               <div class="text-small text-destructive erm-error" id="erm-vsop-error"></div>
               <div class="erm-form-actions">
                 <button type="button" class="btn text-destructive" id="erm-delete-vsop" hidden>
@@ -2870,7 +3057,7 @@
         const defaults = {
           founderSetVersion: 'mf-ch-ng-jb-v3',
           financingSetVersion: 'preseed-seed-v1',
-          vsopSetVersion: 'vsop-2500-v2',
+          vsopSetVersion: 'vsop-standard-v3',
           holders: [
             {
               id: 'founder',
@@ -2916,11 +3103,20 @@
                     },
                   ]
                 : [];
-          r.investors = r.investors.map((investor, index) => ({
-            id: investor.id || r.id + '-investor-' + (index + 1),
-            name: String(investor.name || investor.investor || '').trim(),
-            investment: Math.max(0, Number(investor.investment) || 0),
-          }));
+          const bundledInvestors = new Map();
+          r.investors
+            .map((investor, index) => ({
+              id: investor.id || r.id + '-investor-' + (index + 1),
+              name: String(investor.name || investor.investor || '').trim(),
+              investment: Math.max(0, Number(investor.investment) || 0),
+            }))
+            .forEach((investor) => {
+              const key = investor.name.toLocaleLowerCase('de-DE');
+              const existing = bundledInvestors.get(key);
+              if (existing) existing.investment += investor.investment;
+              else bundledInvestors.set(key, investor);
+            });
+          r.investors = [...bundledInvestors.values()];
           r.investment = r.investors.reduce((sum, investor) => sum + investor.investment, 0);
           r.investor = r.investors[0]?.name || '';
           if (!r.className)
@@ -2937,7 +3133,7 @@
           r.redemptionDate = r.redemptionDate || '';
           r.redemptionMultiple = Math.max(0.1, Number(r.redemptionMultiple) || 1);
           if (r.liquidationPreferenceType === 'none') {
-            r.liquidationSeniority = 999999;
+            r.liquidationSeniority = 1;
             r.participationCapMultiple = 0;
             r.cumulativeDividendRate = 0;
             r.redemptionEnabled = false;
@@ -2946,6 +3142,63 @@
           }
           if (r.liquidationPreferenceType !== 'participating') r.participationCapMultiple = 0;
           return r;
+        };
+        const normalizeVsopGrant = (grant) => {
+          const normalized = grant && typeof grant === 'object' ? grant : {};
+          normalized.poolId = String(normalized.poolId || '');
+          normalized.name = String(normalized.name || '').trim();
+          normalized.shares = Math.max(0, Number(normalized.shares) || 0);
+          normalized.plannedShares = Math.max(0, Number(normalized.plannedShares) || 0);
+          normalized.grantDate = String(normalized.grantDate || '');
+          normalized.startDate = String(normalized.startDate || normalized.grantDate || '');
+          normalized.vestingMonths = Math.max(
+            1,
+            Math.round(Number(normalized.vestingMonths) || 48),
+          );
+          normalized.cliffMonths = Math.min(
+            normalized.vestingMonths,
+            Math.max(0, Math.round(Number(normalized.cliffMonths) || 0)),
+          );
+          const vestingInterval = Math.round(Number(normalized.vestingIntervalMonths) || 1);
+          normalized.vestingIntervalMonths = [1, 3, 12].includes(vestingInterval)
+            ? vestingInterval
+            : 1;
+          normalized.vestingPauseMonths = Math.max(
+            0,
+            Math.round(Number(normalized.vestingPauseMonths) || 0),
+          );
+          normalized.hurdle = Math.max(0, Number(normalized.hurdle) || 0);
+          if (!['Aktiv', 'Ausgeschieden', 'Storniert'].includes(normalized.status))
+            normalized.status = 'Aktiv';
+          normalized.leaverDate = String(normalized.leaverDate || '');
+          const defaultLeaverType =
+            normalized.status === 'Ausgeschieden' ? 'good' : 'none';
+          normalized.leaverType = ['none', 'good', 'neutral', 'bad'].includes(
+            normalized.leaverType,
+          )
+            ? normalized.leaverType
+            : defaultLeaverType;
+          normalized.vestedRetentionPct = Math.min(
+            100,
+            Math.max(
+              0,
+              normalized.vestedRetentionPct === undefined
+                ? 100
+                : Number(normalized.vestedRetentionPct) || 0,
+            ),
+          );
+          normalized.expiryDate = String(normalized.expiryDate || '');
+          normalized.accelerationTrigger = ['none', 'single', 'double'].includes(
+            normalized.accelerationTrigger,
+          )
+            ? normalized.accelerationTrigger
+            : 'none';
+          normalized.accelerationPct = Math.min(
+            100,
+            Math.max(0, Number(normalized.accelerationPct) || 0),
+          );
+          normalized.secondTriggerDate = String(normalized.secondTriggerDate || '');
+          return normalized;
         };
 
         // State lifecycle
@@ -3019,6 +3272,7 @@
           });
           normalized.vsopParticipants.forEach((grant) => {
             if (!grant.poolId) grant.poolId = migratedPoolId;
+            normalizeVsopGrant(grant);
           });
           return normalized;
         }
@@ -3040,6 +3294,530 @@
         let editPool = null;
         let capQuery = '';
         const $ = (s) => root.querySelector(s);
+        const languageStorageKey = 'ease-cap-table-manager-language-v1';
+        const supportedLanguages = new Set(['de', 'en']);
+        const currencyStorageKey = 'ease-cap-table-manager-currency-v1';
+        const supportedCurrencies = new Set(['EUR', 'USD']);
+        let currentLanguage = (() => {
+          try {
+            const savedLanguage = localStorage.getItem(languageStorageKey);
+            return supportedLanguages.has(savedLanguage) ? savedLanguage : 'de';
+          } catch {
+            return 'de';
+          }
+        })();
+        let currentCurrency = (() => {
+          try {
+            const savedCurrency = localStorage.getItem(currencyStorageKey);
+            return supportedCurrencies.has(savedCurrency) ? savedCurrency : 'EUR';
+          } catch {
+            return 'EUR';
+          }
+        })();
+        const currentLocale = () => (currentLanguage === 'en' ? 'en-GB' : 'de-DE');
+        const translationPairs = [
+          [
+            'Bezieht alle bestehenden VSOP-Pools einschließlich freier und geplanter Pool-Anteile in die Wandlungsbasis ein. Deaktiviert wird nur auf Basis der echten Equity-Anteile gewandelt.',
+            'Includes all existing VSOP pools, including free and planned pool shares, in the conversion basis. When disabled, conversion is based only on actual equity shares.',
+          ],
+          [
+            'Höhere Zahlen werden zuerst bedient; gleiche Ränge sind pari passu.',
+            'Higher numbers are served first; equal ranks are pari passu.',
+          ],
+          [
+            'Speichern und zurücksetzen ist die Standardaktion für die Entertaste.',
+            'Save and reset is the default action for the Enter key.',
+          ],
+          [
+            'Wähle das Instrument. Alle Transaktionen werden gemeinsam chronologisch dargestellt.',
+            'Choose the instrument. All transactions are shown together in chronological order.',
+          ],
+          [
+            'Ab dem Stichtag gilt der Rückzahlungsbetrag als Mindest-Präferenzanspruch.',
+            'From this date, the redemption amount is the minimum preference claim.',
+          ],
+          [
+            'Neue Anteile, Bewertung, Investment und Liquidationspräferenz.',
+            'New shares, valuation, investment and liquidation preference.',
+          ],
+          [
+            'Wandlung mit Zins, Discount, Cap und wählbarer Basis.',
+            'Conversion with interest, discount, cap and selectable basis.',
+          ],
+          [
+            'Anteile zwischen Verkäufer und Käufer übertragen.',
+            'Transfer shares between seller and buyer.',
+          ],
+          [
+            'Vereinfachter LiqPref-Waterfall · pari passu · ohne Steuern',
+            'Simplified LiqPref waterfall · pari passu · excluding taxes',
+          ],
+          [
+            'Chronologisch · von links nach rechts · Farben nach Typ',
+            'Chronological · left to right · colours by type',
+          ],
+          [
+            'Alle Zeichnungen verwenden denselben Preis je Anteil.',
+            'All subscriptions use the same price per share.',
+          ],
+          [
+            'Namensgleiche Investoren werden gebündelt.',
+            'Investors with the same name are bundled.',
+          ],
+          [
+            'Ändert nur das angezeigte Symbol; Werte werden nicht umgerechnet.',
+            'Changes only the displayed symbol; values are not converted.',
+          ],
+          [
+            'Virtuelle Zahlungsansprüche · Vesting, Leaver und Exit-Bedingungen',
+            'Virtual payment claims · vesting, leaver and exit terms',
+          ],
+          [
+            'Vertragliche Modellparameter – keine Rechts- oder Steuerberatung. Bereits gevestete Ansprüche bleiben standardmäßig zu 100 % erhalten.',
+            'Contractual model parameters – not legal or tax advice. Vested claims are retained at 100% by default.',
+          ],
+          [
+            'Restlicher VSOP-Pool',
+            'Remaining VSOP pool',
+          ],
+          [
+            'nicht auszahlbare, geplante oder freie Anteile; der Wert verbleibt bei den Gesellschaftern.',
+            'non-payable, planned or available shares; their value remains with the shareholders.',
+          ],
+          [
+            'Möchtest du die aktuellen Daten vorher als CSV speichern?',
+            'Would you like to save the current data as CSV first?',
+          ],
+          [
+            'Keine Beteiligten für diese Suche gefunden.',
+            'No stakeholders found for this search.',
+          ],
+          [
+            'Noch keine Personen im VSOP-Pool.',
+            'No people in the VSOP pool yet.',
+          ],
+          ['Noch keine Finanzierungen.', 'No financing transactions yet.'],
+          ['Cap Table & Finanzierungen', 'Cap table & financing'],
+          ['Versionen & Daten', 'Versions & data'],
+          ['Post-Money-Bewertung', 'Post-money valuation'],
+          ['Kapital aufgenommen', 'Capital raised'],
+          ['Gründeranteil', 'Founder ownership'],
+          ['Zeitpunkt der Cap Table', 'Cap table stage'],
+          ['Verteilung der Unternehmensanteile', 'Company ownership distribution'],
+          ['Beteiligte suchen…', 'Search stakeholders…'],
+          ['Cap Table durchsuchen', 'Search cap table'],
+          ['Chronologisch', 'Chronological'],
+          ['Exit-Simulation', 'Exit simulation'],
+          ['Exit Simulation', 'Exit simulation'],
+          ['Exit-Annahmen', 'Exit assumptions'],
+          ['Unternehmensverkauf (€)', 'Company sale (€)'],
+          ['Verteilbarer Nettoerlös', 'Distributable net proceeds'],
+          ['Gründer erhalten', 'Founders receive'],
+          ['Angels erhalten', 'Angels receive'],
+          ['Investoren erhalten', 'Investors receive'],
+          ['VSOP-Personen erhalten', 'VSOP participants receive'],
+          ['Restlicher VSOP-Pool', 'Remaining VSOP pool'],
+          ['Beteiligten hinzufügen', 'Add stakeholder'],
+          ['Beteiligten bearbeiten', 'Edit stakeholder'],
+          ['Beteiligten löschen?', 'Delete stakeholder?'],
+          ['Neue Transaktion', 'New transaction'],
+          ['Eigenkapitalrunden', 'Equity rounds'],
+          ['Eigenkapitalrunde hinzufügen', 'Add equity round'],
+          ['Eigenkapitalrunde bearbeiten', 'Edit equity round'],
+          ['Eigenkapitalrunde', 'Equity round'],
+          ['Wandeldarlehen hinzufügen', 'Add convertible loan'],
+          ['Wandeldarlehen bearbeiten', 'Edit convertible loan'],
+          ['Wandeldarlehen löschen?', 'Delete convertible loan?'],
+          ['Wandeldarlehen', 'Convertible loan'],
+          ['Secondary hinzufügen', 'Add secondary'],
+          ['Secondary bearbeiten', 'Edit secondary'],
+          ['Secondary löschen?', 'Delete secondary?'],
+          ['VSOP-Pool anlegen', 'Create VSOP pool'],
+          ['VSOP-Pool bearbeiten', 'Edit VSOP pool'],
+          ['VSOP-Person hinzufügen', 'Add VSOP participant'],
+          ['VSOP-Person', 'VSOP participant'],
+          ['VSOP-Pools & Zuteilungen', 'VSOP pools & grants'],
+          ['VSOP-Zuteilung bearbeiten', 'Edit VSOP grant'],
+          ['VSOP-Zuteilung löschen?', 'Delete VSOP grant?'],
+          ['VSOP-Zuteilung', 'VSOP grant'],
+          ['Eingaben zurücksetzen?', 'Reset entries?'],
+          ['Ohne Speichern zurücksetzen', 'Reset without saving'],
+          ['Speichern und zurücksetzen', 'Save and reset'],
+          ['Endgültig löschen', 'Delete permanently'],
+          ['Änderungen speichern', 'Save changes'],
+          ['Investiertes Kapital (€)', 'Invested capital (€)'],
+          ['Investitionsdatum', 'Investment date'],
+          ['Liquidationspräferenz', 'Liquidation preference'],
+          ['Nicht partizipierend', 'Non-participating'],
+          ['nicht partizipierend', 'non-participating'],
+          ['Partizipierend', 'Participating'],
+          ['partizipierend', 'participating'],
+          ['Senioritätsrang', 'Seniority rank'],
+          ['Seniorität', 'Seniority'],
+          ['Kumulative Dividende p. a. (%)', 'Cumulative dividend p.a. (%)'],
+          ['Kumul. Dividende', 'Cum. dividend'],
+          ['Redemption-Floor simulieren', 'Apply redemption floor'],
+          ['Redemption-Stichtag', 'Redemption date'],
+          ['Zusätzliche Pool-Anteile', 'Additional pool shares'],
+          ['Pool-Auffrischung', 'Pool refresh'],
+          ['Kein Zielpool', 'No target pool'],
+          ['Zielpool', 'Target pool'],
+          ['Darlehensgeber', 'Lender'],
+          ['Bezeichnung', 'Label'],
+          ['Darlehensbetrag (€)', 'Loan principal (€)'],
+          ['Auszahlungstag', 'Funding date'],
+          ['Zins p. a. (%)', 'Interest p.a. (%)'],
+          ['Wandlungsbasis', 'Conversion basis'],
+          ['Fully Diluted wandeln', 'Convert on a fully diluted basis'],
+          ['Nur Equity-Anteile', 'Equity shares only'],
+          ['Übertragene Anteilsklasse', 'Transferred share class'],
+          ['Transaktionsdatum', 'Transaction date'],
+          ['Preis je Anteil (€)', 'Price per share (€)'],
+          ['Vestingbeginn', 'Vesting start'],
+          ['Vestingdauer (Monate)', 'Vesting period (months)'],
+          ['Cliff (Monate)', 'Cliff (months)'],
+          ['Vesting-Intervall', 'Vesting interval'],
+          ['Vesting-Pause (Monate)', 'Vesting pause (months)'],
+          [
+            'Basispreis (Strikepreis) je virtuellem Anteil (€)',
+            'Base price (strike price) per virtual share (€)',
+          ],
+          ['Basispreis', 'Base price'],
+          ['Zusagedatum', 'Grant date'],
+          ['Austrittsdatum', 'Leaving date'],
+          ['Leaver-Kategorie', 'Leaver category'],
+          ['Gevestete Ansprüche bleiben erhalten (%)', 'Vested claims retained (%)'],
+          ['Exit-Beschleunigung', 'Exit acceleration'],
+          ['Beschleunigtes Vesting (%)', 'Accelerated vesting (%)'],
+          ['Datum des zweiten Triggers', 'Second-trigger date'],
+          ['Double Trigger · Exit + zweites Ereignis', 'Double trigger · exit + second event'],
+          ['Single Trigger · Exit', 'Single trigger · exit'],
+          ['Monatlich', 'Monthly'],
+          ['Quartalsweise', 'Quarterly'],
+          ['Jährlich', 'Annually'],
+          ['Poolname', 'Pool name'],
+          ['Pool-Anteile', 'Pool shares'],
+          ['Seitennavigation', 'Page navigation'],
+          ['Daten verwalten', 'Manage data'],
+          ['Einträge hinzufügen', 'Add entries'],
+          ['Ansicht exportieren', 'Export view'],
+          ['CSV exportieren', 'Export CSV'],
+          ['CSV laden', 'Import CSV'],
+          ['Lokal gespeichert', 'Saved locally'],
+          ['Rückgängig', 'Undo'],
+          ['Wiederholen', 'Redo'],
+          ['Zurücksetzen', 'Reset'],
+          ['Übersicht', 'Overview'],
+          ['Finanzierungen', 'Financing'],
+          ['Kennzahlen', 'Key metrics'],
+          ['Entwicklung', 'Development'],
+          ['Aktuell', 'Latest'],
+          ['Gesamt', 'Total'],
+          ['Beteiligte', 'Stakeholders'],
+          ['FD-Anteile', 'FD shares'],
+          ['Anteilsklasse', 'Share class'],
+          ['Anteile', 'Shares'],
+          ['Aktionen', 'Actions'],
+          ['Unternehmensanteile', 'Company ownership'],
+          ['Auszahlung', 'Payout'],
+          ['Auszahlbar', 'Payable'],
+          ['Ausstehend', 'Outstanding'],
+          ['Konvertiert in', 'Converted into'],
+          ['Anspruch', 'Claim'],
+          ['Datum fehlt', 'Date missing'],
+          ['Datum', 'Date'],
+          ['Schulden (€)', 'Debt (€)'],
+          ['Transaktionskosten (€)', 'Transaction costs (€)'],
+          ['Restpool', 'Remaining pool'],
+          ['Investiert', 'Invested'],
+          ['Gründung', 'Formation'],
+          ['seit Gründung', 'since formation'],
+          ['Ausgangsanteil', 'Initial ownership'],
+          ['noch keine Bewertung', 'no valuation yet'],
+          ['Runde', 'Round'],
+          ['Closing-Datum', 'Closing date'],
+          ['Investoren', 'Investors'],
+          ['Investor hinzufügen', 'Add investor'],
+          ['Investor entfernen', 'Remove investor'],
+          ['Keine', 'None'],
+          ['Nein', 'No'],
+          ['Typ', 'Type'],
+          ['Gründer', 'Founder'],
+          ['Mitarbeitende', 'Employees'],
+          ['Sonstige', 'Other'],
+          ['Aktiv', 'Active'],
+          ['Ausgeschieden', 'Left'],
+          ['Storniert', 'Cancelled'],
+          ['Verkäufer', 'Seller'],
+          ['Käufer', 'Buyer'],
+          ['Automatisch · Common zuerst', 'Automatic · common first'],
+          ['Automatisch', 'Automatic'],
+          ['Common / ohne LiqPref', 'Common / no LiqPref'],
+          ['ohne LiqPref', 'no LiqPref'],
+          ['gewählten Anteilsklasse', 'selected share class'],
+          ['verfügbaren Anteilsklassen', 'available share classes'],
+          ['aktuell nicht verfügbar', 'currently unavailable'],
+          ['Preis / Anteil', 'Price / share'],
+          ['Verwässerung', 'Dilution'],
+          ['Volumen', 'Volume'],
+          ['Hinweis', 'Notice'],
+          ['belegt', 'reserved'],
+          ['verfügbar', 'available'],
+          ['frei', 'available'],
+          ['gevestet', 'vested'],
+          ['monatlich', 'monthly'],
+          ['quartalsweise', 'quarterly'],
+          ['jährlich', 'annually'],
+          ['Ablauf', 'Expiry'],
+          ['Abgelaufen', 'Expired'],
+          ['Poolvolumen', 'Pool capacity'],
+          ['Gevestet / Reserviert', 'Vested / reserved'],
+          ['Zuteilungen', 'grants'],
+          ['Zuteilung', 'grant'],
+          ['beschleunigt', 'accelerated'],
+          ['auszahlbar', 'payable'],
+          [' erhalten', ' retained'],
+          ['Monate', 'months'],
+          ['Pool fehlt', 'Pool missing'],
+          ['Secondary-Erlöse', 'Secondary proceeds'],
+          ['bearbeiten', 'edit'],
+          ['löschen', 'delete'],
+          ['Löschen', 'Delete'],
+          ['Abbrechen', 'Cancel'],
+          ['Hinzufügen', 'Add'],
+          ['Speichern', 'Save'],
+          ['Name', 'Name'],
+          ['Sprache', 'Language'],
+          ['Währungssymbol', 'Currency symbol'],
+          ['Bereiche', 'Sections'],
+          ['Wert', 'Value'],
+          ['0 bedeutet unbegrenzt.', '0 means unlimited.'],
+          ['z. B. ', 'e.g. '],
+          [' p. a.', ' p.a.'],
+          [' ab ', ' from '],
+          [' hält ', ' holds '],
+          [' geladen.', ' imported.'],
+          [' exportiert.', ' exported.'],
+          [' (gefiltert)', ' (filtered)'],
+          [' zurückgesetzt:', ' reset:'],
+          ['Änderung rückgängig gemacht', 'Change undone'],
+          ['Änderung wiederhergestellt', 'Change restored'],
+          ['Zuerst zugeordnete VSOP-Personen verschieben oder löschen', 'Move or delete assigned VSOP participants first'],
+          ['Mindestens ein Beteiligter muss verbleiben', 'At least one stakeholder must remain'],
+          ['Lege zuerst einen VSOP-Pool an.', 'Create a VSOP pool first.'],
+          ['Bitte Poolname und eine gültige Anzahl Anteile eingeben.', 'Enter a pool name and a valid number of shares.'],
+          ['Ein VSOP-Pool mit diesem Namen existiert bereits.', 'A VSOP pool with this name already exists.'],
+          ['Der Pool muss inklusive Auffrischungen mindestens ', 'Including refreshes, the pool must cover at least '],
+          [' reservierte Anteile abdecken.', ' reserved shares.'],
+          ['Die Zuteilung für ', 'The grant for '],
+          [' wird entfernt und die reservierten Anteile werden dem Pool zurückgegeben.', ' will be removed and the reserved shares returned to the pool.'],
+          ['Bitte Pool, Zuteilung, Daten und Vestingparameter vollständig prüfen.', 'Check the pool, grant, dates and vesting parameters.'],
+          ['Für ausgeschiedene Personen wird ein Austrittsdatum benötigt.', 'A leaving date is required for people who have left.'],
+          ['Das Ablaufdatum darf nicht vor Zuteilung oder Austritt liegen.', 'The expiry date cannot precede the grant or leaving date.'],
+          ['Für Double-Trigger-Beschleunigung wird das zweite Ereignisdatum benötigt.', 'Double-trigger acceleration requires the second-event date.'],
+          ['Diese Zuteilung überschreitet die inklusive Auffrischungen verfügbaren Pool-Anteile.', 'This grant exceeds the pool shares available after refreshes.'],
+          [' ist mit ', ' is over-allocated by '],
+          [' Anteilen überbelegt.', ' shares.'],
+          ['Bitte Name und gültige Anzahl Anteile eingeben.', 'Enter a name and a valid number of shares.'],
+          ['Für die IRR wird ein Investitionsdatum benötigt.', 'An investment date is required for the IRR.'],
+          [' wird aus allen Berechnungen und Finanzierungsständen entfernt.', ' will be removed from all calculations and financing stages.'],
+          [' von ', ' from '],
+          [' wird aus allen Berechnungen entfernt.', ' will be removed from all calculations.'],
+          [' Lösche oder bearbeite zuerst die abhängige Secondary.', ' Delete or edit the dependent secondary first.'],
+          ['Bitte Darlehensgeber, Betrag und Datum vollständig eingeben.', 'Enter the lender, amount and date.'],
+          ['Die Übertragung von ', 'The transfer of '],
+          [' wird aus allen Cap Table-Ständen entfernt.', ' will be removed from all cap table stages.'],
+          ['Bitte unterschiedliche Parteien, positive Anteile, Preis und ein gültiges Datum eingeben.', 'Enter different parties, positive shares and price, and a valid date.'],
+          ['Bitte Runde, Anteilsklasse, Datum und alle Investoren mit positiven Investments ausfüllen.', 'Enter the round, share class, date and all investors with positive investments.'],
+          ['Jeder Investor darf innerhalb einer Runde nur einmal vorkommen.', 'Each investor may appear only once within a round.'],
+          ['Für die Liquidationspräferenz wird ein positives Multiple benötigt.', 'The liquidation preference requires a positive multiple.'],
+          ['Seniorität, Cap, Conversion Ratio und Dividende enthalten ungültige Werte.', 'Seniority, cap, conversion ratio or dividend contains an invalid value.'],
+          ['Redemption benötigt einen gültigen Stichtag ab Closing und ein positives Multiple.', 'Redemption requires a valid date on or after closing and a positive multiple.'],
+          ['Für zusätzliche Pool-Anteile wird ein Zielpool benötigt.', 'Additional pool shares require a target pool.'],
+          ['Die CSV enthält keine Datensätze.', 'The CSV contains no records.'],
+          ['Spalte record_type fehlt.', 'The record_type column is missing.'],
+          ['CSV konnte nicht geladen werden.', 'The CSV could not be imported.'],
+          ['Mindestens ein holder wird benötigt.', 'At least one holder is required.'],
+          ['IDs müssen über alle Datensätze eindeutig sein.', 'IDs must be unique across all records.'],
+          ['Für VSOP-Datensätze fehlt ein VSOP-Pool.', 'A VSOP pool is missing for the VSOP records.'],
+          ['Ungültiger', 'Invalid'],
+          ['Ungültige', 'Invalid'],
+          ['ungültige', 'invalid'],
+          ['Zeile', 'row'],
+          ['verweist auf', 'references'],
+          ['keine gültige', 'no valid'],
+          ['keinen gültigen', 'no valid'],
+          ['einen gültigen', 'a valid'],
+          ['benötigt', 'requires'],
+          ['müssen eindeutig sein', 'must be unique'],
+          ['enthält keine gültigen Investoren', 'contains no valid investors'],
+        ].sort((a, b) => b[0].length - a[0].length);
+        const exactEnglishTranslations = new Map(translationPairs);
+        const originalText = new WeakMap();
+        const lastLocalizedText = new WeakMap();
+        const originalAttributes = new WeakMap();
+        const lastLocalizedAttributes = new WeakMap();
+        const localizableAttributes = [
+          'aria-label',
+          'placeholder',
+          'title',
+          'data-tooltip',
+          'data-label',
+        ];
+
+        function englishText(value) {
+          const text = String(value ?? '');
+          const leading = text.match(/^\s*/)?.[0] || '';
+          const trailing = text.match(/\s*$/)?.[0] || '';
+          const compact = text.trim().replace(/\s+/g, ' ');
+          const exact = exactEnglishTranslations.get(compact);
+          if (exact !== undefined) return leading + exact + trailing;
+          return translationPairs.reduce(
+            (translated, [german, english]) => translated.split(german).join(english),
+            text,
+          );
+        }
+
+        const localizedValue = (value) => {
+          const localized =
+            currentLanguage === 'en' ? englishText(value) : String(value ?? '');
+          return currentCurrency === 'USD'
+            ? localized.split('(€)').join('($)')
+            : localized;
+        };
+
+        function isLocalizationIgnored(node) {
+          const element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+          return Boolean(element?.closest('[data-i18n-ignore]'));
+        }
+
+        function localizeTextNode(node) {
+          if (isLocalizationIgnored(node)) return;
+          const value = node.nodeValue || '';
+          let source = originalText.get(node);
+          const lastLocalized = lastLocalizedText.get(node);
+          if (source === undefined || (lastLocalized !== undefined && value !== lastLocalized)) {
+            source = value;
+            originalText.set(node, source);
+          }
+          const localized = localizedValue(source);
+          if (value !== localized) node.nodeValue = localized;
+          lastLocalizedText.set(node, localized);
+        }
+
+        function localizeAttribute(element, attribute) {
+          if (isLocalizationIgnored(element) || !element.hasAttribute(attribute)) return;
+          const value = element.getAttribute(attribute) || '';
+          let sources = originalAttributes.get(element);
+          if (!sources) {
+            sources = new Map();
+            originalAttributes.set(element, sources);
+          }
+          let localizedValues = lastLocalizedAttributes.get(element);
+          if (!localizedValues) {
+            localizedValues = new Map();
+            lastLocalizedAttributes.set(element, localizedValues);
+          }
+          let source = sources.get(attribute);
+          const lastLocalized = localizedValues.get(attribute);
+          if (source === undefined || (lastLocalized !== undefined && value !== lastLocalized)) {
+            source = value;
+            sources.set(attribute, source);
+          }
+          const localized = localizedValue(source);
+          if (value !== localized) element.setAttribute(attribute, localized);
+          localizedValues.set(attribute, localized);
+        }
+
+        function localizeTree(target) {
+          if (!target) return;
+          if (target.nodeType === Node.TEXT_NODE) {
+            localizeTextNode(target);
+            return;
+          }
+          if (target.nodeType !== Node.ELEMENT_NODE) return;
+          localizableAttributes.forEach((attribute) => localizeAttribute(target, attribute));
+          const walker = document.createTreeWalker(target, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+          let node = walker.nextNode();
+          while (node) {
+            if (node.nodeType === Node.TEXT_NODE) localizeTextNode(node);
+            else localizableAttributes.forEach((attribute) => localizeAttribute(node, attribute));
+            node = walker.nextNode();
+          }
+        }
+
+        const localizationObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'characterData') localizeTextNode(mutation.target);
+            else if (mutation.type === 'attributes')
+              localizeAttribute(mutation.target, mutation.attributeName);
+            else mutation.addedNodes.forEach((node) => localizeTree(node));
+          });
+        });
+
+        function updateLanguageControls() {
+          document.documentElement.lang = currentLanguage;
+          root.dataset.language = currentLanguage;
+          root.querySelectorAll('[data-language]').forEach((button) =>
+            button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage)),
+          );
+        }
+        function updateCurrencyControls() {
+          root.dataset.currency = currentCurrency;
+          root.querySelectorAll('[data-currency]').forEach((button) => {
+            const selected = button.dataset.currency === currentCurrency,
+              isEuro = button.dataset.currency === 'EUR';
+            button.setAttribute('aria-pressed', String(selected));
+            button.setAttribute(
+              'aria-label',
+              currentLanguage === 'en'
+                ? isEuro
+                  ? 'Display euros'
+                  : 'Display US dollars'
+                : isEuro
+                  ? 'Euro anzeigen'
+                  : 'US-Dollar anzeigen',
+            );
+          });
+        }
+
+        function setLanguage(language) {
+          if (!supportedLanguages.has(language) || language === currentLanguage) return;
+          currentLanguage = language;
+          try {
+            localStorage.setItem(languageStorageKey, currentLanguage);
+          } catch {}
+          updateLanguageControls();
+          updateCurrencyControls();
+          render();
+        }
+        function setCurrency(currency) {
+          if (!supportedCurrencies.has(currency) || currency === currentCurrency) return;
+          currentCurrency = currency;
+          try {
+            localStorage.setItem(currencyStorageKey, currentCurrency);
+          } catch {}
+          updateCurrencyControls();
+          render();
+        }
+
+        updateLanguageControls();
+        updateCurrencyControls();
+        localizationObserver.observe(root, {
+          subtree: true,
+          childList: true,
+          characterData: true,
+          attributes: true,
+          attributeFilter: localizableAttributes,
+        });
+        $('.erm-language-switch').addEventListener('click', (event) => {
+          const button = event.target.closest('[data-language]');
+          if (button) setLanguage(button.dataset.language);
+        });
+        $('.erm-currency-switch').addEventListener('click', (event) => {
+          const button = event.target.closest('[data-currency]');
+          if (button) setCurrency(button.dataset.currency);
+        });
         let undoStack = [];
         let redoStack = [];
         let lastSavedState = JSON.stringify(state);
@@ -3064,33 +3842,47 @@
           '#9a8f3a',
         ];
         const euro = (n) =>
-          new Intl.NumberFormat('de-DE', {
+          new Intl.NumberFormat(currentLocale(), {
             style: 'currency',
-            currency: 'EUR',
+            currency: currentCurrency,
+            currencyDisplay: 'narrowSymbol',
             maximumFractionDigits: n >= 1000000 ? 1 : 0,
             notation: n >= 1000000 ? 'compact' : 'standard',
           }).format(n);
         const euroPerShare = (n) =>
-          new Intl.NumberFormat('de-DE', {
+          new Intl.NumberFormat(currentLocale(), {
             style: 'currency',
-            currency: 'EUR',
+            currency: currentCurrency,
+            currencyDisplay: 'narrowSymbol',
             minimumFractionDigits: 2,
             maximumFractionDigits: 4,
           }).format(Number(n) || 0);
-        const num = (n) => new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(n);
+        const num = (n) =>
+          new Intl.NumberFormat(currentLocale(), { maximumFractionDigits: 0 }).format(n);
         const moneyInputValue = (n) =>
-          new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 }).format(
+          new Intl.NumberFormat(currentLocale(), { maximumFractionDigits: 0 }).format(
             Math.max(0, Number(n) || 0),
           );
         const parseMoney = (value) => Number(String(value ?? '').replace(/[^0-9]/g, '')) || 0;
-        const formatMoneyField = (input) => {
+        const moneyEditingValue = (digits) => {
+          const groupSeparator =
+            new Intl.NumberFormat(currentLocale())
+              .formatToParts(1000)
+              .find((part) => part.type === 'group')?.value || '.';
+          return digits.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator);
+        };
+        const formatMoneyField = (input, { normalize = false } = {}) => {
           const raw = input.value,
             caret = input.selectionStart ?? raw.length;
           const digitsBefore = raw.slice(0, caret).replace(/[^0-9]/g, '').length;
-          const digits = raw.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '');
-          const formatted = digits ? moneyInputValue(digits) : '';
+          const digits = raw.replace(/[^0-9]/g, '');
+          const formatted = digits
+            ? normalize
+              ? moneyInputValue(digits)
+              : moneyEditingValue(digits)
+            : '';
           input.value = formatted;
-          if (document.activeElement === input) {
+          if (!normalize && document.activeElement === input) {
             let pos = 0,
               count = 0;
             while (pos < formatted.length && count < digitsBefore) {
@@ -3101,19 +3893,24 @@
           }
         };
         const pct = (n) =>
-          new Intl.NumberFormat('de-DE', {
+          new Intl.NumberFormat(currentLocale(), {
             minimumFractionDigits: 1,
             maximumFractionDigits: 1,
           }).format(n) + ' %';
         const multipleLabel = (payout, invested) =>
           invested > 0
-            ? (payout / invested).toLocaleString('de-DE', {
+            ? (payout / invested).toLocaleString(currentLocale(), {
                 minimumFractionDigits: 1,
                 maximumFractionDigits: 1,
               }) + '×'
             : payout > 0
               ? '∞×'
-              : '0,0×';
+              : (0).toLocaleString(currentLocale(), {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                }) + '×';
+        const dateLabel = (date) =>
+          new Intl.DateTimeFormat(currentLocale()).format(new Date(date + 'T00:00:00Z'));
         const esc = (s) =>
           String(s).replace(
             /[&<>'"]/g,
@@ -3122,18 +3919,33 @@
         const uid = () => Math.random().toString(36).slice(2, 10);
         const validDate = (s) =>
           /^\d{4}-\d{2}-\d{2}$/.test(s || '') && !Number.isNaN(Date.parse(s + 'T00:00:00Z'));
-        const roundInvestors = (round) =>
-          Array.isArray(round.investors) && round.investors.length
-            ? round.investors
-            : round.investor && Number(round.investment) > 0
-              ? [
-                  {
-                    id: round.id + '-investor-1',
-                    name: round.investor,
-                    investment: Number(round.investment),
-                  },
-                ]
-              : [];
+        const roundInvestors = (round) => {
+          const raw =
+            Array.isArray(round.investors) && round.investors.length
+              ? round.investors
+              : round.investor && Number(round.investment) > 0
+                ? [
+                    {
+                      id: round.id + '-investor-1',
+                      name: round.investor,
+                      investment: Number(round.investment),
+                    },
+                  ]
+                : [];
+          const bundled = new Map();
+          raw.forEach((investor, index) => {
+            const normalized = {
+                id: investor.id || round.id + '-investor-' + (index + 1),
+                name: String(investor.name || investor.investor || '').trim(),
+                investment: Math.max(0, Number(investor.investment) || 0),
+              },
+              key = normalized.name.toLocaleLowerCase('de-DE'),
+              existing = bundled.get(key);
+            if (existing) existing.investment += normalized.investment;
+            else bundled.set(key, normalized);
+          });
+          return [...bundled.values()];
+        };
         const roundInvestment = (round) =>
           roundInvestors(round).reduce(
             (sum, investor) => sum + (Number(investor.investment) || 0),
@@ -3198,8 +4010,14 @@
           if (endDate < addMonths(startDate, months)) months--;
           return Math.max(0, months);
         };
-        const vestedShares = (grant, asOf = today) => {
-          if (grant.status === 'Storniert' || !validDate(grant.startDate)) return 0;
+        const grantIssuedAt = (grant, asOf) =>
+          validDate(asOf) &&
+          (!validDate(grant.grantDate) || grant.grantDate <= asOf) &&
+          grant.status !== 'Storniert';
+        const grantExpiredAt = (grant, asOf) =>
+          validDate(grant.expiryDate) && validDate(asOf) && grant.expiryDate < asOf;
+        const earnedVsopShares = (grant, asOf = today) => {
+          if (!grantIssuedAt(grant, asOf) || !validDate(grant.startDate)) return 0;
           let endDate = validDate(asOf)
             ? new Date(asOf + 'T00:00:00Z')
             : new Date(today + 'T00:00:00Z');
@@ -3207,18 +4025,90 @@
             const leave = new Date(grant.leaverDate + 'T00:00:00Z');
             if (leave < endDate) endDate = leave;
           }
+          if (endDate < new Date(grant.startDate + 'T00:00:00Z')) return 0;
           const elapsedMonths = completedMonths(grant.startDate, endDate),
-            vestingMonths = Math.max(1, Number(grant.vestingMonths) || 1);
-          if (elapsedMonths < Math.max(0, Number(grant.cliffMonths) || 0)) return 0;
+            pausedMonths = Math.max(0, Math.round(Number(grant.vestingPauseMonths) || 0)),
+            serviceMonths = Math.max(0, elapsedMonths - pausedMonths),
+            vestingMonths = Math.max(1, Number(grant.vestingMonths) || 1),
+            interval = [1, 3, 12].includes(Number(grant.vestingIntervalMonths))
+              ? Number(grant.vestingIntervalMonths)
+              : 1,
+            creditedMonths =
+              serviceMonths >= vestingMonths
+                ? vestingMonths
+                : Math.floor(serviceMonths / interval) * interval;
+          if (serviceMonths < Math.max(0, Number(grant.cliffMonths) || 0)) return 0;
           return (
-            ((Number(grant.shares) || 0) * Math.min(vestingMonths, elapsedMonths)) / vestingMonths
+            ((Number(grant.shares) || 0) * Math.min(vestingMonths, creditedMonths)) /
+            vestingMonths
           );
         };
-        const reservedVsopShares = (grant) =>
-          grant.status === 'Storniert'
+        const vestedShares = (grant, asOf = today) => {
+          const earned = earnedVsopShares(grant, asOf);
+          if (
+            grant.status !== 'Ausgeschieden' ||
+            !validDate(grant.leaverDate) ||
+            !validDate(asOf) ||
+            grant.leaverDate > asOf
+          )
+            return earned;
+          const retention = Math.min(
+            100,
+            Math.max(
+              0,
+              grant.vestedRetentionPct === undefined
+                ? 100
+                : Number(grant.vestedRetentionPct) || 0,
+            ),
+          );
+          return earned * (retention / 100);
+        };
+        const vsopEntitlement = (grant, asOf = today, isExit = false) => {
+          const issued = grantIssuedAt(grant, asOf),
+            expired = grantExpiredAt(grant, asOf),
+            earned = earnedVsopShares(grant, asOf),
+            retained = vestedShares(grant, asOf);
+          let accelerated = 0;
+          if (issued && !expired && isExit && Number(grant.accelerationPct) > 0) {
+            const trigger = grant.accelerationTrigger || 'none',
+              singleTriggered = trigger === 'single' && grant.status === 'Aktiv',
+              doubleTriggered =
+                trigger === 'double' &&
+                grant.status === 'Ausgeschieden' &&
+                ['good', 'neutral'].includes(grant.leaverType) &&
+                validDate(grant.leaverDate) &&
+                grant.leaverDate <= asOf &&
+                validDate(grant.secondTriggerDate) &&
+                grant.secondTriggerDate <= asOf;
+            if (singleTriggered || doubleTriggered) {
+              const unvested = Math.max(0, (Number(grant.shares) || 0) - earned);
+              accelerated =
+                unvested *
+                (Math.min(100, Math.max(0, Number(grant.accelerationPct) || 0)) / 100);
+            }
+          }
+          return {
+            issued,
+            expired,
+            earned,
+            retained,
+            accelerated,
+            payable: issued && !expired ? Math.max(0, retained + accelerated) : 0,
+          };
+        };
+        const calculateVsopPayout = (grant, asOf, valuePerShare) => {
+          const entitlement = vsopEntitlement(grant, asOf, true),
+            spread = Math.max(0, (Number(valuePerShare) || 0) - (Number(grant.hurdle) || 0));
+          return { ...entitlement, spread, payout: entitlement.payable * spread };
+        };
+        const reservedVsopShares = (grant, asOf = today) =>
+          grant.status === 'Storniert' || grantExpiredAt(grant, asOf)
             ? 0
-            : grant.status === 'Ausgeschieden'
-              ? vestedShares(grant)
+            : grant.status === 'Ausgeschieden' &&
+                validDate(grant.leaverDate) &&
+                validDate(asOf) &&
+                grant.leaverDate <= asOf
+              ? vestedShares(grant, asOf)
               : (Number(grant.shares) || 0) + (Number(grant.plannedShares) || 0);
         const vsopPools = () => state.holders.filter((h) => h.isVirtual);
         const poolSelectOptions = (selected = '', allowEmpty = false) =>
@@ -3380,6 +4270,13 @@
           'exit_debt_eur',
           'exit_costs_eur',
           'exit_date',
+          'vesting_interval_months',
+          'vesting_pause_months',
+          'leaver_type',
+          'vested_retention_pct',
+          'acceleration_trigger',
+          'acceleration_pct',
+          'second_trigger_date',
         ];
         const csvCell = (value) => '"' + String(value ?? '').replace(/"/g, '""') + '"';
         function downloadCsv(csv, filename) {
@@ -3397,7 +4294,7 @@
         function exportCsv() {
           const rows = [];
           const add = (record_type, data = {}) =>
-            rows.push({ schema_version: 2, record_type, ...data });
+            rows.push({ schema_version: 3, record_type, ...data });
           state.holders.forEach((h) =>
             add('holder', {
               id: h.id,
@@ -3475,10 +4372,18 @@
               vesting_start: g.startDate,
               vesting_months: g.vestingMonths,
               cliff_months: g.cliffMonths,
+              vesting_interval_months: g.vestingIntervalMonths || 1,
+              vesting_pause_months: g.vestingPauseMonths || 0,
               strike_price_eur: g.hurdle || 0,
               status: g.status,
               leaver_date: g.leaverDate || '',
+              leaver_type: g.leaverType || 'none',
+              vested_retention_pct:
+                g.vestedRetentionPct === undefined ? 100 : g.vestedRetentionPct,
               expiry_date: g.expiryDate || '',
+              acceleration_trigger: g.accelerationTrigger || 'none',
+              acceleration_pct: g.accelerationPct || 0,
+              second_trigger_date: g.secondTriggerDate || '',
             }),
           );
           add('exit', {
@@ -3577,7 +4482,7 @@
         function csvNumber(value) {
           let s = String(value ?? '')
             .trim()
-            .replace(/[€%\s]/g, '');
+            .replace(/[€$%\s]/g, '');
           if (!s) return 0;
           if (s.includes(',') && s.includes('.'))
             s =
@@ -3598,7 +4503,7 @@
           const imported = {
               founderSetVersion: 'mf-ch-ng-jb-v3',
               financingSetVersion: 'preseed-seed-v1',
-              vsopSetVersion: 'vsop-2500-v2',
+              vsopSetVersion: 'vsop-standard-v3',
               holders: [],
               rounds: [],
               convertibles: [],
@@ -3744,21 +4649,44 @@
                 !validDate(r.vesting_start.trim())
               )
                 throw new Error(`Ungültiger vsop-Datensatz in Zeile ${rowIndex + 2}.`);
-              imported.vsopParticipants.push({
-                id,
-                name: r.name.trim(),
-                poolId: String(r.pool_id ?? '').trim(),
-                shares: n('shares'),
-                plannedShares: Math.max(0, n('planned_shares') || 0),
-                grantDate: r.grant_date.trim(),
-                startDate: r.vesting_start.trim(),
-                vestingMonths: Math.max(1, n('vesting_months') || 48),
-                cliffMonths: Math.max(0, n('cliff_months') || 0),
-                hurdle: Math.max(0, n('strike_price_eur') || 0),
-                status: r.status.trim() || 'Aktiv',
-                leaverDate: r.leaver_date.trim(),
-                expiryDate: r.expiry_date.trim(),
-              });
+              const status = String(r.status || '').trim() || 'Aktiv',
+                leaverDate = String(r.leaver_date || '').trim(),
+                expiryDate = String(r.expiry_date || '').trim(),
+                accelerationTrigger =
+                  String(r.acceleration_trigger || '').trim() || 'none',
+                secondTriggerDate = String(r.second_trigger_date || '').trim(),
+                retentionValue = String(r.vested_retention_pct || '').trim(),
+                grant = {
+                  id,
+                  name: r.name.trim(),
+                  poolId: String(r.pool_id ?? '').trim(),
+                  shares: n('shares'),
+                  plannedShares: Math.max(0, n('planned_shares') || 0),
+                  grantDate: r.grant_date.trim(),
+                  startDate: r.vesting_start.trim(),
+                  vestingMonths: Math.max(1, n('vesting_months') || 48),
+                  cliffMonths: Math.max(0, n('cliff_months') || 0),
+                  vestingIntervalMonths: n('vesting_interval_months') || 1,
+                  vestingPauseMonths: Math.max(0, n('vesting_pause_months') || 0),
+                  hurdle: Math.max(0, n('strike_price_eur') || 0),
+                  status,
+                  leaverDate,
+                  leaverType: String(r.leaver_type || '').trim() || undefined,
+                  vestedRetentionPct: retentionValue === '' ? 100 : n('vested_retention_pct'),
+                  expiryDate,
+                  accelerationTrigger,
+                  accelerationPct: Math.max(0, n('acceleration_pct') || 0),
+                  secondTriggerDate,
+                };
+              if (
+                (status === 'Ausgeschieden' && !validDate(leaverDate)) ||
+                (expiryDate && !validDate(expiryDate)) ||
+                (accelerationTrigger === 'double' &&
+                  Number(grant.accelerationPct) > 0 &&
+                  !validDate(secondTriggerDate))
+              )
+                throw new Error(`Ungültiger vsop-Datensatz in Zeile ${rowIndex + 2}.`);
+              imported.vsopParticipants.push(normalizeVsopGrant(grant));
             } else if (type === 'exit')
               imported.exit = {
                 value: Math.max(0, n('exit_value_eur') || 0),
@@ -3812,6 +4740,20 @@
             if (r.poolRefresh > 0 && !r.poolId && pools.length === 1) r.poolId = pools[0].id;
             if (r.poolRefresh > 0 && !poolIds.has(r.poolId))
               throw new Error(`Pool-Auffrischung in ${r.name} benötigt einen gültigen Zielpool.`);
+          });
+          pools.forEach((pool) => {
+            const capacity =
+                Number(pool.shares) +
+                imported.rounds
+                  .filter((round) => round.poolId === pool.id)
+                  .reduce((sum, round) => sum + (Number(round.poolRefresh) || 0), 0),
+              reserved = imported.vsopParticipants
+                .filter((grant) => grant.poolId === pool.id)
+                .reduce((sum, grant) => sum + reservedVsopShares(grant), 0);
+            if (reserved > capacity)
+              throw new Error(
+                `VSOP-Pool ${pool.name} ist mit ${num(reserved - capacity)} Anteilen überbelegt.`,
+              );
           });
           const roundIds = new Set(imported.rounds.map((r) => r.id));
           imported.secondaries.forEach((s) => {
@@ -3908,7 +4850,7 @@
                 Math.max(1, Math.round(Number(lot.liquidationSeniority) || 1)),
               ),
             ),
-          ].sort((a, b) => a - b);
+          ].sort((a, b) => b - a);
           ranks.forEach((rank) => {
             if (available <= 0) return;
             const ranked = preferenceLots.filter(
@@ -4047,32 +4989,38 @@
           }
           return { ...result, elected, convertedParticipating };
         }
-
         // Transaction timeline
         function snapshots(source = state) {
-          let lots = source.holders.map((h) => ({
-            id: 'base-' + h.id,
-            holderId: h.id,
-            name: h.name,
-            type: h.type,
-            shares: Number(h.shares) || 0,
-            isVirtual: Boolean(h.isVirtual),
-            costBasis: Number(h.costBasis) || 0,
-            investmentDate: h.investmentDate || '',
-            sourceRoundId: '',
-            className: 'Common',
-            preferenceType: 'none',
-            preferenceBasePerShare: 0,
-            preferenceClaimPerShare: 0,
-            liquidationSeniority: 999999,
-            participationCapMultiple: 0,
-            conversionRatio: 1,
-            cumulativeDividendRate: 0,
-            dividendStartDate: '',
-            redemptionEnabled: false,
-            redemptionDate: '',
-            redemptionMultiple: 1,
-          }));
+          const initialHolderIds = new Map();
+          let lots = source.holders.map((h) => {
+            const isVirtual = Boolean(h.isVirtual),
+              key = holderKey(h.name),
+              holderId = isVirtual ? h.id : initialHolderIds.get(key) || h.id;
+            if (!isVirtual && !initialHolderIds.has(key)) initialHolderIds.set(key, holderId);
+            return {
+              id: 'base-' + h.id,
+              holderId,
+              name: h.name,
+              type: h.type,
+              shares: Number(h.shares) || 0,
+              isVirtual,
+              costBasis: Number(h.costBasis) || 0,
+              investmentDate: h.investmentDate || '',
+              sourceRoundId: '',
+              className: 'Common',
+              preferenceType: 'none',
+              preferenceBasePerShare: 0,
+              preferenceClaimPerShare: 0,
+              liquidationSeniority: 999999,
+              participationCapMultiple: 0,
+              conversionRatio: 1,
+              cumulativeDividendRate: 0,
+              dividendStartDate: '',
+              redemptionEnabled: false,
+              redemptionDate: '',
+              redemptionMultiple: 1,
+            };
+          });
           let cap = aggregateLots(lots),
             raised = source.convertibles.reduce((sum, c) => sum + (Number(c.principal) || 0), 0),
             valuation = null;
@@ -4161,10 +5109,11 @@
                   ? `Secondary „${s.name}“: ${s.seller} verfügt in ${sourceRoundId ? className : 'den verfügbaren Anteilsklassen'} nur über ${num(available)} Anteile.`
                   : '';
               if (!error) {
-                const buyerExisting = cap.find(
-                    (h) => !h.isVirtual && holderKey(h.name) === holderKey(s.buyer),
+                const buyerExisting = lots.find(
+                    (lot) =>
+                      !lot.isVirtual && holderKey(lot.name) === holderKey(s.buyer),
                   ),
-                  buyerHolderId = buyerExisting?.id || 'sec-' + s.id;
+                  buyerHolderId = buyerExisting?.holderId || 'sec-' + s.id;
                 let remaining = requested;
                 transferable.forEach((lot) => {
                   if (remaining <= 0) return;
@@ -4246,12 +5195,13 @@
                 conversionPrice = Math.min(discountPrice, capPrice);
               const claim = loanClaim(c, r.date),
                 shares = claim / Math.max(0.000001, conversionPrice),
-                existing = cap.find(
-                  (h) => !h.isVirtual && holderKey(h.name) === holderKey(c.lender),
+                existing = lots.find(
+                  (lot) =>
+                    !lot.isVirtual && holderKey(lot.name) === holderKey(c.lender),
                 );
               lots.push({
                 id: 'conv-' + c.id,
-                holderId: existing?.id || 'conv-' + c.id,
+                holderId: existing?.holderId || 'conv-' + c.id,
                 name: c.lender,
                 type: existing?.type || 'Investor',
                 shares,
@@ -4355,6 +5305,7 @@
           renderFinancing(context);
           renderExit(context);
           renderVsop(context);
+          localizeTree(root);
           refreshIcons();
         }
 
@@ -4382,15 +5333,22 @@
             100;
           $('#erm-valuation').textContent = snap.valuation ? euro(snap.valuation) : '–';
           $('#erm-valuation-note').textContent = snap.valuation
-            ? 'nach ' + snap.label
-            : 'noch keine Bewertung';
+            ? (currentLanguage === 'en' ? 'after ' : 'nach ') + snap.label
+            : currentLanguage === 'en'
+              ? 'no valuation yet'
+              : 'noch keine Bewertung';
           $('#erm-raised').textContent = euro(snap.raised);
           $('#erm-round-count').textContent =
-            `${activeRounds.length} ${activeRounds.length === 1 ? 'Eigenkapitalrunde' : 'Eigenkapitalrunden'} · ${state.convertibles.length} Wandeldarlehen · ${activeSecondaries.length} ${activeSecondaries.length === 1 ? 'Secondary' : 'Secondaries'}`;
+            currentLanguage === 'en'
+              ? `${activeRounds.length} ${activeRounds.length === 1 ? 'equity round' : 'equity rounds'} · ${state.convertibles.length} ${state.convertibles.length === 1 ? 'convertible loan' : 'convertible loans'} · ${activeSecondaries.length} ${activeSecondaries.length === 1 ? 'secondary' : 'secondaries'}`
+              : `${activeRounds.length} ${activeRounds.length === 1 ? 'Eigenkapitalrunde' : 'Eigenkapitalrunden'} · ${state.convertibles.length} Wandeldarlehen · ${activeSecondaries.length} ${activeSecondaries.length === 1 ? 'Secondary' : 'Secondaries'}`;
           $('#erm-founder-share').textContent = pct(founder);
           $('#erm-founder-dilution').textContent = stage
-            ? pct(founder - initialFounder) + ' seit Gründung'
-            : 'Ausgangsanteil';
+            ? pct(founder - initialFounder) +
+              (currentLanguage === 'en' ? ' since formation' : ' seit Gründung')
+            : currentLanguage === 'en'
+              ? 'Initial ownership'
+              : 'Ausgangsanteil';
           $('#erm-total-shares').textContent = num(total) + ' FD-Anteile';
         }
 
@@ -4494,7 +5452,7 @@
                       status = converted
                         ? 'Konvertiert in ' + conversionEntry.round.name
                         : 'Ausstehend';
-                    return `<article class="erm-round erm-financing-card is-convertible"><div class="viz-row"><span class="viz-badge erm-type-badge">Wandeldarlehen</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${entry.index}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${entry.index}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(c.date + 'T00:00:00Z'))}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap) > 0 ? euro(c.valuationCap) : '–'}</span><span class="text-muted">Wandlungsbasis</span><span>${c.fullyDilutedConversion ? 'Fully Diluted' : 'Nur Equity-Anteile'}</span></div></article>`;
+                    return `<article class="erm-round erm-financing-card is-convertible"><div class="viz-row"><span class="viz-badge erm-type-badge">Wandeldarlehen</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${entry.index}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${entry.index}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${dateLabel(c.date)}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap) > 0 ? euro(c.valuationCap) : '–'}</span><span class="text-muted">Wandlungsbasis</span><span>${c.fullyDilutedConversion ? 'Fully Diluted' : 'Nur Equity-Anteile'}</span></div></article>`;
                   }
                   if (entry.kind === 'secondary') {
                     const s = entry.item,
@@ -4512,7 +5470,7 @@
                           : s.sourceRoundId
                             ? sourceRound.className || sourceRound.name || s.sourceRoundId
                             : 'Automatisch · Common zuerst';
-                    return `<article class="erm-round erm-financing-card is-secondary"><div class="viz-row"><span class="viz-badge erm-type-badge">Secondary</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(s.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-secondary="${entry.index}" aria-label="${esc(s.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-secondary="${entry.index}" aria-label="${esc(s.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(s.seller)} → ${esc(s.buyer)}</span><div class="erm-round-meta text-small"><span class="text-muted">Datum</span><span>${new Intl.DateTimeFormat('de-DE').format(new Date(s.date + 'T00:00:00Z'))}</span><span class="text-muted">Anteilsklasse</span><span>${esc(sourceClass)}</span><span class="text-muted">Anteile</span><span>${num(s.shares)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(s.pricePerShare)}</span><span class="text-muted">Volumen</span><span>${euro(volume)}</span>${secondarySnap?.secondaryError ? `<span class="text-destructive">Hinweis</span><span class="text-destructive">${esc(secondarySnap.secondaryError)}</span>` : ''}</div></article>`;
+                    return `<article class="erm-round erm-financing-card is-secondary"><div class="viz-row"><span class="viz-badge erm-type-badge">Secondary</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(s.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-secondary="${entry.index}" aria-label="${esc(s.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-secondary="${entry.index}" aria-label="${esc(s.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(s.seller)} → ${esc(s.buyer)}</span><div class="erm-round-meta text-small"><span class="text-muted">Datum</span><span>${dateLabel(s.date)}</span><span class="text-muted">Anteilsklasse</span><span>${esc(sourceClass)}</span><span class="text-muted">Anteile</span><span>${num(s.shares)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(s.pricePerShare)}</span><span class="text-muted">Volumen</span><span>${euro(volume)}</span>${secondarySnap?.secondaryError ? `<span class="text-destructive">Hinweis</span><span class="text-destructive">${esc(secondarySnap.secondaryError)}</span>` : ''}</div></article>`;
                   }
                   const r = entry.item,
                     roundSnapIndex = snaps.findIndex(
@@ -4532,19 +5490,19 @@
                   const capLabel =
                       r.liquidationPreferenceType === 'participating' &&
                       Number(r.participationCapMultiple) > 0
-                        ? ` · Cap ${Number(r.participationCapMultiple).toLocaleString('de-DE')}×`
+                        ? ` · Cap ${Number(r.participationCapMultiple).toLocaleString(currentLocale())}×`
                         : '',
                     preferenceLabel =
                       r.liquidationPreferenceType === 'participating'
-                        ? `${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× partizipierend${capLabel}`
+                        ? `${Number(r.liquidationPreferenceMultiple).toLocaleString(currentLocale())}× partizipierend${capLabel}`
                         : r.liquidationPreferenceType === 'non-participating'
-                          ? `${Number(r.liquidationPreferenceMultiple).toLocaleString('de-DE')}× nicht partizipierend`
+                          ? `${Number(r.liquidationPreferenceMultiple).toLocaleString(currentLocale())}× nicht partizipierend`
                           : 'Keine',
                     redemptionLabel =
                       r.redemptionEnabled && validDate(r.redemptionDate)
-                        ? `${Number(r.redemptionMultiple).toLocaleString('de-DE')}× ab ${new Intl.DateTimeFormat('de-DE').format(new Date(r.redemptionDate + 'T00:00:00Z'))}`
+                        ? `${Number(r.redemptionMultiple).toLocaleString(currentLocale())}× ab ${dateLabel(r.redemptionDate)}`
                         : 'Nein';
-                  return `<article class="erm-round erm-financing-card is-equity"><div class="viz-row"><span class="viz-badge erm-type-badge">Eigenkapitalrunde</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(investorNames)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date ? esc(new Intl.DateTimeFormat('de-DE').format(new Date(r.date + 'T00:00:00Z'))) : 'Datum fehlt'}</span><span class="text-muted">Anteilsklasse</span><span>${esc(r.className || r.name)}</span><span class="text-muted">Investoren</span><span>${investors.length}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(roundInvestment(r))}</span><span class="text-muted">LiqPref</span><span>${esc(preferenceLabel)}</span><span class="text-muted">Seniorität</span><span>${r.liquidationPreferenceType === 'none' ? '–' : Number(r.liquidationSeniority).toLocaleString('de-DE')}</span><span class="text-muted">Conversion Ratio</span><span>${Number(r.conversionRatio || 1).toLocaleString('de-DE', { maximumFractionDigits: 4 })}:1</span><span class="text-muted">Kumul. Dividende</span><span>${r.liquidationPreferenceType === 'none' ? '–' : pct(Number(r.cumulativeDividendRate) || 0) + ' p. a.'}</span><span class="text-muted">Redemption</span><span>${esc(redemptionLabel)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(roundSnap.price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh || 0)} · ${esc(poolName)} · ${r.poolRefreshTiming === 'post' ? 'Post-Money' : 'Pre-Money'}</span></div></article>`;
+                  return `<article class="erm-round erm-financing-card is-equity"><div class="viz-row"><span class="viz-badge erm-type-badge">Eigenkapitalrunde</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(investorNames)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date ? esc(dateLabel(r.date)) : 'Datum fehlt'}</span><span class="text-muted">Anteilsklasse</span><span>${esc(r.className || r.name)}</span><span class="text-muted">Investoren</span><span>${investors.length}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(roundInvestment(r))}</span><span class="text-muted">LiqPref</span><span>${esc(preferenceLabel)}</span><span class="text-muted">Seniorität</span><span>${r.liquidationPreferenceType === 'none' ? '–' : Number(r.liquidationSeniority).toLocaleString(currentLocale())}</span><span class="text-muted">Conversion Ratio</span><span>${Number(r.conversionRatio || 1).toLocaleString(currentLocale(), { maximumFractionDigits: 4 })}:1</span><span class="text-muted">Kumul. Dividende</span><span>${r.liquidationPreferenceType === 'none' ? '–' : pct(Number(r.cumulativeDividendRate) || 0) + ' p. a.'}</span><span class="text-muted">Redemption</span><span>${esc(redemptionLabel)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(roundSnap.price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh || 0)} · ${esc(poolName)} · ${r.poolRefreshTiming === 'post' ? 'Post-Money' : 'Pre-Money'}</span></div></article>`;
                 })
                 .join('')
             : '<div class="erm-empty">Noch keine Finanzierungen.</div>';
@@ -4556,10 +5514,13 @@
           const exitCosts = Math.max(0, Number(state.exit.costs) || 0);
           const exitNet = Math.max(0, exitValue - exitDebt - exitCosts);
           const exitDate = state.exit.date || '';
-          $('#erm-exit-value').value = moneyInputValue(exitValue);
+          if (document.activeElement !== $('#erm-exit-value'))
+            $('#erm-exit-value').value = moneyInputValue(exitValue);
           $('#erm-exit-date').value = exitDate;
-          $('#erm-exit-debt').value = moneyInputValue(exitDebt);
-          $('#erm-exit-costs').value = moneyInputValue(exitCosts);
+          if (document.activeElement !== $('#erm-exit-debt'))
+            $('#erm-exit-debt').value = moneyInputValue(exitDebt);
+          if (document.activeElement !== $('#erm-exit-costs'))
+            $('#erm-exit-costs').value = moneyInputValue(exitCosts);
           const cashflowsByName = {};
           const addCashflow = (name, amount, date) => {
             const k = name.trim().toLowerCase();
@@ -4591,17 +5552,15 @@
           const poolSizeAtStage = snap.cap
               .filter((h) => h.isVirtual)
               .reduce((sum, h) => sum + (Number(h.shares) || 0), 0),
-            fullyDilutedValuePerShare = total ? exitNet / total : 0;
-          const vsopExitRows = state.vsopParticipants.map((g) => {
-            const eligible =
-                !validDate(g.expiryDate) || !validDate(exitDate) || exitDate <= g.expiryDate,
-              vested = eligible ? vestedShares(g, exitDate) : 0,
-              payout = Math.max(0, (fullyDilutedValuePerShare - (Number(g.hurdle) || 0)) * vested);
-            return { grant: g, vested, payout };
-          });
+            fullyDilutedValuePerShare = total ? exitNet / total : 0,
+            vsopAsOf = validDate(exitDate) ? exitDate : today;
+          const vsopExitRows = state.vsopParticipants.map((grant) => ({
+            grant,
+            ...calculateVsopPayout(grant, vsopAsOf, fullyDilutedValuePerShare),
+          }));
           const vsopPayout = vsopExitRows.reduce((sum, row) => sum + row.payout, 0),
-            vestedPoolShares = vsopExitRows.reduce((sum, row) => sum + row.vested, 0),
-            restPoolShares = Math.max(0, poolSizeAtStage - vestedPoolShares),
+            payablePoolShares = vsopExitRows.reduce((sum, row) => sum + row.payable, 0),
+            restPoolShares = Math.max(0, poolSizeAtStage - payablePoolShares),
             equityRemainder = Math.max(0, exitNet - vsopPayout);
           const actualHolders = snap.cap.filter((h) => !h.isVirtual);
           const actualLots = snap.lots.filter((lot) => !lot.isVirtual && lot.shares > 0),
@@ -4665,11 +5624,36 @@
                 html: `<tr><td data-label="Beteiligte">${esc(h.name)}<br><span class="text-small text-muted">${details.join(' · ')}</span></td><td data-label="Ownership">${pct(ownership * 100)}</td><td data-label="Auszahlung">${euro(payout)}</td><td data-label="Investiert">${euro(invested)}</td><td data-label="Multiple">${multipleLabel(totalReturn, invested)}</td><td data-label="IRR p. a.">${irr === null ? '–' : pct(irr * 100)}</td></tr>`,
               };
             });
-          const personRows = vsopExitRows.map((row) => {
-            const invested = Math.max(0, Number(row.grant.hurdle) || 0) * row.vested;
-            return `<tr><td data-label="Beteiligte">${esc(row.grant.name)}<br><span class="text-small text-muted">VSOP · ${num(row.vested)} gevestet · Strike ${euro(row.grant.hurdle || 0)}</span></td><td data-label="Ownership">${pct(total ? (row.vested / total) * 100 : 0)}</td><td data-label="Auszahlung">${euro(row.payout)}</td><td data-label="Investiert">${euro(invested)}</td><td data-label="Multiple">${multipleLabel(row.payout, invested)}</td><td data-label="IRR p. a.">–</td></tr>`;
+          const vsopPeople = new Map();
+          vsopExitRows.forEach((row) => {
+            const key = holderKey(row.grant.name),
+              existing = vsopPeople.get(key) || {
+                name: row.grant.name,
+                grants: 0,
+                earned: 0,
+                payable: 0,
+                accelerated: 0,
+                payout: 0,
+              };
+            existing.grants++;
+            existing.earned += row.earned;
+            existing.payable += row.payable;
+            existing.accelerated += row.accelerated;
+            existing.payout += row.payout;
+            vsopPeople.set(key, existing);
           });
-          const restRow = `<tr><td data-label="Beteiligte">Restlicher VSOP-Pool<br><span class="text-small text-muted">${num(restPoolShares)} unvestete, geplante oder freie Anteile verfallen beim Exit; der Wert verbleibt bei den Gesellschaftern.</span></td><td data-label="Ownership">${pct(total ? (restPoolShares / total) * 100 : 0)}</td><td data-label="Auszahlung">${euro(0)}</td><td data-label="Investiert">–</td><td data-label="Multiple">–</td><td data-label="IRR p. a.">–</td></tr>`;
+          const personRows = [...vsopPeople.values()]
+            .sort((a, b) => b.payout - a.payout || a.name.localeCompare(b.name, 'de-DE'))
+            .map((person) => {
+              const details = [
+                `VSOP · ${num(person.payable)} auszahlbar`,
+                `${person.grants} ${person.grants === 1 ? 'Zuteilung' : 'Zuteilungen'}`,
+              ];
+              if (person.accelerated > 0)
+                details.push(`${num(person.accelerated)} beschleunigt`);
+              return `<tr><td data-label="Beteiligte">${esc(person.name)}<br><span class="text-small text-muted">${details.join(' · ')}</span></td><td data-label="Ownership">${pct(total ? (person.payable / total) * 100 : 0)}</td><td data-label="Auszahlung">${euro(person.payout)}</td><td data-label="Investiert">–</td><td data-label="Multiple">–</td><td data-label="IRR p. a.">–</td></tr>`;
+            });
+          const restRow = `<tr><td data-label="Beteiligte">Restlicher VSOP-Pool<br><span class="text-small text-muted">${num(restPoolShares)} nicht auszahlbare, geplante oder freie Anteile; der Wert verbleibt bei den Gesellschaftern.</span></td><td data-label="Ownership">${pct(total ? (restPoolShares / total) * 100 : 0)}</td><td data-label="Auszahlung">${euro(0)}</td><td data-label="Investiert">–</td><td data-label="Multiple">–</td><td data-label="IRR p. a.">–</td></tr>`;
           const groupSection = (label, amount, rows) => [
             `<tr class="erm-group-row"><th colspan="6" scope="rowgroup"><div class="viz-row"><strong>${label}</strong><span>${euro(amount)}</span></div></th></tr>`,
             ...rows,
@@ -4700,32 +5684,95 @@
           $('#erm-exit-pool-rest').textContent = `${num(restPoolShares)} Anteile · ${euro(0)}`;
         }
 
-        function renderVsop({ snap }) {
-          const poolSize = snap.cap
-            .filter((h) => h.isVirtual)
-            .reduce((sum, h) => sum + (Number(h.shares) || 0), 0);
-          const reserved = state.vsopParticipants.reduce(
-              (sum, g) => sum + reservedVsopShares(g),
-              0,
-            ),
+        function renderVsop({ snap, snaps }) {
+          const currentSnapshot = stage === snaps.length - 1,
+            asOf = currentSnapshot || !validDate(snap.asOfDate) ? today : snap.asOfDate,
+            pools = vsopPools().map((pool) => {
+              const capacity =
+                  Number((snap.cap.find((holder) => holder.id === pool.id) || {}).shares) || 0;
+              const grants = state.vsopParticipants.filter((grant) => grant.poolId === pool.id),
+                effectiveGrants = grants.filter(
+                  (grant) => !validDate(grant.grantDate) || grant.grantDate <= asOf,
+                ),
+                granted = effectiveGrants
+                  .filter((grant) => grant.status !== 'Storniert')
+                  .reduce((sum, grant) => sum + (Number(grant.shares) || 0), 0),
+                planned = effectiveGrants
+                  .filter((grant) => grant.status === 'Aktiv')
+                  .reduce((sum, grant) => sum + (Number(grant.plannedShares) || 0), 0),
+                vested = effectiveGrants.reduce(
+                  (sum, grant) => sum + vestedShares(grant, asOf),
+                  0,
+                ),
+                reserved = effectiveGrants.reduce(
+                  (sum, grant) => sum + reservedVsopShares(grant, asOf),
+                  0,
+                );
+              return {
+                ...pool,
+                capacity,
+                granted,
+                planned,
+                vested,
+                reserved,
+                available: Math.max(0, capacity - reserved),
+              };
+            }),
+            poolSize = pools.reduce((sum, pool) => sum + pool.capacity, 0),
+            reserved = pools.reduce((sum, pool) => sum + pool.reserved, 0),
             available = Math.max(0, poolSize - reserved),
-            initialFullyDiluted = state.holders.reduce(
-              (sum, h) => sum + (Number(h.shares) || 0),
+            snapshotFullyDiluted = snap.cap.reduce(
+              (sum, holder) => sum + (Number(holder.shares) || 0),
               0,
             );
-          const poolCount = vsopPools().length;
+          const poolCount = pools.length;
           $('#erm-vsop-summary').textContent =
             `${poolCount} ${poolCount === 1 ? 'Pool' : 'Pools'} · ${num(poolSize)} Anteile · ${num(reserved)} belegt · ${num(available)} verfügbar`;
+          $('#erm-vsop-pools').innerHTML = pools.length
+            ? pools
+                .map(
+                  (pool) =>
+                    `<article class="erm-vsop-pool-card"><div class="viz-row"><strong>${esc(pool.name)}</strong><span>${num(pool.available)} frei</span></div><div class="viz-row text-small"><span class="text-muted">Poolvolumen</span><span>${num(pool.capacity)}</span></div><div class="viz-row text-small"><span class="text-muted">Granted / Planned</span><span>${num(pool.granted)} / ${num(pool.planned)}</span></div><div class="viz-row text-small"><span class="text-muted">Gevestet / Reserviert</span><span>${num(pool.vested)} / ${num(pool.reserved)}</span></div></article>`,
+                )
+                .join('')
+            : '<div class="erm-empty">Noch kein VSOP-Pool angelegt.</div>';
           $('#erm-vsop-body').innerHTML = state.vsopParticipants.length
             ? state.vsopParticipants
                 .map((g, i) => {
-                  const vested = vestedShares(g),
-                    fullyDiluted = initialFullyDiluted
-                      ? (Number(g.shares) / initialFullyDiluted) * 100
+                  const entitlement = vsopEntitlement(g, asOf),
+                    vested = entitlement.earned,
+                    payable = entitlement.payable,
+                    fullyDiluted = snapshotFullyDiluted
+                      ? (Number(g.shares) / snapshotFullyDiluted) * 100
                       : 0;
                   const poolName =
-                    (state.holders.find((h) => h.id === g.poolId) || {}).name || 'Pool fehlt';
-                  return `<tr><td data-label="Owner">${esc(g.name)}<br><span class="text-small text-muted">${esc(g.status)} · ${esc(poolName)}</span></td><td data-label="Vested">${num(vested)}</td><td data-label="Granted">${num(g.shares)}</td><td data-label="Planned">${num(g.plannedShares || 0)}</td><td data-label="Fully Diluted">${pct(fullyDiluted)}</td><td data-label="Date">${new Intl.DateTimeFormat('de-DE').format(new Date(g.grantDate + 'T00:00:00Z'))}</td><td data-label="Expired Date">${validDate(g.expiryDate) ? new Intl.DateTimeFormat('de-DE').format(new Date(g.expiryDate + 'T00:00:00Z')) : 'N/A'}</td><td data-label="Strike Price">${euro(g.hurdle || 0)}</td><td data-label="Cliff">${g.cliffMonths} Monate</td><td data-label="Aktionen"><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-vsop="${i}" aria-label="${esc(g.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-vsop="${i}" aria-label="${esc(g.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></td></tr>`;
+                      (state.holders.find((h) => h.id === g.poolId) || {}).name || 'Pool fehlt',
+                    cadence =
+                      Number(g.vestingIntervalMonths) === 12
+                        ? 'jährlich'
+                        : Number(g.vestingIntervalMonths) === 3
+                          ? 'quartalsweise'
+                          : 'monatlich',
+                    vestingDetails = [
+                      `${g.vestingMonths} Monate`,
+                      `${g.cliffMonths} Cliff`,
+                      cadence,
+                    ];
+                  if (Number(g.vestingPauseMonths) > 0)
+                    vestingDetails.push(`${g.vestingPauseMonths} Monate Pause`);
+                  const leaverDetails =
+                    g.status === 'Ausgeschieden'
+                      ? `${g.leaverType === 'bad' ? 'Bad' : g.leaverType === 'neutral' ? 'Neutral' : 'Good'} Leaver · ${pct(g.vestedRetentionPct)} erhalten`
+                      : g.status;
+                  const dateDetails = [
+                    `${dateLabel(g.grantDate)} · ${esc(poolName)}`,
+                    validDate(g.expiryDate) ? `Ablauf ${dateLabel(g.expiryDate)}` : '',
+                    entitlement.expired ? 'Abgelaufen' : '',
+                    g.accelerationTrigger !== 'none' && Number(g.accelerationPct) > 0
+                      ? `${pct(g.accelerationPct)} ${g.accelerationTrigger === 'double' ? 'Double Trigger' : 'Single Trigger'}`
+                      : '',
+                  ].filter(Boolean);
+                  return `<tr><td data-label="Owner">${esc(g.name)}<br><span class="text-small text-muted">${dateDetails.join(' · ')}</span></td><td data-label="Vested">${num(vested)}</td><td data-label="Auszahlbar">${num(payable)}</td><td data-label="Granted">${num(g.shares)}</td><td data-label="Planned">${num(g.plannedShares || 0)}</td><td data-label="Fully Diluted">${pct(fullyDiluted)}</td><td data-label="Vesting">${esc(vestingDetails.join(' · '))}</td><td data-label="Leaver">${esc(leaverDetails)}</td><td data-label="Basispreis">${euro(g.hurdle || 0)}</td><td data-label="Aktionen"><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-vsop="${i}" aria-label="${esc(g.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-vsop="${i}" aria-label="${esc(g.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></td></tr>`;
                 })
                 .join('')
             : '<tr><td colspan="10" class="erm-empty">Noch keine Personen im VSOP-Pool.</td></tr>';
@@ -4823,6 +5870,22 @@
           else state.holders[editPool] = pool;
           commitChanges('#erm-pool-dialog');
         });
+        function updateVsopConditionFields() {
+          const isLeaver = $('#erm-vsop-status').value === 'Ausgeschieden',
+            accelerationTrigger = $('#erm-vsop-acceleration-trigger').value,
+            hasAcceleration = accelerationTrigger !== 'none',
+            hasSecondTrigger = accelerationTrigger === 'double';
+          $('#erm-vsop-leaver-type-field').hidden = !isLeaver;
+          $('#erm-vsop-retention-field').hidden = !isLeaver;
+          $('#erm-vsop-leaver-date').closest('label').hidden = !isLeaver;
+          $('#erm-vsop-leaver-type').disabled = !isLeaver;
+          $('#erm-vsop-retention').disabled = !isLeaver;
+          $('#erm-vsop-leaver-date').disabled = !isLeaver;
+          $('#erm-vsop-acceleration-pct-field').hidden = !hasAcceleration;
+          $('#erm-vsop-acceleration-pct').disabled = !hasAcceleration;
+          $('#erm-vsop-second-trigger-field').hidden = !hasSecondTrigger;
+          $('#erm-vsop-second-trigger-date').disabled = !hasSecondTrigger;
+        }
         function openVsop(i = null) {
           const pools = vsopPools();
           if (!pools.length) {
@@ -4841,10 +5904,17 @@
                   startDate: today,
                   vestingMonths: 48,
                   cliffMonths: 12,
+                  vestingIntervalMonths: 1,
+                  vestingPauseMonths: 0,
                   hurdle: 0,
                   status: 'Aktiv',
                   leaverDate: '',
+                  leaverType: 'none',
+                  vestedRetentionPct: 100,
                   expiryDate: '',
+                  accelerationTrigger: 'none',
+                  accelerationPct: 0,
+                  secondTriggerDate: '',
                 }
               : state.vsopParticipants[i];
           $('#erm-vsop-form-title').textContent =
@@ -4859,10 +5929,20 @@
           $('#erm-vsop-start-date').value = g.startDate;
           $('#erm-vsop-months').value = g.vestingMonths;
           $('#erm-vsop-cliff').value = g.cliffMonths;
+          $('#erm-vsop-interval').value = g.vestingIntervalMonths || 1;
+          $('#erm-vsop-pause').value = g.vestingPauseMonths || 0;
           $('#erm-vsop-hurdle').value = moneyInputValue(g.hurdle || 0);
           $('#erm-vsop-expiry-date').value = g.expiryDate || '';
           $('#erm-vsop-status').value = g.status;
           $('#erm-vsop-leaver-date').value = g.leaverDate || '';
+          $('#erm-vsop-leaver-type').value =
+            g.leaverType && g.leaverType !== 'none' ? g.leaverType : 'good';
+          $('#erm-vsop-retention').value =
+            g.vestedRetentionPct === undefined ? 100 : g.vestedRetentionPct;
+          $('#erm-vsop-acceleration-trigger').value = g.accelerationTrigger || 'none';
+          $('#erm-vsop-acceleration-pct').value = g.accelerationPct || 0;
+          $('#erm-vsop-second-trigger-date').value = g.secondTriggerDate || '';
+          updateVsopConditionFields();
           $('#erm-vsop-error').textContent = '';
           $('#erm-vsop-dialog').showModal();
         }
@@ -4883,9 +5963,14 @@
           pendingDeleteVsop = null;
           commitChanges('#erm-delete-vsop-dialog');
         });
+        $('#erm-vsop-status').addEventListener('change', updateVsopConditionFields);
+        $('#erm-vsop-acceleration-trigger').addEventListener(
+          'change',
+          updateVsopConditionFields,
+        );
         $('#erm-save-vsop').addEventListener('click', (e) => {
           e.preventDefault();
-          const g = {
+          let g = {
             id: editVsop === null ? uid() : state.vsopParticipants[editVsop].id,
             poolId: $('#erm-vsop-pool').value,
             name: $('#erm-vsop-name').value.trim(),
@@ -4895,10 +5980,32 @@
             startDate: $('#erm-vsop-start-date').value,
             vestingMonths: Number($('#erm-vsop-months').value),
             cliffMonths: Number($('#erm-vsop-cliff').value),
+            vestingIntervalMonths: Number($('#erm-vsop-interval').value),
+            vestingPauseMonths: Number($('#erm-vsop-pause').value),
             hurdle: parseMoney($('#erm-vsop-hurdle').value),
             status: $('#erm-vsop-status').value,
-            leaverDate: $('#erm-vsop-leaver-date').value,
+            leaverDate:
+              $('#erm-vsop-status').value === 'Ausgeschieden'
+                ? $('#erm-vsop-leaver-date').value
+                : '',
+            leaverType:
+              $('#erm-vsop-status').value === 'Ausgeschieden'
+                ? $('#erm-vsop-leaver-type').value
+                : 'none',
+            vestedRetentionPct:
+              $('#erm-vsop-status').value === 'Ausgeschieden'
+                ? Number($('#erm-vsop-retention').value)
+                : 100,
             expiryDate: $('#erm-vsop-expiry-date').value,
+            accelerationTrigger: $('#erm-vsop-acceleration-trigger').value,
+            accelerationPct:
+              $('#erm-vsop-acceleration-trigger').value === 'none'
+                ? 0
+                : Number($('#erm-vsop-acceleration-pct').value),
+            secondTriggerDate:
+              $('#erm-vsop-acceleration-trigger').value === 'double'
+                ? $('#erm-vsop-second-trigger-date').value
+                : '',
           };
           if (
             !g.poolId ||
@@ -4908,7 +6015,14 @@
             !validDate(g.startDate) ||
             g.vestingMonths <= 0 ||
             g.cliffMonths < 0 ||
-            g.cliffMonths > g.vestingMonths
+            g.cliffMonths > g.vestingMonths ||
+            ![1, 3, 12].includes(g.vestingIntervalMonths) ||
+            g.vestingPauseMonths < 0 ||
+            !Number.isInteger(g.vestingPauseMonths) ||
+            g.vestedRetentionPct < 0 ||
+            g.vestedRetentionPct > 100 ||
+            g.accelerationPct < 0 ||
+            g.accelerationPct > 100
           ) {
             $('#erm-vsop-error').textContent =
               'Bitte Pool, Zuteilung, Daten und Vestingparameter vollständig prüfen.';
@@ -4919,6 +6033,25 @@
               'Für ausgeschiedene Personen wird ein Austrittsdatum benötigt.';
             return;
           }
+          if (
+            validDate(g.expiryDate) &&
+            (g.expiryDate < g.grantDate ||
+              (g.status === 'Ausgeschieden' && g.expiryDate < g.leaverDate))
+          ) {
+            $('#erm-vsop-error').textContent =
+              'Das Ablaufdatum darf nicht vor Zuteilung oder Austritt liegen.';
+            return;
+          }
+          if (
+            g.accelerationTrigger === 'double' &&
+            g.accelerationPct > 0 &&
+            !validDate(g.secondTriggerDate)
+          ) {
+            $('#erm-vsop-error').textContent =
+              'Für Double-Trigger-Beschleunigung wird das zweite Ereignisdatum benötigt.';
+            return;
+          }
+          g = normalizeVsopGrant(g);
           const pool = state.holders.find((h) => h.id === g.poolId && h.isVirtual),
             poolCapacity =
               (pool ? pool.shares : 0) +
@@ -5306,12 +6439,16 @@
                 `<div class="erm-round-investor-row" data-investor-id="${esc(investor.id || uid())}"><label class="form-label">Investor ${index + 1}<input class="form-control" data-round-investor-name required placeholder="z. B. Venture Fund" value="${esc(investor.name || '')}"></label><label class="form-label">Investment (€)<input class="form-control" data-round-investor-investment type="text" inputmode="numeric" value="${esc(moneyInputValue(investor.investment || 0))}"></label><button type="button" class="btn btn-ghost text-destructive" data-remove-round-investor aria-label="Investor entfernen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div>`,
             )
             .join('');
-          root.querySelectorAll('[data-round-investor-investment]').forEach((input) =>
+          root.querySelectorAll('[data-round-investor-investment]').forEach((input) => {
             input.addEventListener('input', () => {
               formatMoneyField(input);
               updateRoundInvestmentTotal();
-            }),
-          );
+            });
+            input.addEventListener('blur', () => {
+              formatMoneyField(input, { normalize: true });
+              updateRoundInvestmentTotal();
+            });
+          });
           updateRoundInvestmentTotal();
           if (window.lucide) lucide.createIcons({ attrs: { width: 16, height: 16 } });
         }
@@ -5401,7 +6538,7 @@
         $('#erm-round-redemption-enabled').addEventListener('change', updateRoundPreferenceFields);
         $('#erm-save-round').addEventListener('click', (e) => {
           e.preventDefault();
-          const investors = readRoundInvestors(),
+          const investors = roundInvestors({ investors: readRoundInvestors() }),
             rawRound = {
               id: editRound === null ? uid() : state.rounds[editRound].id,
               name: $('#erm-round-name').value.trim(),
@@ -5439,13 +6576,6 @@
             return;
           }
           if (
-            new Set(investors.map((investor) => holderKey(investor.name))).size !== investors.length
-          ) {
-            $('#erm-round-error').textContent =
-              'Jeder Investor darf innerhalb einer Runde nur einmal vorkommen.';
-            return;
-          }
-          if (
             rawRound.liquidationPreferenceType !== 'none' &&
             !(rawRound.liquidationPreferenceMultiple > 0)
           ) {
@@ -5479,7 +6609,7 @@
           }
           if (r.liquidationPreferenceType === 'none') {
             r.liquidationPreferenceMultiple = 1;
-            r.liquidationSeniority = 999999;
+            r.liquidationSeniority = 1;
             r.participationCapMultiple = 0;
             r.cumulativeDividendRate = 0;
             r.redemptionEnabled = false;
@@ -5586,7 +6716,12 @@
         });
         root
           .querySelectorAll('[data-money]')
-          .forEach((input) => input.addEventListener('input', () => formatMoneyField(input)));
+          .forEach((input) => {
+            input.addEventListener('input', () => formatMoneyField(input));
+            input.addEventListener('blur', () =>
+              formatMoneyField(input, { normalize: true }),
+            );
+          });
         root.querySelectorAll('[data-exit-input]').forEach((input) =>
           input.addEventListener('input', (e) => {
             if (e.target.dataset.exitInput !== 'date' && e.target.value === '') return;
