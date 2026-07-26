@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+
 # EASE Cap Table Manager
 
 Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Secondaries, VSOP-Pools und Exit-Simulationen. Die App startet mit einem leeren Modell: Ein Founder hält 100 %, alle Transaktions-, VSOP- und Exit-Werte stehen auf null.
@@ -25,9 +27,21 @@ Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Seco
 
 - [Importierbare Beispiel-CSV](examples/ease-cap-table-example.csv)
 
+Die Beispiel-CSV bildet einen deutschen Finanzierungsverlauf ab: Zwei Gründer
+starten mit insgesamt 25.000 Anteilen. Darauf folgen zwei
+Pre-Seed-Angel-Wandeldarlehen, Bridge-, Seed- und Series-A-Runde sowie ein
+Mitarbeitenden-Pool und eine Exit-Annahme.
+
 ## Starten
 
-Öffne `index.html` direkt in einem modernen Browser. Alternativ kann die Datei über einen beliebigen lokalen Webserver bereitgestellt werden.
+Öffne `index.html` direkt in einem modernen Browser. Alternativ kann die Datei
+über einen lokalen Webserver bereitgestellt werden:
+
+```powershell
+python -m http.server 8000
+```
+
+Danach `http://localhost:8000` öffnen.
 
 ## Berechnungen testen
 
@@ -48,4 +62,14 @@ Die VSOP-Funktionen bilden vertragliche Rechenparameter ab und ersetzen keine re
 Der €/$-Schalter ändert ausschließlich Symbol und Zahlenformat in der Oberfläche. Er führt keine Währungsumrechnung durch; gespeicherte Zahlen und die bestehenden EUR-Felder des CSV-Schemas bleiben unverändert.
 
 Für **GitHub-Beispiel laden** erlaubt die Content Security Policy ausschließlich eine zusätzliche Leseverbindung zu `raw.githubusercontent.com`. Dabei wird nur die versionierte Beispiel-CSV aus diesem Repository abgerufen; lokale Workspace-Daten werden nicht übertragen.
+
+## Lizenz
+
+Copyright © 2026 EASE Cap Table Manager contributors.
+
+Diese Software ist unter der **GNU Affero General Public License, Version 3
+ausschließlich** (`AGPL-3.0-only`) lizenziert und wird ohne Gewährleistung
+bereitgestellt. Siehe [LICENSE](LICENSE). Der
+[Quellcode](https://github.com/fleischer-EASE/EASECapTableManager) ist öffentlich
+verfügbar.
 

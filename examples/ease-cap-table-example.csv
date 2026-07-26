@@ -1,19 +1,19 @@
 schema_version;record_type;id;round_id;name;share_class;category;shares;planned_shares;cost_basis_eur;investment_date;is_virtual;counterparty;principal_eur;interest_pct;discount_pct;valuation_cap_eur;fully_diluted_conversion;liquidation_preference_type;liquidation_preference_multiple;liquidation_seniority;participation_cap_multiple;conversion_ratio;cumulative_dividend_rate_pct;redemption_enabled;redemption_date;redemption_multiple;seller;buyer;secondary_price_per_share_eur;source_round_id;pool_id;pre_money_eur;investment_eur;closing_date;pool_refresh_shares;pool_refresh_timing;grant_date;vesting_start;vesting_months;cliff_months;strike_price_eur;status;leaver_date;expiry_date;exit_value_eur;exit_debt_eur;exit_costs_eur;exit_date;vesting_interval_months;vesting_pause_months;leaver_type;vested_retention_pct;acceleration_trigger;acceleration_pct;second_trigger_date
-3;holder;founder-lea;;Lea König;;Gründer;550000;;15000;2021-01-04;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-3;holder;founder-jonas;;Jonas Weber;;Gründer;350000;;10000;2021-01-04;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-3;holder;vsop-pool;;Employee Pool;;VSOP-Pool;100000;;0;;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-3;convertible;convertible-angel-anna;;Pre-Seed Angel Note Anna;;;;;;2021-09-15;;Anna Schneider;150000;6;20;3000000;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-3;convertible;convertible-angel-michael;;Pre-Seed Angel Note Michael;;;;;;2021-09-15;;Michael Braun;150000;6;20;3000000;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-3;round;round-bridge;;Bridge-Runde;Bridge Preferred;;;;;;;;;;;;;non-participating;1;3;0;1;0;false;;1;;;;;vsop-pool;5000000;1000000;2022-06-30;50000;pre;;;;;;;;;;;;
+3;holder;founder-lea;;Lea König;;Gründer;15000;;15000;2021-01-04;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+3;holder;founder-jonas;;Jonas Weber;;Gründer;10000;;10000;2021-01-04;false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+3;holder;vsop-pool;;Mitarbeitenden-Pool;;VSOP-Pool;2500;;0;;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+3;convertible;convertible-angel-anna;;Pre-Seed Angel Wandeldarlehen Anna;;;;;;2021-09-15;;Anna Schneider;150000;6;20;3000000;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+3;convertible;convertible-angel-michael;;Pre-Seed Angel Wandeldarlehen Michael;;;;;;2021-09-15;;Michael Braun;150000;6;20;3000000;true;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+3;round;round-bridge;;Bridge-Runde;Bridge Preferred;;;;;;;;;;;;;non-participating;1;1;0;1;0;false;;1;;;;;vsop-pool;5000000;1000000;2022-06-30;1250;pre;;;;;;;;;;;;
 3;round_investor;bridge-angel-anna;round-bridge;;;;;;;;;Anna Schneider;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
 3;round_investor;bridge-angel-michael;round-bridge;;;;;;;;;Michael Braun;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
-3;round_investor;bridge-nordstern;round-bridge;;;;;;;;;Nordstern Ventures;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
-3;round_investor;bridge-rheinland;round-bridge;;;;;;;;;Rheinland Ventures;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
-3;round;round-seed;;Seed-Runde;Seed Preferred;;;;;;;;;;;;;non-participating;1;2;0;1;0;false;;1;;;;;vsop-pool;12000000;3000000;2023-09-29;75000;pre;;;;;;;;;;;;
-3;round_investor;seed-nordstern;round-seed;;;;;;;;;Nordstern Ventures;;;;;;;;;;;;;;;;;;;;;1000000;;;;;;;;;;;;;;;
-3;round_investor;seed-hanseatic;round-seed;;;;;;;;;Hanseatic Ventures;;;;;;;;;;;;;;;;;;;;;2000000;;;;;;;;;;;;;;;
-3;round;round-series-a;;Series A;Series A Preferred;;;;;;;;;;;;;non-participating;1;1;0;1;0;false;;1;;;;;vsop-pool;32000000;8000000;2025-10-01;125000;pre;;;;;;;;;;;;
-3;round_investor;series-a-hanseatic;round-series-a;;;;;;;;;Hanseatic Ventures;;;;;;;;;;;;;;;;;;;;;3000000;;;;;;;;;;;;;;;
-3;round_investor;series-a-alpine;round-series-a;;;;;;;;;Alpine Growth Fund;;;;;;;;;;;;;;;;;;;;;5000000;;;;;;;;;;;;;;;
-3;vsop;vsop-mira;;Mira Hoffmann;;;40000;10000;;;;;;;;;;;;;;;;;;;;;;;vsop-pool;;;;;;2022-01-03;2022-01-03;48;12;0.5;Aktiv;;2032-01-03;;;;;1;0;none;100;none;0;
+3;round_investor;bridge-nordstern;round-bridge;;;;;;;;;Nordstern Ventures GmbH;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
+3;round_investor;bridge-rheinland;round-bridge;;;;;;;;;Rheinland Beteiligungs GmbH;;;;;;;;;;;;;;;;;;;;;250000;;;;;;;;;;;;;;;
+3;round;round-seed;;Seed-Runde;Seed Preferred;;;;;;;;;;;;;non-participating;1;2;0;1;0;false;;1;;;;;vsop-pool;12000000;3000000;2023-09-29;1875;pre;;;;;;;;;;;;
+3;round_investor;seed-nordstern;round-seed;;;;;;;;;Nordstern Ventures GmbH;;;;;;;;;;;;;;;;;;;;;1000000;;;;;;;;;;;;;;;
+3;round_investor;seed-hanseatic;round-seed;;;;;;;;;Hanseatic Ventures GmbH & Co. KG;;;;;;;;;;;;;;;;;;;;;2000000;;;;;;;;;;;;;;;
+3;round;round-series-a;;Series-A-Runde;Series A Preferred;;;;;;;;;;;;;non-participating;1;3;0;1;0;false;;1;;;;;vsop-pool;32000000;8000000;2025-10-01;3125;pre;;;;;;;;;;;;
+3;round_investor;series-a-hanseatic;round-series-a;;;;;;;;;Hanseatic Ventures GmbH & Co. KG;;;;;;;;;;;;;;;;;;;;;3000000;;;;;;;;;;;;;;;
+3;round_investor;series-a-alpine;round-series-a;;;;;;;;;Alpen Wachstum Fonds I GmbH & Co. KG;;;;;;;;;;;;;;;;;;;;;5000000;;;;;;;;;;;;;;;
+3;vsop;vsop-mira;;Mira Hoffmann;;;1000;250;;;;;;;;;;;;;;;;;;;;;;;vsop-pool;;;;;;2022-01-03;2022-01-03;48;12;0.5;Aktiv;;2032-01-03;;;;;1;0;none;100;none;0;
 3;exit;exit-example;;Exit-Annahme;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;120000000;4000000;6000000;2029-10-01

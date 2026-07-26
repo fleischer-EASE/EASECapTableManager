@@ -1,4 +1,6 @@
 /*
+ * SPDX-License-Identifier: AGPL-3.0-only
+ *
  * Independent, human-auditable scenarios for the calculation code in index.html.
  *
  * Important: Expected outcomes below are literal values derived separately from
@@ -20,6 +22,8 @@ const marker = text => {
   'id="erm-example-dialog"',
   'id="erm-example-without-save"',
   'id="erm-example-save"',
+  'AGPL-3.0-only',
+  '.erm-development .erm-panel-tools',
   'https://raw.githubusercontent.com/fleischer-EASE/EASECapTableManager/main/examples/ease-cap-table-example.csv',
   'connect-src blob: data: https://raw.githubusercontent.com',
   'importExampleCsv(false)',
@@ -27,6 +31,9 @@ const marker = text => {
 ].forEach(contract => marker(contract));
 if (source.includes('<span class="erm-page-kicker">EASE Cap Table Manager</span>'))
   throw new Error('Redundant main-section product label is still present.');
+const license = fs.readFileSync('LICENSE', 'utf8');
+if (!license.includes('GNU AFFERO GENERAL PUBLIC LICENSE') || !license.includes('Version 3, 19 November 2007'))
+  throw new Error('The full GNU AGPL version 3 license text is missing.');
 
 const declarationMarker = name => marker(`const ${name} =`);
 const functionMarker = name => marker(`function ${name}(`);
@@ -856,14 +863,16 @@ const csvScenarios = [
   {
     id: 'CSV-47',
     title: 'The repository example imports as the documented financing path',
-    calculation: 'The file contains 2 notes and Bridge €1m + Seed €3m + Series A €8m = €12m of equity rounds.',
+    calculation: 'The German example starts with 25,000 founder shares and contains 2 pre-seed angel notes plus Bridge €1m + Seed €3m + Series A €8m = €12m of equity rounds.',
     input: {csv: fs.readFileSync('examples/ease-cap-table-example.csv', 'utf8')},
     expected: {
       holders: 3,
+      founderShares: 25000,
       convertibles: 2,
       rounds: 3,
       roundInvestments: {'round-bridge': 1000000, 'round-seed': 3000000, 'round-series-a': 8000000},
       roundInvestorCounts: {'round-bridge': 4, 'round-seed': 2, 'round-series-a': 2},
+      roundSeniorities: {'round-bridge': 1, 'round-seed': 2, 'round-series-a': 3},
       vsopGrant: {
         id: 'vsop-mira',
         vestingIntervalMonths: 1,
@@ -1096,6 +1105,14 @@ function runCsvScenario(scenario) {
   importer.importCsv(scenario.input.csv);
   const state = importer.getState();
   assertEqual(state.holders.length, scenario.expected.holders, `${scenario.id} holder count`);
+  if (scenario.expected.founderShares !== undefined)
+    assertNear(
+      state.holders
+        .filter(holder => holder.type === 'Gründer')
+        .reduce((total, holder) => total + Number(holder.shares || 0), 0),
+      scenario.expected.founderShares,
+      `${scenario.id} founder shares`
+    );
   assertEqual(state.convertibles.length, scenario.expected.convertibles, `${scenario.id} convertible count`);
   assertEqual(state.rounds.length, scenario.expected.rounds, `${scenario.id} round count`);
   Object.entries(scenario.expected.roundInvestments || {}).forEach(([id, expected]) => {
@@ -1107,6 +1124,11 @@ function runCsvScenario(scenario) {
     const round = state.rounds.find(item => item.id === id);
     if (!round) throw new Error(`${scenario.id}: round ${id} missing`);
     assertEqual(projectRoundHelpers.roundInvestors(round).length, expected, `${scenario.id} ${id} investor count`);
+  });
+  Object.entries(scenario.expected.roundSeniorities || {}).forEach(([id, expected]) => {
+    const round = state.rounds.find(item => item.id === id);
+    if (!round) throw new Error(`${scenario.id}: round ${id} missing`);
+    assertEqual(round.liquidationSeniority, expected, `${scenario.id} ${id} seniority`);
   });
   if (scenario.expected.vsopGrant) {
     const grant = state.vsopParticipants.find(item => item.id === scenario.expected.vsopGrant.id);
