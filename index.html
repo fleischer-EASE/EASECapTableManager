@@ -7,9 +7,9 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src 'self' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data: https://raw.githubusercontent.com; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src 'self' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com https://www.paypalobjects.com https://www.paypal.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data: https://raw.githubusercontent.com; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action https://www.paypal.com"
     />
-    <title>EASE Cap Table Manager</title>
+    <title>Cap Table Manager</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -1092,6 +1092,10 @@
         background: var(--muted);
         cursor: pointer;
       }
+      #equity-round-manager .erm-check-card.is-disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
       #equity-round-manager .erm-check-card input {
         width: 17px;
         height: 17px;
@@ -1421,10 +1425,10 @@
         position: sticky;
         top: 0;
         align-self: start;
-        grid-template-rows: auto auto 1fr;
-        gap: 28px;
+        grid-template-rows: auto auto auto 1fr;
+        gap: 16.128px;
         height: 100vh;
-        padding: 30px 20px 24px;
+        padding: 17.28px 11.52px 13.824px;
         border: 0;
         color: #edf2ef;
         background:
@@ -1435,8 +1439,8 @@
       }
       #equity-round-manager .erm-brand {
         display: grid;
-        gap: 16px;
-        padding: 0 8px 24px;
+        gap: 9.216px;
+        padding: 0 4.608px 13.824px;
         border-bottom: 1px solid rgb(255 255 255 / 10%);
       }
       #equity-round-manager .erm-brand-lockup {
@@ -1459,19 +1463,19 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        gap: 12px;
+        gap: 6.912px;
         flex-wrap: wrap;
       }
       #equity-round-manager .erm-preference-switches {
         display: flex;
-        gap: 6px;
+        gap: 3.456px;
         margin-left: 0;
       }
       #equity-round-manager .erm-language-switch,
       #equity-round-manager .erm-currency-switch {
         display: inline-flex;
-        gap: 2px;
-        padding: 2px;
+        gap: 1.152px;
+        padding: 1.152px;
         border: 1px solid rgb(255 255 255 / 10%);
         border-radius: 8px;
         background: rgb(255 255 255 / 5%);
@@ -1506,7 +1510,7 @@
         outline-offset: 2px;
       }
       #equity-round-manager .erm-nav {
-        gap: 5px;
+        gap: 2.88px;
       }
       #equity-round-manager .erm-nav .btn {
         justify-content: flex-start;
@@ -1538,8 +1542,8 @@
       }
       #equity-round-manager .erm-sidebar-actions {
         align-self: end;
-        gap: 10px;
-        padding: 18px 8px 0;
+        gap: 5.76px;
+        padding: 10.368px 4.608px 0;
         border-top: 1px solid rgb(255 255 255 / 10%);
       }
       #equity-round-manager .erm-sidebar-actions > .text-small:first-child {
@@ -1550,7 +1554,7 @@
         text-transform: uppercase;
       }
       #equity-round-manager .erm-data-buttons {
-        gap: 6px;
+        gap: 3.456px;
       }
       #equity-round-manager .erm-data-buttons .btn {
         justify-content: flex-start;
@@ -1570,6 +1574,97 @@
       }
       #equity-round-manager #erm-csv-status {
         color: rgb(240 245 242 / 56%);
+      }
+      #equity-round-manager .erm-sidebar-donation {
+        display: grid;
+        gap: 5.76px;
+        padding: 6.912px;
+        border: 1px solid rgb(255 255 255 / 9%);
+        border-radius: 12px;
+        background: rgb(255 255 255 / 5%);
+        transition:
+          transform 160ms ease,
+          border-color 160ms ease,
+          background 160ms ease;
+      }
+      #equity-round-manager .erm-sidebar-donation:is(:hover, :focus-within) {
+        border-color: rgb(255 255 255 / 18%);
+        background: rgb(255 255 255 / 8%);
+        transform: translateY(-1px);
+      }
+      #equity-round-manager .erm-sidebar-donation > strong {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 650;
+      }
+      #equity-round-manager .erm-donation-goal {
+        display: grid;
+        gap: 4.032px;
+      }
+      #equity-round-manager .erm-donation-goal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4.608px;
+        color: rgb(240 245 242 / 66%);
+        font-size: 11px;
+      }
+      #equity-round-manager .erm-donation-goal-percent {
+        padding: 1px 6px;
+        border-radius: var(--radius-full);
+        color: #fff;
+        background: rgb(127 156 142 / 32%);
+        font-variant-numeric: tabular-nums;
+        font-weight: 650;
+      }
+      #equity-round-manager .erm-donation-progress {
+        position: relative;
+        height: 7px;
+        overflow: hidden;
+        border-radius: var(--radius-full);
+        background: rgb(255 255 255 / 12%);
+      }
+      #equity-round-manager .erm-donation-progress > span {
+        display: block;
+        width: 80%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--sage);
+      }
+      #equity-round-manager .erm-donation-goal-status {
+        color: rgb(240 245 242 / 72%);
+        font-size: 11px;
+        line-height: 1.35;
+      }
+      #equity-round-manager .erm-paypal-donation,
+      #equity-round-manager .erm-paypal-donation input[type='image'] {
+        display: block;
+      }
+      #equity-round-manager .erm-paypal-donation {
+        width: fit-content;
+        margin-inline: auto;
+        padding: 4.608px 5.76px;
+        overflow: hidden;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgb(12 24 18 / 18%);
+        line-height: 0;
+      }
+      #equity-round-manager .erm-paypal-donation input[type='image'] {
+        max-width: 100%;
+        transition:
+          transform 160ms ease,
+          filter 160ms ease;
+      }
+      #equity-round-manager .erm-paypal-donation input[type='image']:is(:hover, :focus-visible) {
+        filter: brightness(1.06);
+        transform: scale(1.025);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #equity-round-manager .erm-sidebar-donation,
+        #equity-round-manager .erm-paypal-donation input[type='image'] {
+          transition: none;
+        }
       }
 
       #equity-round-manager .erm-content {
@@ -2172,9 +2267,6 @@
       #equity-round-manager .erm-guide-footer p {
         margin: 0;
       }
-      #equity-round-manager .erm-guide-footer a {
-        color: #dceee5;
-      }
 
       @media (max-width: 1120px) {
         #equity-round-manager .erm-app-shell {
@@ -2184,13 +2276,13 @@
           position: static;
           grid-template-columns: 1fr;
           grid-template-rows: auto auto auto;
-          gap: 18px;
+          gap: 10.368px;
           height: auto;
-          padding: 22px;
+          padding: 12.672px;
           border-radius: 0 0 18px 18px;
         }
         #equity-round-manager .erm-brand {
-          padding: 0 0 18px;
+          padding: 0 0 10.368px;
         }
         #equity-round-manager .erm-nav {
           grid-column: auto;
@@ -2242,7 +2334,7 @@
       }
       @media (max-width: 520px) {
         #equity-round-manager .erm-sidebar {
-          padding: 18px 14px;
+          padding: 10.368px 8.064px;
           border-radius: 0 0 14px 14px;
         }
         #equity-round-manager .erm-create-actions {
@@ -2270,7 +2362,7 @@
           <div class="erm-brand">
             <div class="erm-brand-lockup">
               <span class="erm-brand-copy">
-                <strong>EASE Cap Table Manager</strong>
+                <strong>Cap Table Manager</strong>
               </span>
             </div>
             <div class="erm-brand-meta">
@@ -2355,6 +2447,51 @@
               <i data-lucide="bug" aria-hidden="true"></i> Fehler melden
             </a>
           </nav>
+          <div class="erm-sidebar-donation">
+            <strong>Support a founder!</strong>
+            <div
+              class="erm-donation-goal"
+              aria-label="8€ of 10€ monthly goal reached"
+            >
+              <div class="erm-donation-goal-head">
+                <span>Monthly goal</span>
+                <span class="erm-donation-goal-percent">80%</span>
+              </div>
+              <div
+                class="erm-donation-progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="10"
+                aria-valuenow="8"
+                aria-valuetext="8€ of 10€ monthly goal reached"
+              >
+                <span aria-hidden="true"></span>
+              </div>
+              <span class="erm-donation-goal-status">8€ of 10€ monthly goal reached</span>
+            </div>
+            <form
+              class="erm-paypal-donation"
+              action="https://www.paypal.com/donate"
+              method="post"
+              target="_top"
+              aria-label="Mit PayPal spenden"
+            >
+              <input type="hidden" name="hosted_button_id" value="TAQ9YEFQSRFGN" />
+              <input
+                type="image"
+                src="https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif"
+                name="submit"
+                title="PayPal - The safer, easier way to pay online!"
+                alt="Donate with PayPal button"
+              />
+              <img
+                src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
+                width="1"
+                height="1"
+                alt=""
+              />
+            </form>
+          </div>
           <div class="erm-sidebar-actions" aria-label="Daten verwalten">
             <span class="text-small text-muted">Versionen &amp; Daten</span>
             <div class="erm-data-buttons">
@@ -2949,9 +3086,20 @@
                     class="erm-check-copy"
                     ><strong>Fully Diluted wandeln</strong
                     ><span class="text-small text-muted"
-                      >Bezieht alle bestehenden VSOP-Pools einschließlich freier und geplanter
-                      Pool-Anteile in die Wandlungsbasis ein. Deaktiviert wird nur auf Basis der
-                      echten Equity-Anteile gewandelt.</span
+                      >Bezieht virtuelle VSOP-Anteile in die Wandlungsbasis ein. Die folgende
+                      Option begrenzt die Basis auf bereits gewährte Anteile. Deaktiviert wird nur
+                      auf Basis der echten Equity-Anteile gewandelt.</span
+                    ></span
+                  ></label
+                >
+                <label class="erm-check-card" id="erm-convertible-granted-vsop-only-card"
+                  ><input id="erm-convertible-granted-vsop-only" type="checkbox" /><span
+                    class="erm-check-copy"
+                    ><strong>Nur gewährte VSOP-Anteile berücksichtigen</strong
+                    ><span class="text-small text-muted"
+                      >Berücksichtigt nur bis zum Wandlungsstichtag gewährte VSOP-Anteile. Freie,
+                      geplante, stornierte und erst später gewährte Anteile bleiben
+                      unberücksichtigt.</span
                     ></span
                   ></label
                 >
@@ -3308,6 +3456,7 @@
               </div>
             </form>
           </dialog>
+
         </main>
       </div>
     </div>
@@ -3536,6 +3685,9 @@
                   ? convertible.includeGrantedVsop
                   : true;
             }
+            if (typeof convertible.fullyDilutedGrantedVsopOnly !== 'boolean') {
+              convertible.fullyDilutedGrantedVsopOnly = false;
+            }
           });
           normalized.secondaries.forEach((secondary) => {
             if (secondary.sourceRoundId === undefined) secondary.sourceRoundId = '';
@@ -3588,8 +3740,12 @@
         const currentLocale = () => (currentLanguage === 'en' ? 'en-GB' : 'de-DE');
         const translationPairs = [
           [
-            'Bezieht alle bestehenden VSOP-Pools einschließlich freier und geplanter Pool-Anteile in die Wandlungsbasis ein. Deaktiviert wird nur auf Basis der echten Equity-Anteile gewandelt.',
-            'Includes all existing VSOP pools, including free and planned pool shares, in the conversion basis. When disabled, conversion is based only on actual equity shares.',
+            'Bezieht virtuelle VSOP-Anteile in die Wandlungsbasis ein. Die folgende Option begrenzt die Basis auf bereits gewährte Anteile. Deaktiviert wird nur auf Basis der echten Equity-Anteile gewandelt.',
+            'Includes all shares in VSOP-Pools in the conversion basis.',
+          ],
+          [
+            'Berücksichtigt nur bis zum Wandlungsstichtag gewährte VSOP-Anteile. Freie, geplante, stornierte und erst später gewährte Anteile bleiben unberücksichtigt.',
+            'Includes only VSOP shares granted by the conversion date. Free, planned, cancelled and subsequently granted shares are excluded.',
           ],
           [
             'Höhere Zahlen werden zuerst bedient; gleiche Ränge sind pari passu.',
@@ -3751,6 +3907,9 @@
           ['Zins p. a. (%)', 'Interest p.a. (%)'],
           ['Wandlungsbasis', 'Conversion basis'],
           ['Fully Diluted wandeln', 'Convert on a fully diluted basis'],
+          ['Nur gewährte VSOP-Anteile berücksichtigen', 'Include granted VSOP shares only'],
+          ['Fully Diluted · nur gewährte VSOP-Anteile', 'Fully diluted · granted VSOP shares only'],
+          ['Fully Diluted · gesamter VSOP-Pool', 'Fully diluted · entire VSOP pool'],
           ['Nur Equity-Anteile', 'Equity shares only'],
           ['Übertragene Anteilsklasse', 'Transferred share class'],
           ['Transaktionsdatum', 'Transaction date'],
@@ -3793,6 +3952,7 @@
           ['Übersicht', 'Overview'],
           ['Anleitung', 'Guide'],
           ['Fehler melden', 'Report bug'],
+          ['Mit PayPal spenden', 'Donate with PayPal'],
           ['Mitarbeitenden-Pool', 'Employee Pool'],
           ['Finanzierungen', 'Financing'],
           ['Kennzahlen', 'Key metrics'],
@@ -4570,6 +4730,7 @@
           'acceleration_trigger',
           'acceleration_pct',
           'second_trigger_date',
+          'fully_diluted_granted_vsop_only',
         ];
         const csvCell = (value) => '"' + String(value ?? '').replace(/"/g, '""') + '"';
         function downloadCsv(csv, filename) {
@@ -4587,7 +4748,7 @@
         function exportCsv() {
           const rows = [];
           const add = (record_type, data = {}) =>
-            rows.push({ schema_version: 3, record_type, ...data });
+            rows.push({ schema_version: 4, record_type, ...data });
           state.holders.forEach((h) =>
             add('holder', {
               id: h.id,
@@ -4640,6 +4801,9 @@
               discount_pct: c.discount || 0,
               valuation_cap_eur: c.valuationCap || 0,
               fully_diluted_conversion: c.fullyDilutedConversion ? 'true' : 'false',
+              fully_diluted_granted_vsop_only: c.fullyDilutedGrantedVsopOnly
+                ? 'true'
+                : 'false',
             }),
           );
           state.secondaries.forEach((s) =>
@@ -4901,7 +5065,10 @@
                 r.fully_diluted_conversion ?? r.include_granted_vsop ?? '',
               )
                 .trim()
-                .toLowerCase();
+                .toLowerCase(),
+                grantedVsopOnly = String(r.fully_diluted_granted_vsop_only || '')
+                  .trim()
+                  .toLowerCase();
               imported.convertibles.push({
                 id,
                 name: r.name.trim(),
@@ -4913,6 +5080,9 @@
                 valuationCap: Math.max(0, n('valuation_cap_eur') || 0),
                 fullyDilutedConversion:
                   fullyDiluted === '' || ['true', '1', 'ja', 'yes'].includes(fullyDiluted),
+                fullyDilutedGrantedVsopOnly: ['true', '1', 'ja', 'yes'].includes(
+                  grantedVsopOnly,
+                ),
               });
             } else if (type === 'secondary') {
               if (
@@ -5484,7 +5654,18 @@
             const equityTotal = cap
               .filter((h) => !h.isVirtual)
               .reduce((a, h) => a + (Number(h.shares) || 0), 0);
-            const fullyDilutedTotal = cap.reduce((sum, h) => sum + (Number(h.shares) || 0), 0);
+            const fullyDilutedTotal = cap.reduce(
+                (sum, h) => sum + (Number(h.shares) || 0),
+                0,
+              ),
+              grantedVsopTotal = (source.vsopParticipants || [])
+                .filter(
+                  (grant) =>
+                    grant.status !== 'Storniert' &&
+                    (!validDate(grant.grantDate) || grant.grantDate <= r.date),
+                )
+                .reduce((sum, grant) => sum + (Number(grant.shares) || 0), 0),
+              grantedFullyDilutedTotal = equityTotal + grantedVsopTotal;
             const price = Number(r.preMoney) / Math.max(0.000001, fullyDilutedTotal),
               conversions = [];
             source.convertibles.forEach((c) => {
@@ -5497,7 +5678,11 @@
                 return;
               const conversionBaseTotal = Math.max(
                   0.000001,
-                  c.fullyDilutedConversion ? fullyDilutedTotal : equityTotal,
+                  c.fullyDilutedConversion
+                    ? c.fullyDilutedGrantedVsopOnly
+                      ? grantedFullyDilutedTotal
+                      : fullyDilutedTotal
+                    : equityTotal,
                 ),
                 discount = Math.min(99, Math.max(0, Number(c.discount) || 0));
               const discountPrice =
@@ -5765,8 +5950,13 @@
                       claim = loanClaim(c, targetDate),
                       status = converted
                         ? 'Konvertiert in ' + conversionEntry.round.name
-                        : 'Ausstehend';
-                    return `<article class="erm-round erm-financing-card is-convertible"><div class="viz-row"><span class="viz-badge erm-type-badge">Wandeldarlehen</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${entry.index}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${entry.index}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${dateLabel(c.date)}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap) > 0 ? euro(c.valuationCap) : '–'}</span><span class="text-muted">Wandlungsbasis</span><span>${c.fullyDilutedConversion ? 'Fully Diluted' : 'Nur Equity-Anteile'}</span></div></article>`;
+                        : 'Ausstehend',
+                      basisLabel = !c.fullyDilutedConversion
+                        ? 'Nur Equity-Anteile'
+                        : c.fullyDilutedGrantedVsopOnly
+                          ? 'Fully Diluted · nur gewährte VSOP-Anteile'
+                          : 'Fully Diluted · gesamter VSOP-Pool';
+                    return `<article class="erm-round erm-financing-card is-convertible"><div class="viz-row"><span class="viz-badge erm-type-badge">Wandeldarlehen</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(c.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit-convertible="${entry.index}" aria-label="${esc(c.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete-convertible="${entry.index}" aria-label="${esc(c.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><div class="viz-row"><span class="text-small">${esc(c.lender)}</span><span class="viz-badge">${esc(status)}</span></div><div class="erm-round-meta text-small"><span class="text-muted">Auszahlung</span><span>${euro(c.principal)}</span><span class="text-muted">Datum</span><span>${dateLabel(c.date)}</span><span class="text-muted">Anspruch</span><span>${euro(claim)}</span><span class="text-muted">Zins / Discount</span><span>${pct(c.interest)} / ${pct(c.discount)}</span><span class="text-muted">Valuation Cap</span><span>${Number(c.valuationCap) > 0 ? euro(c.valuationCap) : '–'}</span><span class="text-muted">Wandlungsbasis</span><span>${basisLabel}</span></div></article>`;
                   }
                   if (entry.kind === 'secondary') {
                     const s = entry.item,
@@ -6128,8 +6318,8 @@
               en: 'Figure EN-01 · Main view with language and currency switches, navigation, key metrics and development stages.',
             },
             visible: {
-              de: 'Die Markierungen zeigen die globalen Schalter, das Menü und die wichtigsten Ergebnisbereiche. Ein ausgewählter Entwicklungsstand steuert alle darunterliegenden Berechnungen.',
-              en: 'The annotations identify the global switches, menu and main result areas. A selected development stage controls all calculations shown below it.',
+              de: 'Links stehen Sprache, Währung, Navigation und Datenwerkzeuge. Rechts bestimmen Kennzahlen und der ausgewählte Entwicklungsstand alle darunterliegenden Berechnungen.',
+              en: 'Language, currency, navigation and data tools are on the left. On the right, the metrics and selected development stage control all calculations shown below.',
             },
             result: {
               de: 'Die gewünschte Sprache und das gewünschte Währungssymbol sind aktiv; die richtige Datenansicht ist ausgewählt.',
@@ -6434,14 +6624,14 @@
                 'Öffne Neue Transaktion → Wandeldarlehen.',
                 'Trage Bezeichnung, Darlehensgeber, Betrag und Auszahlungstag ein.',
                 'Erfasse Zins, Discount und optionalen Valuation Cap.',
-                'Wähle Fully Diluted wandeln, wenn bestehende VSOP-Pools in die Wandlungsbasis gehören; sonst Nur Equity-Anteile.',
+                'Wähle Fully Diluted wandeln, wenn VSOP-Anteile in die Wandlungsbasis gehören. Aktiviere zusätzlich Nur gewährte VSOP-Anteile berücksichtigen, um freie, geplante, stornierte und erst später gewährte Anteile auszuschließen.',
                 'Speichere das Darlehen und prüfe in der späteren Runde Wandlungspreis, Anspruch und neue Anteile.',
               ],
               en: [
                 'Open New transaction → Convertible loan.',
                 'Enter label, lender, amount and funding date.',
                 'Enter interest, discount and an optional valuation cap.',
-                'Choose Convert on a fully diluted basis when existing VSOP pools belong in the conversion basis; otherwise choose Equity shares only.',
+                'Choose Convert on a fully diluted basis when VSOP shares belong in the conversion basis. Also enable Include granted VSOP shares only to exclude free, planned, cancelled and subsequently granted shares.',
                 'Save the loan and inspect conversion price, claim and new shares in the later round.',
               ],
             },
@@ -6450,8 +6640,8 @@
               en: 'Figure EN-07 · Example pre-seed convertible loan with discount, cap and conversion basis.',
             },
             visible: {
-              de: 'Die Wandlungsbasis ist als eigener Schalter sichtbar. Der Cap darf 0 sein; dann begrenzt er den Wandlungspreis nicht.',
-              en: 'The conversion basis is shown as a separate switch. The cap may be 0; in that case it does not limit the conversion price.',
+              de: 'Die Wandlungsbasis und die optionale Beschränkung auf gewährte VSOP-Anteile sind als eigene Schalter sichtbar. Der Cap darf 0 sein; dann begrenzt er den Wandlungspreis nicht.',
+              en: 'The conversion basis and optional restriction to granted VSOP shares are shown as separate switches. The cap may be 0; in that case it does not limit the conversion price.',
             },
             result: {
               de: 'Das Darlehen erscheint in der Finanzierungsübersicht und wandelt in der ersten passenden späteren Runde.',
@@ -6461,10 +6651,12 @@
               de: [
                 'Die Verzinsung ist linear nach tatsächlichen Tagen geteilt durch 365, nicht Zinseszins.',
                 'Discount und Cap werden beide berechnet; der niedrigere Wandlungspreis wird verwendet.',
+                'Bei der Beschränkung auf gewährte VSOP-Anteile zählt der Stand am Wandlungsstichtag; Planned, freie Kapazität, stornierte und spätere Grants zählen nicht.',
               ],
               en: [
                 'Interest is linear using actual days divided by 365, not compound interest.',
                 'Discount and cap are both calculated; the lower conversion price is used.',
+                'When restricted to granted VSOP shares, the conversion-date position is used; planned, free capacity, cancelled and later grants do not count.',
               ],
             },
           },
@@ -6763,14 +6955,14 @@
             },
             steps: {
               de: [
-                'Klicke CSV exportieren, um den vollständigen Workspace im Schema Version 3 herunterzuladen.',
+                'Klicke CSV exportieren, um den vollständigen Workspace im Schema Version 4 herunterzuladen.',
                 'Klicke CSV laden und wähle eine zuvor exportierte Workspace-Datei. Erfolgreiche oder fehlerhafte Imports erscheinen im Statusfeld.',
                 'Nutze Rückgängig und Wiederholen für bis zu 30 gespeicherte Zustandsänderungen; Strg/Cmd+Z und Strg/Cmd+Y funktionieren außerhalb von Eingabefeldern.',
                 'Klicke Zurücksetzen. Wähle Speichern und zurücksetzen für eine letzte CSV-Sicherung oder Ohne Speichern zurücksetzen.',
                 'Lade das Beispiel erneut, um zum Ausgangspunkt dieser Anleitung zurückzukehren.',
               ],
               en: [
-                'Click Export CSV to download the complete workspace using schema version 3.',
+                'Click Export CSV to download the complete workspace using schema version 4.',
                 'Click Import CSV and choose a previously exported workspace file. Successful or failed imports appear in the status area.',
                 'Use Undo and Redo for up to 30 saved state changes; Ctrl/Cmd+Z and Ctrl/Cmd+Y work outside input fields.',
                 'Click Reset. Choose Save and reset for one final CSV backup or Reset without saving.',
@@ -6867,10 +7059,10 @@
               en: 'Shows potential dilution and, depending on the setting, supplies the conversion basis.',
             },
             implementation: {
-              de: 'aggregateLots() multipliziert Lot-Anteile mit conversionRatio; Pool-Lots sind mit isVirtual markiert. Die Wandlung kann fullyDilutedTotal oder equityTotal verwenden.',
-              en: 'aggregateLots() multiplies lot shares by conversionRatio; pool lots are marked isVirtual. Conversion can use fullyDilutedTotal or equityTotal.',
+              de: 'aggregateLots() multipliziert Lot-Anteile mit conversionRatio; Pool-Lots sind mit isVirtual markiert. Die Wandlung kann fullyDilutedTotal, equityTotal oder equityTotal plus die am Wandlungsstichtag gewährten VSOP-Anteile verwenden.',
+              en: 'aggregateLots() multiplies lot shares by conversionRatio; pool lots are marked isVirtual. Conversion can use fullyDilutedTotal, equityTotal, or equityTotal plus VSOP shares granted by the conversion date.',
             },
-            component: 'aggregateLots(), lotEquivalentShares(), fullyDilutedConversion',
+            component: 'aggregateLots(), lotEquivalentShares(), fullyDilutedConversion, fullyDilutedGrantedVsopOnly',
             sections: '03, 07, 10',
           },
           {
@@ -6925,7 +7117,7 @@
             sections: '02, 13',
           },
           {
-            names: { de: 'CSV und Schema Version 3 / CSV and schema version 3', en: 'CSV and schema version 3 / CSV und Schema Version 3' },
+            names: { de: 'CSV und Schema Version 4 / CSV and schema version 4', en: 'CSV and schema version 4 / CSV und Schema Version 4' },
             definition: {
               de: 'Textformat mit Zeilen für verschiedene Datensatztypen und einer festen Spaltenliste.',
               en: 'Text format with rows for different record types and a fixed list of columns.',
@@ -6935,8 +7127,8 @@
               en: 'Backs up and transfers a complete workspace without a server.',
             },
             implementation: {
-              de: 'exportCsv() schreibt schema_version 3 und record_type; parseCsv() unterstützt Semikolon oder Komma und Anführungszeichen; importCsv() validiert Typen, IDs, Verweise und abhängige Secondaries.',
-              en: 'exportCsv() writes schema_version 3 and record_type; parseCsv() supports semicolon or comma and quoted cells; importCsv() validates types, IDs, references and dependent secondaries.',
+              de: 'exportCsv() schreibt schema_version 4 und record_type; parseCsv() unterstützt Semikolon oder Komma und Anführungszeichen; importCsv() validiert Typen, IDs, Verweise und abhängige Secondaries.',
+              en: 'exportCsv() writes schema_version 4 and record_type; parseCsv() supports semicolon or comma and quoted cells; importCsv() validates types, IDs, references and dependent secondaries.',
             },
             component: 'csvHeaders, exportCsv(), parseCsv(), importCsv(), downloadCsv()',
             sections: '02, 03, 13',
@@ -7224,8 +7416,8 @@
               en: 'Enables early financing without setting an immediate share price.',
             },
             implementation: {
-              de: 'state.convertibles speichert principal, date, interest, discount, valuationCap und fullyDilutedConversion. snapshots() wandelt jedes noch nicht gewandelte, ältere Darlehen in der späteren Runde.',
-              en: 'state.convertibles stores principal, date, interest, discount, valuationCap and fullyDilutedConversion. snapshots() converts each unconverted earlier loan in the later round.',
+              de: 'state.convertibles speichert principal, date, interest, discount, valuationCap, fullyDilutedConversion und fullyDilutedGrantedVsopOnly. snapshots() wandelt jedes noch nicht gewandelte, ältere Darlehen in der späteren Runde.',
+              en: 'state.convertibles stores principal, date, interest, discount, valuationCap, fullyDilutedConversion and fullyDilutedGrantedVsopOnly. snapshots() converts each unconverted earlier loan in the later round.',
             },
             component: 'state.convertibles, loanClaim(), snapshots() conversion loop',
             sections: '05, 07, 09',
@@ -7275,10 +7467,10 @@
               en: 'Determines whether virtual pool shares dilute the conversion.',
             },
             implementation: {
-              de: 'fullyDilutedConversion wählt in snapshots() zwischen fullyDilutedTotal und equityTotal.',
-              en: 'fullyDilutedConversion selects between fullyDilutedTotal and equityTotal in snapshots().',
+              de: 'fullyDilutedConversion wählt in snapshots() zwischen Fully Diluted und equityTotal. fullyDilutedGrantedVsopOnly ersetzt bei Fully Diluted die gesamte Poolkapazität durch nicht stornierte, bis zum Rundenstichtag gewährte VSOP-Anteile.',
+              en: 'fullyDilutedConversion selects between fully diluted and equityTotal in snapshots(). For fully diluted conversion, fullyDilutedGrantedVsopOnly replaces total pool capacity with non-cancelled VSOP shares granted by the round date.',
             },
-            component: 'convertible.fullyDilutedConversion, snapshots()',
+            component: 'convertible.fullyDilutedConversion, convertible.fullyDilutedGrantedVsopOnly, snapshots()',
             sections: '07',
           },
           {
@@ -7581,11 +7773,11 @@
               en: 'Reduces unexpected external content and data connections.',
             },
             implementation: {
-              de: 'Ein Meta-Tag setzt default-src auf none, erlaubt lokale Guide-Bilder über img-src self und den Beispielabruf über connect-src raw.githubusercontent.com. Die Bibliotheksquellen stehen explizit in der Richtlinie.',
-              en: 'A meta tag sets default-src to none, permits local guide images through img-src self and the example request through connect-src raw.githubusercontent.com. Library sources are explicitly listed in the policy.',
+              de: 'Ein Meta-Tag setzt default-src auf none. Lokale Guide-Bilder, der Beispielabruf von raw.githubusercontent.com und weitere benötigte externe Ziele stehen ausdrücklich in der Richtlinie.',
+              en: 'A meta tag sets default-src to none. Local guide images, the example request to raw.githubusercontent.com and other required external destinations are listed explicitly in the policy.',
             },
             component: 'index.html meta http-equiv="Content-Security-Policy"',
-            sections: '02, Guide footer',
+            sections: '02, 13',
           },
         ];
 
@@ -7598,7 +7790,7 @@
                     close: 'Close',
                     introTitle: 'From formation to exit — one continuous example',
                     intro:
-                      'This guide follows the public example built into the app. You do not need an account or prior cap-table knowledge. Follow the numbered sections in order, or jump directly to a topic.',
+                      'This guide follows the public example built into the app. You do not need an account or prior cap-table knowledge. Each section pairs the current interface with a Chrome screenshot, a practical workflow, its expected result and common pitfalls.',
                     toc: 'Contents',
                     purpose: 'Purpose',
                     when: 'When and why',
@@ -7610,15 +7802,14 @@
                     support:
                       'Bug reports and other inquiries can be sent to captable@ease-systems.de.',
                     license:
-                      'Licensed under AGPL-3.0-only. The software is provided without warranty. See LICENSE for the complete terms.',
-                    source: 'Source repository',
+                      'Licensed under AGPL-3.0-only. The software is provided without warranty.',
                   }
                 : {
                     title: 'Anleitung',
                     close: 'Schließen',
                     introTitle: 'Von der Gründung bis zum Exit — ein durchgängiges Beispiel',
                     intro:
-                      'Diese Anleitung folgt dem öffentlichen, in die App eingebauten Beispiel. Du brauchst weder ein Konto noch Cap-Table-Vorkenntnisse. Arbeite die nummerierten Abschnitte nacheinander durch oder springe direkt zu einem Thema.',
+                      'Diese Anleitung folgt dem öffentlichen, in die App eingebauten Beispiel. Du brauchst weder ein Konto noch Cap-Table-Vorkenntnisse. Jeder Abschnitt verbindet die aktuelle Oberfläche mit einem Chrome-Screenshot, einem konkreten Ablauf, dem erwarteten Ergebnis und typischen Stolperfallen.',
                     toc: 'Inhalt',
                     purpose: 'Zweck',
                     when: 'Wann und warum',
@@ -7630,8 +7821,7 @@
                     support:
                       'Fehlerberichte und andere Anfragen können an captable@ease-systems.de gesendet werden.',
                     license:
-                      'Lizenziert unter AGPL-3.0-only. Die Software wird ohne Gewährleistung bereitgestellt. Die vollständigen Bedingungen stehen in LICENSE.',
-                    source: 'Quellcode-Repository',
+                      'Lizenziert unter AGPL-3.0-only. Die Software wird ohne Gewährleistung bereitgestellt.',
                   };
           $('#erm-guide-title').textContent = ui.title;
           $('#erm-guide-close-label').textContent = ui.close;
@@ -7689,7 +7879,6 @@
             <footer class="erm-guide-footer">
               <p>${ui.support}</p>
               <p>${ui.license}</p>
-              <p><a href="LICENSE" target="_blank" rel="noopener">LICENSE</a> · <a href="https://github.com/fleischer-EASE/EASECapTableManager" target="_blank" rel="noopener">${ui.source}</a></p>
             </footer>`;
         }
 
@@ -8121,6 +8310,15 @@
         });
 
         // Convertibles
+        function updateConvertibleVsopBasis() {
+          const enabled = $('#erm-convertible-fully-diluted').checked;
+          if (!enabled) $('#erm-convertible-granted-vsop-only').checked = false;
+          $('#erm-convertible-granted-vsop-only').disabled = !enabled;
+          $('#erm-convertible-granted-vsop-only-card').classList.toggle(
+            'is-disabled',
+            !enabled,
+          );
+        }
         function openConvertible(i = null) {
           editConvertible = i;
           const c =
@@ -8134,6 +8332,7 @@
                   discount: 20,
                   valuationCap: 2000000,
                   fullyDilutedConversion: true,
+                  fullyDilutedGrantedVsopOnly: false,
                 }
               : state.convertibles[i];
           $('#erm-convertible-form-title').textContent =
@@ -8147,9 +8346,16 @@
           $('#erm-convertible-discount').value = c.discount || 0;
           $('#erm-convertible-cap').value = moneyInputValue(c.valuationCap || 0);
           $('#erm-convertible-fully-diluted').checked = c.fullyDilutedConversion !== false;
+          $('#erm-convertible-granted-vsop-only').checked =
+            c.fullyDilutedGrantedVsopOnly === true;
+          updateConvertibleVsopBasis();
           $('#erm-convertible-error').textContent = '';
           $('#erm-convertible-dialog').showModal();
         }
+        $('#erm-convertible-fully-diluted').addEventListener(
+          'change',
+          updateConvertibleVsopBasis,
+        );
         function requestConvertibleDelete(i) {
           const c = state.convertibles[i];
           if (!c) return;
@@ -8180,6 +8386,9 @@
             discount: Math.min(99, Math.max(0, Number($('#erm-convertible-discount').value) || 0)),
             valuationCap: parseMoney($('#erm-convertible-cap').value),
             fullyDilutedConversion: $('#erm-convertible-fully-diluted').checked,
+            fullyDilutedGrantedVsopOnly:
+              $('#erm-convertible-fully-diluted').checked &&
+              $('#erm-convertible-granted-vsop-only').checked,
           };
           if (!c.name || !c.lender || c.principal <= 0 || !validDate(c.date)) {
             $('#erm-convertible-error').textContent =

@@ -1,64 +1,74 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
 
-# EASE Cap Table Manager
+# Cap Table Manager
 
-EASE Cap Table Manager is a dependency-free, browser-based single-page
-application for cap tables, equity rounds, convertible loans, secondary
-transactions, VSOP pools, and exit simulations. The application starts with a
-simple formation model in which one founder owns 100%, while all transaction,
-VSOP, and exit values are set to zero.
+Cap Table Manager is a dependency-free, browser-based workspace for modelling
+ownership, financing rounds, convertible loans, secondary transfers, VSOP
+programmes, and exit proceeds. Everything runs in one `index.html`; no account,
+backend, build step, or package installation is required.
+
+A blank workspace starts with one founder holding 100%. For a guided tour, load
+the public example and follow the integrated bilingual guide from formation
+through Series A and the exit waterfall.
 
 ## Quick start
 
-No build step or package installation is required. Open `index.html` directly
-in a modern browser, or serve the repository locally to give browser storage a
-stable origin:
+Open `index.html` directly in a modern browser, or serve the repository locally
+for a stable browser-storage origin:
 
 ```powershell
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`.
+Then open `http://localhost:8000`. Using the same address and port keeps the
+same local workspace between sessions.
 
-## Features
+## Typical workflow
 
-- English-by-default interface switchable between English and German, with a
-  persistent €/$ display toggle
-- Cap table views across chronological equity and secondary stages
-- A shared **New transaction** entry point for equity rounds, convertible loans,
-  and secondary transactions
-- Equity rounds with multiple investors at one fully diluted pre-money price
-- Investors with the same name are bundled into one cap-table and exit row
-  across holdings, conversions, and rounds, while the individual conditions of
-  their share lots remain separate in the waterfall
+1. Add the formation stakeholders and their initial shares.
+2. Create VSOP pools before assigning virtual grants.
+3. Record equity rounds, convertible loans, and secondary transfers from
+   **New transaction**.
+4. Move between development stages to review dilution and ownership.
+5. Check the chronological financing cards and edit an event when required.
+6. Enter an exit value, date, debt, and transaction costs to run the waterfall.
+7. Export the workspace CSV before moving data to another browser or resetting.
+
+## Modelling coverage
+
+- English and German interface with a persistent €/$ display toggle. The toggle
+  changes formatting only; it does not convert stored values.
+- Chronological cap-table stages for formation, equity rounds, and secondaries.
+- Multi-investor equity rounds priced from a fully diluted pre-money valuation.
 - Share classes with seniority, pari-passu ranks, non-participating or fully
   participating liquidation preferences, participation caps, conversion
-  ratios, cumulative dividends, and optional redemption floors
-- Convertible loans with interest, discount, valuation cap, and a selectable
-  fully diluted conversion basis
-- Secondary transactions with transferable share class, seller, buyer, share
-  count, price per share, and return cash flows
-- Multiple VSOP pools with capacity controls and available, planned, granted,
-  reserved, and vested balances
-- VSOP grants with grant and vesting start dates, monthly, quarterly, or annual
-  vesting, cliff, vesting pauses, base price (strike price), and expiry date
-- Good-, neutral-, and bad-leaver modelling with a configurable retention rate
-  for vested claims; existing and new grants retain 100% of vested claims by
-  default
-- Single- and double-trigger acceleration for exit simulations; VSOP holders
-  with the same name are bundled at exit, while base price, vesting, leaver, and
-  acceleration conditions are calculated separately for every grant
+  ratios, cumulative dividends, and optional redemption floors.
+- Convertible loans with simple interest, discount, valuation cap, and three
+  possible conversion bases.
+- Secondary transfers by seller, buyer, date, share class, quantity, and price.
+- Multiple VSOP pools with granted, planned, vested, reserved, and available
+  balances.
+- VSOP grants with cliff, vesting interval, vesting pause, strike price, expiry,
+  leaver retention, and single- or double-trigger acceleration.
 - Exit simulation with a seniority-based liquidation-preference waterfall,
-  economic conversion choice, multiples, and IRR; ranks start at 1 and higher
-  seniority numbers are served first
-- Export of the currently selected and optionally filtered cap-table view
-- Local automatic saving, undo and redo, search, and complete CSV backups
-- Direct import of the current example, with an option to save the existing
-  workspace as CSV before it is replaced
-- An integrated bilingual **Guide / Anleitung** with 13 continuous practical
-  sections and 26 language-specific Chrome screenshots
-- A bilingual **Report bug / Fehler melden** button that opens a pre-addressed
-  email in the user’s configured email application
+  economic conversion choice, payout multiples, and IRR.
+- Local automatic saving, a 30-state undo/redo history, cap-table search, view
+  export, and complete CSV workspace backups.
+
+Stakeholders with the same name are grouped into one cap-table and exit row.
+Their individual lots, financing terms, cash flows, and VSOP grants remain
+separate for the calculations.
+
+### Convertible conversion basis
+
+The two convertible switches produce three calculation modes:
+
+- **Convert on a fully diluted basis** off: actual equity shares only.
+- **Convert on a fully diluted basis** on: actual equity plus all shares in
+  VSOP pools.
+- Fully diluted plus **Include granted VSOP shares only**: actual equity plus
+  non-cancelled VSOP shares granted by the conversion date. Free capacity,
+  planned grants, cancelled grants, and later grants are excluded.
 
 ## Guide and example
 
@@ -68,14 +78,31 @@ Then open `http://localhost:8000`.
 - [German screenshots](guide/screenshots/de)
 - [English screenshots](guide/screenshots/en)
 
-The example CSV represents a German financing journey. Two founders start with
-a total of 25,000 shares. Two pre-seed angel convertible loans are followed by
-Bridge, Seed, and Series A rounds, an employee pool, and an exit assumption.
+The example follows a German financing journey. Two founders start with 25,000
+shares in total. Two pre-seed angel convertibles are followed by Bridge, Seed,
+and Series A rounds, an employee pool, one VSOP grant, and an exit assumption.
 
-The integrated guide uses this same example continuously from formation through
-the exit simulation. Its German and English versions have an identical section,
-step, and screenshot structure. Each main feature explains its purpose, when to
-use it, the required steps, the expected result, and common errors.
+The German and English guides use the same 13-section structure and matching
+Chrome screenshots. Each section explains the purpose, when to use the feature,
+the exact workflow, the expected result, and common errors. The terminology
+table also maps product concepts to the relevant state fields and functions.
+
+## Data and CSV files
+
+Application data is stored in `localStorage` for the current browser origin.
+This makes reloads convenient, but it is not a cloud backup.
+
+- **Export CSV** downloads the complete workspace in CSV schema v4.
+- **Import CSV** restores a complete workspace. Schema v2 and v3 exports remain
+  importable.
+- **Export view** downloads only the selected and optionally filtered cap-table
+  stage. It is a report and cannot be imported as a workspace.
+- **Load example** can download the current workspace first, then replace it
+  with the versioned public example.
+
+Schema v4 adds
+`fully_diluted_granted_vsop_only` to convertible records. Currency fields keep
+their historical EUR names; selecting `$` changes only display formatting.
 
 ## Testing
 
@@ -85,37 +112,23 @@ Run the calculation and import scenarios without installing dependencies:
 node tests/test-scenarios.js
 ```
 
-The suite contains 61 independently calculated, human-readable scenarios
+The suite contains 62 independently calculated, human-readable scenarios
 covering waterfalls, preference claims, financing rounds, VSOP and vesting,
 convertible loans, secondary transactions, and CSV imports.
 
-## Data, backups, and security
+## Security and limitations
 
-Application data is stored locally in the browser. Use **Export CSV** and
-**Load CSV** to save and restore complete workspace versions. CSV schema v3
-includes the vesting interval and pause, leaver category and retention rate,
-exit acceleration, and second-trigger date. Older schema v2 files remain
-importable.
+The restrictive Content Security Policy denies unspecified sources. **Load
+example** permits a read from `raw.githubusercontent.com`; it downloads only the
+versioned example CSV and does not transmit workspace data.
 
-**Export view** downloads only the currently selected cap-table stage and
-respects the active search filter. It is not a complete workspace backup. Use
-the same address and port whenever possible because browsers associate local
-data with the page origin.
+The donation button loads its image and tracking pixel from PayPal. Selecting it
+submits only the hosted donation-button ID and continues the process on PayPal;
+no cap-table data is included.
 
-The VSOP functions model contractual calculation parameters and do not replace
-legal or tax review of a specific participation programme.
-
-The €/$ toggle changes only the displayed symbol and number format. It does not
-perform currency conversion; stored numbers and the existing EUR fields in the
-CSV schema remain unchanged.
-
-For **Load example**, the Content Security Policy permits one additional read
-connection to `raw.githubusercontent.com`. The application downloads only the
-versioned example CSV from this repository and does not transmit local workspace
-data.
-
-No secrets or production personal data should be stored in the repository or
-the example files.
+The waterfall and VSOP tools are financial models, not legal, tax, or accounting
+advice. Do not put secrets or production personal data in the repository or
+example files.
 
 ## Contact
 
@@ -124,7 +137,7 @@ Bug reports and other inquiries can be sent to
 
 ## License
 
-Copyright © 2026 EASE Cap Table Manager contributors.
+Copyright © 2026 Cap Table Manager contributors.
 
 This software is licensed under the **GNU Affero General Public License,
 Version 3 only** (`AGPL-3.0-only`) and is provided without warranty. See

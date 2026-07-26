@@ -260,7 +260,8 @@ function makeConvertible(options) {
     interest: options.interest || 0,
     discount: options.discount || 0,
     valuationCap: options.valuationCap || 0,
-    fullyDilutedConversion: options.fullyDilutedConversion !== false
+    fullyDilutedConversion: options.fullyDilutedConversion !== false,
+    fullyDilutedGrantedVsopOnly: Boolean(options.fullyDilutedGrantedVsopOnly)
   };
 }
 
@@ -709,6 +710,22 @@ const snapshotScenarios = [
     expected: {price: 1000, raised: 200000, valuation: 1100000, capShares: {Founder: 900, Pool: 100, Angel: 90, Fund: 100}, conversions: {note: {price: 1111.1111111111, claim: 100000, shares: 90}}}
   },
   {
+    id: 'CT-62',
+    title: 'A fully diluted convertible can count granted VSOP shares only',
+    calculation: 'Only the 40-share grant issued before conversion counts: €1m / (900 equity + 40 granted) = €1,063.829787 per share, so €100k converts into 94 shares. Planned shares, a future grant and a cancelled grant are excluded.',
+    input: makeState({
+      holders: [makeHolder('founder', 'Founder', 900), makeHolder('pool', 'Pool', 100, {type: 'VSOP-Pool', isVirtual: true})],
+      convertibles: [makeConvertible({id: 'note', name: 'Angel Note', lender: 'Angel', principal: 100000, date: '2024-01-01', fullyDilutedGrantedVsopOnly: true})],
+      vsopParticipants: [
+        {id: 'granted', name: 'Employee', poolId: 'pool', shares: 40, plannedShares: 20, grantDate: '2024-06-01', status: 'Aktiv'},
+        {id: 'future', name: 'Future employee', poolId: 'pool', shares: 30, plannedShares: 0, grantDate: '2026-01-01', status: 'Aktiv'},
+        {id: 'cancelled', name: 'Cancelled employee', poolId: 'pool', shares: 10, plannedShares: 0, grantDate: '2024-07-01', status: 'Storniert'}
+      ],
+      rounds: [makeRound({id: 'round-a', name: 'Seed', preMoney: 1000000, date: '2025-01-01', investors: [{id: 'fund', name: 'Fund', investment: 100000}]})]
+    }),
+    expected: {price: 1000, raised: 200000, valuation: 1100000, capShares: {Founder: 900, Pool: 100, Angel: 94, Fund: 100}, conversions: {note: {price: 1063.829787234, claim: 100000, shares: 94}}}
+  },
+  {
     id: 'CT-36',
     title: 'A 2:1 conversion ratio doubles fully diluted shares',
     calculation: '€1m / €10 = 100,000 legal shares; 100,000 × 2 = 200,000 FD shares.',
@@ -937,6 +954,11 @@ const csvScenarios = [
       roundInvestments: {'round-bridge': 1000000, 'round-seed': 3000000, 'round-series-a': 8000000},
       roundInvestorCounts: {'round-bridge': 4, 'round-seed': 2, 'round-series-a': 2},
       roundSeniorities: {'round-bridge': 1, 'round-seed': 2, 'round-series-a': 3},
+      convertible: {
+        id: 'convertible-angel-anna',
+        fullyDilutedConversion: true,
+        fullyDilutedGrantedVsopOnly: false
+      },
       vsopGrant: {
         id: 'vsop-mira',
         vestingIntervalMonths: 1,
@@ -1194,6 +1216,18 @@ function runCsvScenario(scenario) {
     if (!round) throw new Error(`${scenario.id}: round ${id} missing`);
     assertEqual(round.liquidationSeniority, expected, `${scenario.id} ${id} seniority`);
   });
+  if (scenario.expected.convertible) {
+    const convertible = state.convertibles.find(
+      item => item.id === scenario.expected.convertible.id
+    );
+    if (!convertible)
+      throw new Error(
+        `${scenario.id}: convertible ${scenario.expected.convertible.id} missing`
+      );
+    Object.entries(scenario.expected.convertible).forEach(([key, expected]) =>
+      assertEqual(convertible[key], expected, `${scenario.id} convertible ${key}`)
+    );
+  }
   if (scenario.expected.vsopGrant) {
     const grant = state.vsopParticipants.find(item => item.id === scenario.expected.vsopGrant.id);
     if (!grant) throw new Error(`${scenario.id}: VSOP grant ${scenario.expected.vsopGrant.id} missing`);
@@ -1215,7 +1249,7 @@ function runScenario(scenario) {
   else throw new Error(`Unknown scenario category: ${scenario.id}`);
 }
 
-if (scenarios.length !== 61) throw new Error(`Expected exactly 61 scenarios, found ${scenarios.length}.`);
+if (scenarios.length !== 62) throw new Error(`Expected exactly 62 scenarios, found ${scenarios.length}.`);
 
 let passed = 0;
 scenarios.forEach((scenario, index) => {
