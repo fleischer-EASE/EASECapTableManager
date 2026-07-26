@@ -22,6 +22,17 @@ const marker = text => {
   'id="erm-example-dialog"',
   'id="erm-example-without-save"',
   'id="erm-example-save"',
+  'id="erm-open-guide"',
+  'id="erm-guide-dialog"',
+  'id="erm-guide-content"',
+  'const guideSections =',
+  'function renderGuide()',
+  "guide/screenshots/${language}/${section.image}",
+  "['Beispiel laden', 'Load example']",
+  "['Beispieldaten laden?', 'Load example data?']",
+  'Bug reports and other inquiries can be sent to captable@ease-systems.de.',
+  'Fehlerberichte und andere Anfragen können an captable@ease-systems.de gesendet werden.',
+  "img-src 'self'",
   'AGPL-3.0-only',
   '.erm-development .erm-panel-tools',
   'https://raw.githubusercontent.com/fleischer-EASE/EASECapTableManager/main/examples/ease-cap-table-example.csv',
@@ -29,6 +40,54 @@ const marker = text => {
   'importExampleCsv(false)',
   'importExampleCsv(true)'
 ].forEach(contract => marker(contract));
+const guideSectionsSource = source.slice(
+  marker('const guideSections ='),
+  marker('function renderGuide()')
+);
+const guideSectionNumbers = [
+  ...guideSectionsSource.matchAll(/number: '(\d{2})'/g)
+].map(match => match[1]);
+const expectedGuideSectionNumbers = Array.from(
+  {length: 13},
+  (_, index) => String(index + 1).padStart(2, '0')
+);
+if (guideSectionNumbers.join(',') !== expectedGuideSectionNumbers.join(','))
+  throw new Error(
+    `Expected mirrored guide sections 01–13, found ${guideSectionNumbers.join(',')}.`
+  );
+const guideScreenshotNames = [
+  ...guideSectionsSource.matchAll(/image: '([^']+\.png)'/g)
+].map(match => match[1]);
+if (guideScreenshotNames.length !== 13 || new Set(guideScreenshotNames).size !== 13)
+  throw new Error('The illustrated guide must reference 13 unique screenshots.');
+for (const language of ['de', 'en']) {
+  for (const screenshot of guideScreenshotNames) {
+    const screenshotPath = `guide/screenshots/${language}/${screenshot}`;
+    if (!fs.existsSync(screenshotPath))
+      throw new Error(`Guide screenshot is missing: ${screenshotPath}`);
+    if (fs.statSync(screenshotPath).size < 50000)
+      throw new Error(`Guide screenshot appears incomplete: ${screenshotPath}`);
+  }
+}
+const renderGuideSource = source.slice(
+  marker('function renderGuide()'),
+  marker('function refreshIcons()')
+);
+['erm-guide-terminology', '<span>14</span>', 'guideTerms'].forEach(section14Marker => {
+  if (renderGuideSource.includes(section14Marker))
+    throw new Error(`Guide section 14 is still rendered: ${section14Marker}`);
+});
+[
+  'GitHub-Beispiel',
+  'GitHub-Beispieldaten',
+  'Load GitHub example',
+  'GitHub example data',
+  'Praxisanleitung · GitHub-Beispiel',
+  'Practical guide · GitHub example'
+].forEach(removedExampleLabel => {
+  if (source.includes(removedExampleLabel))
+    throw new Error(`Removed example label is still present: ${removedExampleLabel}`);
+});
 if (source.includes('<span class="erm-page-kicker">EASE Cap Table Manager</span>'))
   throw new Error('Redundant main-section product label is still present.');
 const license = fs.readFileSync('LICENSE', 'utf8');

@@ -2,63 +2,128 @@
 
 # EASE Cap Table Manager
 
-Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Secondaries, VSOP-Pools und Exit-Simulationen. Die App startet mit einem leeren Modell: Ein Founder hält 100 %, alle Transaktions-, VSOP- und Exit-Werte stehen auf null.
+EASE Cap Table Manager is a dependency-free, browser-based single-page
+application for cap tables, equity rounds, convertible loans, secondary
+transactions, VSOP pools, and exit simulations. The application starts with a
+simple formation model in which one founder owns 100%, while all transaction,
+VSOP, and exit values are set to zero.
 
-## Funktionen
+## Quick start
 
-- Umschaltbare deutsche und englische Benutzeroberfläche sowie persistenter €/$-Anzeigeschalter
-- Cap Table über chronologische Eigenkapital- und Secondary-Stände
-- Gemeinsamer Einstieg **Neue Transaktion** für Eigenkapitalrunde, Wandeldarlehen und Secondary
-- Eigenkapitalrunden mit mehreren Investoren zu einem gemeinsamen Fully-Diluted-Pre-Money-Preis
-- Namensgleiche Investoren werden über Beteiligungen, Wandlungen und Runden hinweg zu einer Cap-Table- und Exit-Zeile gebündelt; die unterschiedlichen Konditionen ihrer einzelnen Anteilspakete bleiben im Waterfall erhalten
-- Anteilsklassen mit Seniorität, pari-passu Rängen, nicht oder voll partizipierender Liquidationspräferenz, Participation Cap, Conversion Ratio, kumulativer Dividende und optionalem Redemption-Floor
-- Wandeldarlehen mit Zins, Discount, Valuation Cap und wählbarer Fully-Diluted-Wandlungsbasis
-- Secondaries mit übertragbarer Anteilsklasse, Verkäufer, Käufer, Anteilen, Stückpreis und Rendite-Cashflows
-- Mehrere VSOP-Pools mit Kapazitätskontrolle, freiem, geplanten, gewährtem, reserviertem und gevestetem Bestand
-- VSOP-Zuteilungen mit Zuteilungs- und Vestingbeginn, monatlichem, quartalsweisem oder jährlichem Vesting, Cliff, Vesting-Pausen, Basispreis (Strikepreis) und Ablaufdatum
-- Good-, Neutral- und Bad-Leaver-Modellierung mit frei definierbarem Erhalt bereits gevesteter Ansprüche; bestehende und neue Zuteilungen behalten standardmäßig 100 % der gevesteten Ansprüche
-- Single- und Double-Trigger-Beschleunigung für Exit-Simulationen; namensgleiche VSOP-Berechtigte werden im Exit gebündelt, während Basispreis, Vesting, Leaver- und Beschleunigungsbedingungen je Zuteilung separat berechnet werden
-- Exit-Simulation mit senioritätsbasiertem LiqPref-Waterfall, wirtschaftlicher Konversionswahl, Multiple und IRR; die Rangfolge beginnt bei 1 und höhere Senioritätsränge werden zuerst bedient
-- Export der gerade ausgewählten und optional gefilterten Cap Table
-- Lokale automatische Speicherung, Rückgängig/Wiederholen, Suche sowie CSV-Backups
-- Direkter Import der aktuellen GitHub-Beispieldaten mit vorgelagerter Auswahl, den bestehenden Workspace als CSV zu sichern
+No build step or package installation is required. Open `index.html` directly
+in a modern browser, or serve the repository locally to give browser storage a
+stable origin:
 
-## Dokumentation und Beispiel
+```powershell
+python -m http.server 8000
+```
 
-- [Importierbare Beispiel-CSV](examples/ease-cap-table-example.csv)
+Then open `http://localhost:8000`.
 
-Die Beispiel-CSV bildet einen deutschen Finanzierungsverlauf ab: Zwei Gründer
-starten mit insgesamt 25.000 Anteilen. Darauf folgen zwei
-Pre-Seed-Angel-Wandeldarlehen, Bridge-, Seed- und Series-A-Runde sowie ein
-Mitarbeitenden-Pool und eine Exit-Annahme.
+## Features
 
-## Berechnungen testen
+- Switchable German and English interface with a persistent €/$ display toggle
+- Cap table views across chronological equity and secondary stages
+- A shared **New transaction** entry point for equity rounds, convertible loans,
+  and secondary transactions
+- Equity rounds with multiple investors at one fully diluted pre-money price
+- Investors with the same name are bundled into one cap-table and exit row
+  across holdings, conversions, and rounds, while the individual conditions of
+  their share lots remain separate in the waterfall
+- Share classes with seniority, pari-passu ranks, non-participating or fully
+  participating liquidation preferences, participation caps, conversion
+  ratios, cumulative dividends, and optional redemption floors
+- Convertible loans with interest, discount, valuation cap, and a selectable
+  fully diluted conversion basis
+- Secondary transactions with transferable share class, seller, buyer, share
+  count, price per share, and return cash flows
+- Multiple VSOP pools with capacity controls and available, planned, granted,
+  reserved, and vested balances
+- VSOP grants with grant and vesting start dates, monthly, quarterly, or annual
+  vesting, cliff, vesting pauses, base price (strike price), and expiry date
+- Good-, neutral-, and bad-leaver modelling with a configurable retention rate
+  for vested claims; existing and new grants retain 100% of vested claims by
+  default
+- Single- and double-trigger acceleration for exit simulations; VSOP holders
+  with the same name are bundled at exit, while base price, vesting, leaver, and
+  acceleration conditions are calculated separately for every grant
+- Exit simulation with a seniority-based liquidation-preference waterfall,
+  economic conversion choice, multiples, and IRR; ranks start at 1 and higher
+  seniority numbers are served first
+- Export of the currently selected and optionally filtered cap-table view
+- Local automatic saving, undo and redo, search, and complete CSV backups
+- Direct import of the current example, with an option to save the existing
+  workspace as CSV before it is replaced
+- An integrated bilingual **Guide / Anleitung** with 13 continuous practical
+  sections and 26 language-specific Chrome screenshots
 
-Die regressionskritischen Berechnungen lassen sich ohne Installation mit Node.js prüfen:
+## Guide and example
+
+- [Importable example CSV](examples/ease-cap-table-example.csv)
+- **Guide / Anleitung:** open the application and select **Guide** or
+  **Anleitung** in the left navigation
+- [German screenshots](guide/screenshots/de)
+- [English screenshots](guide/screenshots/en)
+
+The example CSV represents a German financing journey. Two founders start with
+a total of 25,000 shares. Two pre-seed angel convertible loans are followed by
+Bridge, Seed, and Series A rounds, an employee pool, and an exit assumption.
+
+The integrated guide uses this same example continuously from formation through
+the exit simulation. Its German and English versions have an identical section,
+step, and screenshot structure. Each main feature explains its purpose, when to
+use it, the required steps, the expected result, and common errors.
+
+## Testing
+
+Run the calculation and import scenarios without installing dependencies:
 
 ```powershell
 node tests/test-scenarios.js
 ```
 
-Die Suite deckt 61 unabhängig berechnete und menschenlesbar dokumentierte Szenarien für Waterfalls, Präferenzansprüche, Finanzierungsrunden, VSOP/Vesting, Wandeldarlehen und CSV-Importe ab.
+The suite contains 61 independently calculated, human-readable scenarios
+covering waterfalls, preference claims, financing rounds, VSOP and vesting,
+convertible loans, secondary transactions, and CSV imports.
 
-## Daten und Backups
+## Data, backups, and security
 
-Die Eingaben werden lokal im Browser gespeichert. Über **CSV exportieren** und **CSV laden** lassen sich vollständige Versionen sichern und wiederherstellen. Das CSV-Schema v3 enthält auch Vesting-Intervall und -Pause, Leaver-Kategorie und Erhaltungsquote sowie Exit-Beschleunigung und zweites Triggerdatum; ältere v2-Dateien bleiben importierbar. **Ansicht exportieren** lädt ausschließlich den aktuell ausgewählten Cap Table-Stand herunter und berücksichtigt den Suchfilter. Verwende möglichst immer dieselbe Adresse und denselben Port, da Browserdaten an die Adresse gebunden sind.
+Application data is stored locally in the browser. Use **Export CSV** and
+**Load CSV** to save and restore complete workspace versions. CSV schema v3
+includes the vesting interval and pause, leaver category and retention rate,
+exit acceleration, and second-trigger date. Older schema v2 files remain
+importable.
 
-Die VSOP-Funktionen bilden vertragliche Rechenparameter ab und ersetzen keine rechtliche oder steuerliche Prüfung des konkreten Beteiligungsprogramms.
+**Export view** downloads only the currently selected cap-table stage and
+respects the active search filter. It is not a complete workspace backup. Use
+the same address and port whenever possible because browsers associate local
+data with the page origin.
 
-Der €/$-Schalter ändert ausschließlich Symbol und Zahlenformat in der Oberfläche. Er führt keine Währungsumrechnung durch; gespeicherte Zahlen und die bestehenden EUR-Felder des CSV-Schemas bleiben unverändert.
+The VSOP functions model contractual calculation parameters and do not replace
+legal or tax review of a specific participation programme.
 
-Für **GitHub-Beispiel laden** erlaubt die Content Security Policy ausschließlich eine zusätzliche Leseverbindung zu `raw.githubusercontent.com`. Dabei wird nur die versionierte Beispiel-CSV aus diesem Repository abgerufen; lokale Workspace-Daten werden nicht übertragen.
+The €/$ toggle changes only the displayed symbol and number format. It does not
+perform currency conversion; stored numbers and the existing EUR fields in the
+CSV schema remain unchanged.
 
-## Lizenz
+For **Load example**, the Content Security Policy permits one additional read
+connection to `raw.githubusercontent.com`. The application downloads only the
+versioned example CSV from this repository and does not transmit local workspace
+data.
+
+No secrets or production personal data should be stored in the repository or
+the example files.
+
+## Contact
+
+Bug reports and other inquiries can be sent to captable@ease-systems.de.
+
+## License
 
 Copyright © 2026 EASE Cap Table Manager contributors.
 
-Diese Software ist unter der **GNU Affero General Public License, Version 3
-ausschließlich** (`AGPL-3.0-only`) lizenziert und wird ohne Gewährleistung
-bereitgestellt. Siehe [LICENSE](LICENSE). Der
-[Quellcode](https://github.com/fleischer-EASE/EASECapTableManager) ist öffentlich
-verfügbar.
-
+This software is licensed under the **GNU Affero General Public License,
+Version 3 only** (`AGPL-3.0-only`) and is provided without warranty. See
+[LICENSE](LICENSE) for the complete terms. The
+[source code](https://github.com/fleischer-EASE/EASECapTableManager) is publicly
+available.

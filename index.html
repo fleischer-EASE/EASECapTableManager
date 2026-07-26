@@ -7,7 +7,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data: https://raw.githubusercontent.com; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src 'self' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data: https://raw.githubusercontent.com; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <title>EASE Cap Table Manager</title>
     <style>
@@ -1949,6 +1949,232 @@
         background: rgb(18 34 52 / 47%);
         backdrop-filter: blur(3px);
       }
+      #equity-round-manager #erm-guide-dialog {
+        width: min(1180px, calc(100vw - 32px));
+        max-width: none;
+        height: min(920px, calc(100vh - 32px));
+        max-height: none;
+        padding: 0;
+        overflow: hidden;
+        color: #233649;
+        background: #f7f5f1;
+      }
+      #equity-round-manager .erm-guide-shell {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        height: 100%;
+      }
+      #equity-round-manager .erm-guide-head {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 24px;
+        border-bottom: 1px solid #d8d1c7;
+        background: rgb(255 255 255 / 96%);
+      }
+      #equity-round-manager .erm-guide-head h2 {
+        margin: 0;
+        font-size: clamp(22px, 3vw, 34px);
+      }
+      #equity-round-manager .erm-guide-body {
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      }
+      #equity-round-manager .erm-guide-content {
+        width: min(100% - 40px, 1040px);
+        margin: 0 auto;
+        padding: 32px 0 64px;
+      }
+      #equity-round-manager .erm-guide-intro {
+        display: grid;
+        gap: 14px;
+        padding: clamp(22px, 4vw, 42px);
+        border-radius: 20px;
+        color: #fff;
+        background:
+          radial-gradient(circle at 100% 0, rgb(255 255 255 / 14%), transparent 35%),
+          #203247;
+      }
+      #equity-round-manager .erm-guide-intro h3 {
+        max-width: 760px;
+        margin: 0;
+        color: #fff;
+        font-size: clamp(28px, 5vw, 48px);
+      }
+      #equity-round-manager .erm-guide-intro p {
+        max-width: 800px;
+        margin: 0;
+        color: rgb(255 255 255 / 78%);
+        font-size: 16px;
+      }
+      #equity-round-manager .erm-guide-toc {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 24px 0 40px;
+        padding: 18px;
+        border: 1px solid #d8d1c7;
+        border-radius: 16px;
+        background: #fff;
+      }
+      #equity-round-manager .erm-guide-toc strong {
+        grid-column: 1 / -1;
+        margin-bottom: 4px;
+      }
+      #equity-round-manager .erm-guide-toc a {
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+        color: #365d52;
+        text-decoration: none;
+      }
+      #equity-round-manager .erm-guide-toc a:hover {
+        text-decoration: underline;
+      }
+      #equity-round-manager .erm-guide-section {
+        display: grid;
+        gap: 18px;
+        padding: 36px 0;
+        border-top: 1px solid #d8d1c7;
+        scroll-margin-top: 24px;
+      }
+      #equity-round-manager .erm-guide-section:first-of-type {
+        border-top: 0;
+      }
+      #equity-round-manager .erm-guide-kicker {
+        color: #607d6f;
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      #equity-round-manager .erm-guide-section h3 {
+        margin: -8px 0 0;
+        font-size: clamp(24px, 4vw, 36px);
+      }
+      #equity-round-manager .erm-guide-section h4 {
+        margin: 0 0 8px;
+        color: #476357;
+        font-size: 13px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      #equity-round-manager .erm-guide-section :is(p, ul, ol) {
+        margin-top: 0;
+        line-height: 1.65;
+      }
+      #equity-round-manager .erm-guide-section li + li {
+        margin-top: 8px;
+      }
+      #equity-round-manager .erm-guide-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      #equity-round-manager .erm-guide-summary-grid > div,
+      #equity-round-manager .erm-guide-notes {
+        padding: 18px;
+        border: 1px solid #d8d1c7;
+        border-radius: 14px;
+        background: #fff;
+      }
+      #equity-round-manager .erm-guide-steps {
+        padding: 22px 22px 22px 46px;
+        border-left: 4px solid #607d6f;
+        border-radius: 0 14px 14px 0;
+        background: #eef3f0;
+      }
+      #equity-round-manager .erm-guide-figure {
+        margin: 0;
+        overflow: hidden;
+        border: 1px solid #c9c1b6;
+        border-radius: 16px;
+        background: #203247;
+        box-shadow: 0 18px 40px rgb(24 42 58 / 12%);
+      }
+      #equity-round-manager .erm-guide-figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        object-position: top;
+        background: #e9e5df;
+      }
+      #equity-round-manager .erm-guide-figure figcaption {
+        display: grid;
+        gap: 5px;
+        padding: 16px 18px;
+        color: #fff;
+      }
+      #equity-round-manager .erm-guide-figure figcaption span {
+        color: rgb(255 255 255 / 70%);
+        line-height: 1.5;
+      }
+      #equity-round-manager .erm-guide-terminology {
+        padding-top: 46px;
+        border-top: 3px solid #203247;
+        scroll-margin-top: 24px;
+      }
+      #equity-round-manager .erm-guide-terminology > h3 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 42px);
+      }
+      #equity-round-manager .erm-guide-term-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      #equity-round-manager .erm-guide-term {
+        border: 1px solid #d8d1c7;
+        border-radius: 14px;
+        background: #fff;
+      }
+      #equity-round-manager .erm-guide-term summary {
+        padding: 16px 18px;
+        color: #233649;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      #equity-round-manager .erm-guide-term[open] summary {
+        border-bottom: 1px solid #e4ded6;
+      }
+      #equity-round-manager .erm-guide-term dl {
+        display: grid;
+        grid-template-columns: minmax(130px, 0.35fr) minmax(0, 1fr);
+        gap: 10px 18px;
+        margin: 0;
+        padding: 18px;
+      }
+      #equity-round-manager .erm-guide-term dt {
+        color: #607d6f;
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      #equity-round-manager .erm-guide-term dd {
+        margin: 0;
+        line-height: 1.55;
+      }
+      #equity-round-manager .erm-guide-footer {
+        display: grid;
+        gap: 10px;
+        margin-top: 42px;
+        padding: 24px;
+        border-radius: 16px;
+        color: #fff;
+        background: #203247;
+      }
+      #equity-round-manager .erm-guide-footer p {
+        margin: 0;
+      }
+      #equity-round-manager .erm-guide-footer a {
+        color: #dceee5;
+      }
 
       @media (max-width: 1120px) {
         #equity-round-manager .erm-app-shell {
@@ -2026,6 +2252,13 @@
           grid-template-columns: 1fr;
         }
         #equity-round-manager .erm-financing-grid {
+          grid-template-columns: 1fr;
+        }
+        #equity-round-manager .erm-guide-toc,
+        #equity-round-manager .erm-guide-summary-grid {
+          grid-template-columns: 1fr;
+        }
+        #equity-round-manager .erm-guide-term dl {
           grid-template-columns: 1fr;
         }
       }
@@ -2110,6 +2343,9 @@
             <a class="btn btn-ghost" href="#erm-exit"
               ><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i> Exit Simulation</a
             >
+            <button type="button" class="btn btn-ghost" id="erm-open-guide">
+              <i data-lucide="book-open" aria-hidden="true"></i> Anleitung
+            </button>
           </nav>
           <div class="erm-sidebar-actions" aria-label="Daten verwalten">
             <span class="text-small text-muted">Versionen &amp; Daten</span>
@@ -2127,7 +2363,7 @@
                 <i data-lucide="upload" aria-hidden="true"></i> CSV laden
               </button>
               <button type="button" class="btn btn-block" id="erm-import-example">
-                <i data-lucide="github" aria-hidden="true"></i> GitHub-Beispiel laden
+                <i data-lucide="file-down" aria-hidden="true"></i> Beispiel laden
               </button>
               <input id="erm-csv-file" type="file" accept=".csv,text/csv" hidden />
               <button type="button" class="btn btn-block text-destructive" id="erm-reset">
@@ -2365,6 +2601,21 @@
             </div>
           </section>
 
+          <dialog id="erm-guide-dialog" aria-labelledby="erm-guide-title" data-i18n-ignore>
+            <div class="erm-guide-shell">
+              <header class="erm-guide-head">
+                <h2 id="erm-guide-title">Guide / Anleitung</h2>
+                <button type="button" class="btn" id="erm-close-guide">
+                  <i data-lucide="x" aria-hidden="true"></i>
+                  <span id="erm-guide-close-label">Schließen</span>
+                </button>
+              </header>
+              <div class="erm-guide-body" id="erm-guide-scroll">
+                <div class="erm-guide-content" id="erm-guide-content"></div>
+              </div>
+            </div>
+          </dialog>
+
           <dialog id="erm-person-dialog">
             <form method="dialog" class="erm-form" id="erm-person-form">
               <h3 id="erm-person-form-title">Beteiligten hinzufügen</h3>
@@ -2512,8 +2763,7 @@
                     <button type="button" class="btn" id="erm-add-round-investor">
                       <i data-lucide="plus" aria-hidden="true"></i> Investor hinzufügen</button
                     ><span class="text-small text-muted"
-                      >Alle Zeichnungen verwenden denselben Preis je Anteil. Namensgleiche
-                      Investoren werden gebündelt.</span
+                      >Alle Zeichnungen verwenden denselben Preis je Anteil. Namensgleiche Investoren werden gebündelt.</span
                     >
                   </div>
                 </section>
@@ -3032,7 +3282,7 @@
 
           <dialog id="erm-example-dialog">
             <form class="erm-form" id="erm-example-form">
-              <h3>GitHub-Beispieldaten laden?</h3>
+              <h3>Beispieldaten laden?</h3>
               <p>
                 Möchtest du den aktuellen Workspace vor dem Import als CSV speichern?
               </p>
@@ -3462,7 +3712,7 @@
           ['VSOP-Zuteilung löschen?', 'Delete VSOP grant?'],
           ['VSOP-Zuteilung', 'VSOP grant'],
           ['Eingaben zurücksetzen?', 'Reset entries?'],
-          ['GitHub-Beispieldaten laden?', 'Load GitHub example data?'],
+          ['Beispieldaten laden?', 'Load example data?'],
           ['Ohne Speichern zurücksetzen', 'Reset without saving'],
           ['Speichern und zurücksetzen', 'Save and reset'],
           ['Ohne Speichern importieren', 'Import without saving'],
@@ -3527,12 +3777,14 @@
           ['Ansicht exportieren', 'Export view'],
           ['CSV exportieren', 'Export CSV'],
           ['CSV laden', 'Import CSV'],
-          ['GitHub-Beispiel laden', 'Load GitHub example'],
+          ['Beispiel laden', 'Load example'],
           ['Lokal gespeichert', 'Saved locally'],
           ['Rückgängig', 'Undo'],
           ['Wiederholen', 'Redo'],
           ['Zurücksetzen', 'Reset'],
           ['Übersicht', 'Overview'],
+          ['Anleitung', 'Guide'],
+          ['Mitarbeitenden-Pool', 'Employee Pool'],
           ['Finanzierungen', 'Financing'],
           ['Kennzahlen', 'Key metrics'],
           ['Entwicklung', 'Development'],
@@ -3662,11 +3914,11 @@
           ['Die CSV enthält keine Datensätze.', 'The CSV contains no records.'],
           ['Spalte record_type fehlt.', 'The record_type column is missing.'],
           ['CSV konnte nicht geladen werden.', 'The CSV could not be imported.'],
-          ['Beispieldaten werden von GitHub geladen…', 'Loading example data from GitHub…'],
-          ['GitHub-Beispieldaten geladen.', 'GitHub example data imported.'],
+          ['Beispieldaten werden geladen…', 'Loading example data…'],
+          ['Beispieldaten geladen.', 'Example data imported.'],
           [
-            'Beispieldaten konnten nicht von GitHub geladen werden.',
-            'The example data could not be loaded from GitHub.',
+            'Beispieldaten konnten nicht geladen werden.',
+            'The example data could not be loaded.',
           ],
           ['Mindestens ein holder wird benötigt.', 'At least one holder is required.'],
           ['IDs müssen über alle Datensätze eindeutig sein.', 'IDs must be unique across all records.'],
@@ -3821,6 +4073,7 @@
           updateLanguageControls();
           updateCurrencyControls();
           render();
+          if ($('#erm-guide-dialog').open) renderGuide();
         }
         function setCurrency(currency) {
           if (!supportedCurrencies.has(currency) || currency === currentCurrency) return;
@@ -4806,14 +5059,14 @@
           $('#erm-example-dialog').close();
           $('#erm-import-example').disabled = true;
           $('#erm-import-example').setAttribute('aria-busy', 'true');
-          setCsvStatus('Beispieldaten werden von GitHub geladen…');
+          setCsvStatus('Beispieldaten werden geladen…');
           try {
             const response = await fetch(exampleCsvUrl, { cache: 'no-store' });
-            if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);
+            if (!response.ok) throw new Error(`Example HTTP ${response.status}`);
             importCsv(await response.text());
-            setCsvStatus('GitHub-Beispieldaten geladen.');
+            setCsvStatus('Beispieldaten geladen.');
           } catch {
-            setCsvStatus('Beispieldaten konnten nicht von GitHub geladen werden.', true);
+            setCsvStatus('Beispieldaten konnten nicht geladen werden.', true);
           } finally {
             exampleImportPending = false;
             $('#erm-import-example').disabled = false;
@@ -5830,9 +6083,1642 @@
             : '<tr><td colspan="10" class="erm-empty">Noch keine Personen im VSOP-Pool.</td></tr>';
         }
 
+        const guideSections = [
+          {
+            id: 'orientation',
+            number: '01',
+            image: '01-overview.png',
+            title: {
+              de: 'Orientierung, Sprache und Währung',
+              en: 'Orientation, language and currency',
+            },
+            purpose: {
+              de: 'Die Oberfläche zeigt Beteiligungen, Finanzierungen, VSOP und Exit-Ergebnisse in einem Workspace. Sprache und Währungssymbol lassen sich jederzeit wechseln.',
+              en: 'The interface shows ownership, financing, VSOP and exit results in one workspace. You can change the language and displayed currency symbol at any time.',
+            },
+            when: {
+              de: 'Beginne hier, um die Navigation, die wichtigsten Kennzahlen und den aktuell ausgewählten Cap-Table-Stand zu verstehen.',
+              en: 'Start here to understand the navigation, key metrics and the currently selected cap-table stage.',
+            },
+            steps: {
+              de: [
+                'Wähle links oben DE oder EN. Die Anleitung folgt derselben Sprache.',
+                'Wähle € oder $. Dadurch ändert sich nur das Symbol; es findet keine Währungsumrechnung statt.',
+                'Nutze die linke Navigation, um zu Übersicht, Cap Table, Finanzierungen, VSOP Pool, Exit Simulation oder Anleitung zu springen.',
+                'Lies die drei Kennzahlen oben und prüfe unter Entwicklung, welcher Stand ausgewählt ist.',
+              ],
+              en: [
+                'Choose DE or EN in the upper-left corner. The guide follows the same language.',
+                'Choose € or $. This changes only the symbol; no currency conversion takes place.',
+                'Use the left navigation to jump to Overview, Cap table, Financing, VSOP pool, Exit simulation or Guide.',
+                'Read the three key metrics at the top and check which stage is selected under Development.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-01 · Hauptansicht mit Sprach- und Währungsschalter, Navigation, Kennzahlen und Entwicklungsständen.',
+              en: 'Figure EN-01 · Main view with language and currency switches, navigation, key metrics and development stages.',
+            },
+            visible: {
+              de: 'Die Markierungen zeigen die globalen Schalter, das Menü und die wichtigsten Ergebnisbereiche. Ein ausgewählter Entwicklungsstand steuert alle darunterliegenden Berechnungen.',
+              en: 'The annotations identify the global switches, menu and main result areas. A selected development stage controls all calculations shown below it.',
+            },
+            result: {
+              de: 'Die gewünschte Sprache und das gewünschte Währungssymbol sind aktiv; die richtige Datenansicht ist ausgewählt.',
+              en: 'Your preferred language and currency symbol are active, and the correct data view is selected.',
+            },
+            notes: {
+              de: [
+                'Die Währungswahl rechnet keine Werte um.',
+                'Auf schmalen Bildschirmen wird die linke Navigation zu einer horizontalen Leiste.',
+              ],
+              en: [
+                'The currency selection does not convert values.',
+                'On narrow screens, the left navigation becomes a horizontal bar.',
+              ],
+            },
+          },
+          {
+            id: 'example',
+            number: '02',
+            image: '02-example-import.png',
+            title: {
+              de: 'Beispiel laden',
+              en: 'Load the example',
+            },
+            purpose: {
+              de: 'Das bereitgestellte Beispiel bildet den durchgängigen Übungsfall dieser Anleitung: Gründung, Pre-Seed-Wandeldarlehen, Bridge, Seed, Series A, VSOP und Exit.',
+              en: 'The provided example is the continuous use case for this guide: formation, pre-seed convertible loans, Bridge, Seed, Series A, VSOP and exit.',
+            },
+            when: {
+              de: 'Lade es, wenn du die Software ohne eigene Daten kennenlernen oder einen reproduzierbaren Ausgangspunkt verwenden möchtest.',
+              en: 'Load it when you want to learn the software without entering your own data or need a reproducible starting point.',
+            },
+            steps: {
+              de: [
+                'Klicke links auf Beispiel laden. Die öffentliche Beispieldatei kann ohne Konto geladen werden.',
+                'Wähle Speichern und importieren, wenn der aktuelle Workspace zuerst als CSV heruntergeladen werden soll.',
+                'Wähle Ohne Speichern importieren nur, wenn die aktuellen Daten ersetzt werden dürfen.',
+                'Warte auf den Status Beispieldaten geladen.',
+              ],
+              en: [
+                'Click Load example on the left. The public example file can be loaded without an account.',
+                'Choose Save and import if the current workspace should first be downloaded as a CSV.',
+                'Choose Import without saving only when the current data may be replaced.',
+                'Wait for the status Example data imported.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-02 · Sicherheitsabfrage vor dem Import des Beispiels.',
+              en: 'Figure EN-02 · Safety prompt before importing the example.',
+            },
+            visible: {
+              de: 'Der Dialog trennt Abbrechen, Import ohne Sicherung und Import mit vorherigem CSV-Download klar voneinander.',
+              en: 'The dialog clearly separates cancel, import without backup and import with a prior CSV download.',
+            },
+            result: {
+              de: 'Der Workspace enthält den Beispielverlauf und zeigt automatisch den neuesten Finanzierungsstand.',
+              en: 'The workspace contains the example history and automatically shows the latest financing stage.',
+            },
+            notes: {
+              de: [
+                'Der Import ersetzt den aktuellen Workspace.',
+                'Für den Download von GitHub ist eine Internetverbindung erforderlich.',
+                'Bei einer Fehlermeldung bleibt der vorherige Workspace erhalten.',
+              ],
+              en: [
+                'The import replaces the current workspace.',
+                'Downloading from GitHub requires an internet connection.',
+                'If an error is reported, the previous workspace remains in place.',
+              ],
+            },
+          },
+          {
+            id: 'cap-table',
+            number: '03',
+            image: '03-cap-table.png',
+            title: {
+              de: 'Entwicklung und Cap Table lesen',
+              en: 'Read development stages and the cap table',
+            },
+            purpose: {
+              de: 'Die Cap Table zeigt, wer am Unternehmen beteiligt ist, wie viele Fully-Diluted-Anteile zugerechnet werden und welchen prozentualen Anteil sowie modellierten Wert diese Position hat.',
+              en: 'The cap table shows who owns the company, how many fully diluted shares are attributed to each holder, and the percentage ownership and modelled value of each position.',
+            },
+            when: {
+              de: 'Nutze die Entwicklungsstände, um die Verwässerung im Beispiel von der Gründung bis zur Series A nachzuvollziehen.',
+              en: 'Use the development stages to trace dilution in the example from formation through Series A.',
+            },
+            steps: {
+              de: [
+                'Klicke nacheinander auf Gründung, Bridge, Seed und Series A unter Entwicklung.',
+                'Beobachte, wie Bewertung, aufgenommenes Kapital, Gründeranteil, Donut und Cap Table gemeinsam aktualisiert werden.',
+                'Suche im Cap-Table-Feld nach einem Namen, um die Tabelle zu filtern.',
+                'Klicke Ansicht exportieren, um genau den ausgewählten und gegebenenfalls gefilterten Stand als CSV zu speichern.',
+              ],
+              en: [
+                'Click Formation, Bridge, Seed and Series A in sequence under Development.',
+                'Observe how valuation, capital raised, founder ownership, the doughnut and cap table update together.',
+                'Search for a name in the cap-table field to filter the table.',
+                'Click Export view to save exactly the selected and, if applicable, filtered stage as CSV.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-03 · Series-A-Stand des Beispiels mit Entwicklungsleiste, Eigentumsdiagramm und Cap Table.',
+              en: 'Figure EN-03 · Series A stage of the example with development bar, ownership chart and cap table.',
+            },
+            visible: {
+              de: 'Der hervorgehobene Stand bestimmt Kennzahlen, Diagramm, Cap Table, VSOP-Auswertung und Exit-Anteilsmengen. Namensgleiche Investoren erscheinen als eine Zeile.',
+              en: 'The highlighted stage determines the metrics, chart, cap table, VSOP analysis and exit share counts. Investors with identical names appear as one row.',
+            },
+            result: {
+              de: 'Du kannst einen historischen oder aktuellen Beteiligungsstand prüfen und als eigenständige Ansicht exportieren.',
+              en: 'You can inspect a historical or current ownership stage and export it as a standalone view.',
+            },
+            notes: {
+              de: [
+                'Der exportierte Ansichts-CSV ist eine Berichtstabelle und kein vollständiger Workspace-Import.',
+                'Fully Diluted bezieht virtuelle Pool-Anteile und Conversion Ratios ein.',
+              ],
+              en: [
+                'The exported view CSV is a report table, not a complete workspace import.',
+                'Fully diluted includes virtual pool shares and conversion ratios.',
+              ],
+            },
+          },
+          {
+            id: 'stakeholders',
+            number: '04',
+            image: '04-stakeholder.png',
+            title: {
+              de: 'Beteiligte anlegen und bearbeiten',
+              en: 'Create and edit stakeholders',
+            },
+            purpose: {
+              de: 'Beteiligte bilden den Gründungsstand und können Gründer, Mitarbeitende, Advisors, Investoren oder sonstige Anteilseigner sein.',
+              en: 'Stakeholders form the initial ownership stage and can be founders, employees, advisers, investors or other shareholders.',
+            },
+            when: {
+              de: 'Lege echte Equity-Beteiligte direkt an. Für virtuelle Mitarbeiteransprüche verwendest du stattdessen einen VSOP-Pool und eine VSOP-Zuteilung.',
+              en: 'Create actual equity holders directly. For virtual employee claims, use a VSOP pool and VSOP grant instead.',
+            },
+            steps: {
+              de: [
+                'Klicke oben auf Beteiligte.',
+                'Trage Name, Typ und Anteile ein. Für Multiple und IRR kannst du außerdem investiertes Kapital und Investitionsdatum erfassen.',
+                'Klicke Hinzufügen.',
+                'Zum Bearbeiten oder Löschen öffnest du die Stift-Schaltfläche in der Cap Table. Abhängige Transaktionen können das Löschen verhindern.',
+              ],
+              en: [
+                'Click Stakeholders at the top.',
+                'Enter name, type and shares. You can also record invested capital and investment date for the multiple and IRR.',
+                'Click Add.',
+                'To edit or delete, open the pencil button in the cap table. Dependent transactions may prevent deletion.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-04 · Formular für einen neuen Beteiligten mit den vier Eingabebereichen.',
+              en: 'Figure EN-04 · New-stakeholder form with its four input areas.',
+            },
+            visible: {
+              de: 'Die Anteilseigner-Kategorie steuert unter anderem die Gruppierung im Exit. Kapital und Datum sind optional, aber für Renditekennzahlen wichtig.',
+              en: 'The holder category controls, among other things, exit grouping. Capital and date are optional but important for return metrics.',
+            },
+            result: {
+              de: 'Der neue Beteiligte erscheint ab Gründung in Diagramm und Cap Table.',
+              en: 'The new stakeholder appears from the formation stage onward in the chart and cap table.',
+            },
+            notes: {
+              de: [
+                'Name und eine positive Anzahl Anteile sind Pflicht.',
+                'Mindestens ein Beteiligter muss verbleiben.',
+                'Alle sichtbaren Namen werden vor dem Einfügen in dynamisches HTML maskiert.',
+              ],
+              en: [
+                'Name and a positive share count are required.',
+                'At least one stakeholder must remain.',
+                'All displayed names are escaped before insertion into dynamic HTML.',
+              ],
+            },
+          },
+          {
+            id: 'transactions',
+            number: '05',
+            image: '05-transaction-menu.png',
+            title: {
+              de: 'Die passende Transaktion wählen',
+              en: 'Choose the appropriate transaction',
+            },
+            purpose: {
+              de: 'Neue Transaktion öffnet die drei unterstützten Wege: Eigenkapitalrunde, Wandeldarlehen oder Secondary.',
+              en: 'New transaction opens the three supported paths: equity round, convertible loan or secondary.',
+            },
+            when: {
+              de: 'Wähle nach dem wirtschaftlichen Vorgang: neue Anteile gegen Investment, ein später wandelndes Darlehen oder die Übertragung bestehender Anteile.',
+              en: 'Choose based on the economic event: new shares for an investment, a loan that converts later, or a transfer of existing shares.',
+            },
+            steps: {
+              de: [
+                'Klicke oben auf Neue Transaktion.',
+                'Wähle Eigenkapitalrunde für Bridge, Seed oder Series A.',
+                'Wähle Wandeldarlehen für die beiden Pre-Seed-Angel-Darlehen des Beispiels.',
+                'Wähle Secondary, wenn ein bestehender Anteil von Verkäufer zu Käufer wechseln soll.',
+              ],
+              en: [
+                'Click New transaction at the top.',
+                'Choose Equity round for Bridge, Seed or Series A.',
+                'Choose Convertible loan for the two pre-seed angel loans in the example.',
+                'Choose Secondary when an existing share should move from seller to buyer.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-05 · Auswahl der drei Transaktionstypen.',
+              en: 'Figure EN-05 · Selection of the three transaction types.',
+            },
+            visible: {
+              de: 'Jede Kachel nennt Zweck und wichtigsten Berechnungsinhalt. Alle gespeicherten Transaktionen erscheinen später gemeinsam chronologisch.',
+              en: 'Each option states its purpose and main calculation. All saved transactions later appear together in chronological order.',
+            },
+            result: {
+              de: 'Das zum Vorgang passende Eingabeformular wird geöffnet.',
+              en: 'The input form matching the event opens.',
+            },
+            notes: {
+              de: ['Ein Wandeldarlehen ist zunächst keine eigene Cap-Table-Stufe; seine Wandlung erfolgt bei einer späteren Runde.'],
+              en: ['A convertible loan is not initially a separate cap-table stage; it converts in a later round.'],
+            },
+          },
+          {
+            id: 'rounds',
+            number: '06',
+            image: '06-equity-round.png',
+            title: {
+              de: 'Eigenkapitalrunden und Präferenzbedingungen',
+              en: 'Equity rounds and preference terms',
+            },
+            purpose: {
+              de: 'Eine Eigenkapitalrunde erzeugt neue Anteile aus Pre-Money-Bewertung und Investment und speichert die Bedingungen der neuen Anteilsklasse für den Exit-Waterfall.',
+              en: 'An equity round creates new shares from pre-money valuation and investment and stores the new share class terms for the exit waterfall.',
+            },
+            when: {
+              de: 'Verwende sie für Bridge, Seed und Series A des Beispiels oder jede Finanzierung, bei der das Unternehmen neue Anteile ausgibt.',
+              en: 'Use it for the example Bridge, Seed and Series A or any financing in which the company issues new shares.',
+            },
+            steps: {
+              de: [
+                'Öffne Neue Transaktion → Eigenkapitalrunde und trage Runde, Anteilsklasse, Pre-Money-Bewertung und Closing-Datum ein.',
+                'Füge alle Investoren und ihre Investments hinzu. Innerhalb einer Runde darf jeder Name nur einmal vorkommen.',
+                'Wähle keine, nicht partizipierende oder partizipierende Liquidationspräferenz und erfasse Multiple, Senioritätsrang und optionale Zusatzbedingungen.',
+                'Bei einer Pool-Auffrischung wählst du Zielpool, Anteilsmengen und den Zeitpunkt vor oder nach der Runde.',
+                'Klicke Speichern und prüfe Preis je Anteil, Verwässerung und Allokationen in der Finanzierungskarte.',
+              ],
+              en: [
+                'Open New transaction → Equity round and enter round, share class, pre-money valuation and closing date.',
+                'Add all investors and their investments. Within one round, each name may appear only once.',
+                'Choose no, non-participating or participating liquidation preference and enter the multiple, seniority rank and optional additional terms.',
+                'For a pool refresh, choose the target pool, share count and whether it occurs before or after the round.',
+                'Click Save and check price per share, dilution and allocations on the financing card.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-06 · Series-A-Formular des Beispiels mit Investoren und Liquidationsbedingungen.',
+              en: 'Figure EN-06 · Example Series A form with investors and liquidation terms.',
+            },
+            visible: {
+              de: 'Der Senioritätshinweis erklärt die Reihenfolge: höhere Zahlen werden zuerst bedient, gleiche Ränge pari passu. Erweiterte Felder modellieren Cap, Conversion Ratio, kumulative Dividende und Redemption-Floor.',
+              en: 'The seniority hint explains the order: higher numbers are served first and equal ranks pari passu. Advanced fields model the cap, conversion ratio, cumulative dividend and redemption floor.',
+            },
+            result: {
+              de: 'Eine neue chronologische Stufe mit berechnetem Preis, neuen Anteilen und lot-spezifischen Exit-Bedingungen entsteht.',
+              en: 'A new chronological stage is created with a calculated price, new shares and lot-specific exit terms.',
+            },
+            notes: {
+              de: [
+                'Pre-Money-Bewertung, Datum und positive Investments sind Pflicht.',
+                'Der Rang beginnt bei 1; höhere Zahlen haben Vorrang.',
+                'Namensgleiche Investoren werden in der Cap Table gebündelt, ihre unterschiedlichen Rundenbedingungen bleiben getrennt.',
+              ],
+              en: [
+                'Pre-money valuation, date and positive investments are required.',
+                'The rank starts at 1; higher numbers have priority.',
+                'Investors with identical names are bundled in the cap table, while their different round terms remain separate.',
+              ],
+            },
+          },
+          {
+            id: 'convertibles',
+            number: '07',
+            image: '07-convertible.png',
+            title: {
+              de: 'Wandeldarlehen erfassen',
+              en: 'Record convertible loans',
+            },
+            purpose: {
+              de: 'Ein Wandeldarlehen speichert Darlehensbetrag, einfache Verzinsung, Discount, Valuation Cap und Wandlungsbasis bis zu einer späteren Equity-Runde.',
+              en: 'A convertible loan stores principal, simple interest, discount, valuation cap and conversion basis until a later equity round.',
+            },
+            when: {
+              de: 'Verwende es für die Pre-Seed-Angel-Finanzierung des Beispiels, wenn noch kein unmittelbarer Anteilspreis festgelegt wird.',
+              en: 'Use it for the example pre-seed angel financing when no immediate share price is set.',
+            },
+            steps: {
+              de: [
+                'Öffne Neue Transaktion → Wandeldarlehen.',
+                'Trage Bezeichnung, Darlehensgeber, Betrag und Auszahlungstag ein.',
+                'Erfasse Zins, Discount und optionalen Valuation Cap.',
+                'Wähle Fully Diluted wandeln, wenn bestehende VSOP-Pools in die Wandlungsbasis gehören; sonst Nur Equity-Anteile.',
+                'Speichere das Darlehen und prüfe in der späteren Runde Wandlungspreis, Anspruch und neue Anteile.',
+              ],
+              en: [
+                'Open New transaction → Convertible loan.',
+                'Enter label, lender, amount and funding date.',
+                'Enter interest, discount and an optional valuation cap.',
+                'Choose Convert on a fully diluted basis when existing VSOP pools belong in the conversion basis; otherwise choose Equity shares only.',
+                'Save the loan and inspect conversion price, claim and new shares in the later round.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-07 · Pre-Seed-Wandeldarlehen des Beispiels mit Discount, Cap und Wandlungsbasis.',
+              en: 'Figure EN-07 · Example pre-seed convertible loan with discount, cap and conversion basis.',
+            },
+            visible: {
+              de: 'Die Wandlungsbasis ist als eigener Schalter sichtbar. Der Cap darf 0 sein; dann begrenzt er den Wandlungspreis nicht.',
+              en: 'The conversion basis is shown as a separate switch. The cap may be 0; in that case it does not limit the conversion price.',
+            },
+            result: {
+              de: 'Das Darlehen erscheint in der Finanzierungsübersicht und wandelt in der ersten passenden späteren Runde.',
+              en: 'The loan appears in the financing overview and converts in the first eligible later round.',
+            },
+            notes: {
+              de: [
+                'Die Verzinsung ist linear nach tatsächlichen Tagen geteilt durch 365, nicht Zinseszins.',
+                'Discount und Cap werden beide berechnet; der niedrigere Wandlungspreis wird verwendet.',
+              ],
+              en: [
+                'Interest is linear using actual days divided by 365, not compound interest.',
+                'Discount and cap are both calculated; the lower conversion price is used.',
+              ],
+            },
+          },
+          {
+            id: 'secondaries',
+            number: '08',
+            image: '08-secondary.png',
+            title: {
+              de: 'Secondary-Übertragungen modellieren',
+              en: 'Model secondary transfers',
+            },
+            purpose: {
+              de: 'Eine Secondary überträgt bestehende Anteile zwischen Verkäufer und Käufer, ohne neue Unternehmensanteile oder neues Kapital für das Unternehmen zu erzeugen.',
+              en: 'A secondary transfers existing shares from a seller to a buyer without creating new company shares or new capital for the company.',
+            },
+            when: {
+              de: 'Nutze sie, wenn zum Beispiel ein Gründer in oder nach einer Finanzierungsrunde einen Teil seiner Position verkauft.',
+              en: 'Use it when, for example, a founder sells part of their position during or after a financing round.',
+            },
+            steps: {
+              de: [
+                'Öffne Neue Transaktion → Secondary.',
+                'Trage Bezeichnung und Datum ein und wähle den Verkäufer.',
+                'Wähle die zu übertragende Anteilsklasse oder Automatisch.',
+                'Trage Käufer, Anteile und Preis je Anteil ein und speichere.',
+                'Prüfe Käufer und Verkäufer im neuen Entwicklungsstand sowie den Secondary-Erlös im Exit.',
+              ],
+              en: [
+                'Open New transaction → Secondary.',
+                'Enter a label and date, then choose the seller.',
+                'Choose the share class to transfer or Automatic.',
+                'Enter buyer, shares and price per share, then save.',
+                'Check buyer and seller in the new development stage and the secondary proceeds in the exit.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-08 · Secondary-Formular mit Verkäufer, Anteilsklasse, Käufer, Anteilen und Preis.',
+              en: 'Figure EN-08 · Secondary form with seller, share class, buyer, shares and price.',
+            },
+            visible: {
+              de: 'Die Anteilsklassenwahl bestimmt, aus welchen internen Lots die Anteile übertragen werden. Automatisch verwendet zunächst Common-Anteile und danach verfügbare Rundenlots.',
+              en: 'The share-class selection determines which internal lots supply the transferred shares. Automatic uses common shares first, followed by available round lots.',
+            },
+            result: {
+              de: 'Die Gesamtzahl der Unternehmensanteile bleibt gleich; Eigentum, Transaktionshistorie und Rendite-Cashflows werden aktualisiert.',
+              en: 'The total number of company shares stays the same; ownership, transaction history and return cash flows are updated.',
+            },
+            notes: {
+              de: [
+                'Verkäufer und Käufer müssen verschieden sein.',
+                'Der Verkäufer muss am Datum genügend Anteile der gewählten Klasse halten.',
+                'Eine ungültige abhängige Secondary kann das Löschen einer früheren Runde verhindern.',
+              ],
+              en: [
+                'Seller and buyer must be different.',
+                'The seller must hold enough shares of the selected class on the date.',
+                'An invalid dependent secondary may prevent deletion of an earlier round.',
+              ],
+            },
+          },
+          {
+            id: 'timeline',
+            number: '09',
+            image: '09-financing.png',
+            title: {
+              de: 'Finanzierungsverlauf prüfen',
+              en: 'Review the financing timeline',
+            },
+            purpose: {
+              de: 'Die Finanzierungsübersicht ordnet Equity-Runden, Wandeldarlehen und Secondaries chronologisch und fasst ihre wichtigsten Ergebnisse zusammen.',
+              en: 'The financing overview orders equity rounds, convertible loans and secondaries chronologically and summarises their key results.',
+            },
+            when: {
+              de: 'Nutze sie nach jeder Änderung als Plausibilitätsprüfung und um einen bestehenden Vorgang zum Bearbeiten zu öffnen.',
+              en: 'Use it after each change as a reasonableness check and to open an existing event for editing.',
+            },
+            steps: {
+              de: [
+                'Wähle links Finanzierungen.',
+                'Lies die Karten im Beispiel von links nach rechts: Pre-Seed-Darlehen, Bridge, Seed und Series A; vorhandene Secondaries stehen nach Datum dazwischen.',
+                'Prüfe auf Rundenkarten Preis je Anteil, Bewertung, Volumen, Verwässerung, Präferenz und Wandlungen.',
+                'Klicke den Stift zum Bearbeiten oder den Papierkorb zum Löschen.',
+              ],
+              en: [
+                'Choose Financing on the left.',
+                'Read the example cards from left to right: pre-seed loans, Bridge, Seed and Series A; any secondaries appear between them by date.',
+                'On round cards, check price per share, valuation, volume, dilution, preference and conversions.',
+                'Click the pencil to edit or the bin to delete.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-09 · Chronologischer Finanzierungsverlauf des Beispiels.',
+              en: 'Figure EN-09 · Chronological financing timeline of the example.',
+            },
+            visible: {
+              de: 'Farben und Typbezeichnungen unterscheiden die Instrumente. Runde und Wandlung zeigen die aus den Eingaben berechneten Größen direkt auf der Karte.',
+              en: 'Colours and type labels distinguish the instruments. Round and conversion cards show the values calculated from the inputs.',
+            },
+            result: {
+              de: 'Du erkennst Reihenfolge und Auswirkungen der Finanzierungsvorgänge und kannst jeden gespeicherten Vorgang gezielt öffnen.',
+              en: 'You can identify the order and effects of financing events and open any saved event directly.',
+            },
+            notes: {
+              de: ['Wandeldarlehen werden chronologisch dargestellt, erzeugen aber erst bei Wandlung neue Equity-Anteile.'],
+              en: ['Convertible loans appear chronologically but create equity shares only when they convert.'],
+            },
+          },
+          {
+            id: 'vsop-pools',
+            number: '10',
+            image: '10-vsop-pool.png',
+            title: {
+              de: 'VSOP-Pools und Kapazität verwalten',
+              en: 'Manage VSOP pools and capacity',
+            },
+            purpose: {
+              de: 'Ein VSOP-Pool reserviert virtuelle Anteile. Die Übersicht trennt Poolvolumen, Granted, Planned, gevestete, reservierte und freie Anteile.',
+              en: 'A VSOP pool reserves virtual shares. The overview separates pool capacity, granted, planned, vested, reserved and available shares.',
+            },
+            when: {
+              de: 'Lege zuerst einen Pool an, bevor du Personen virtuelle Ansprüche zuteilst. Verwende Pool-Auffrischungen in Runden für spätere Erweiterungen.',
+              en: 'Create a pool before granting virtual claims to people. Use pool refreshes in rounds for later increases.',
+            },
+            steps: {
+              de: [
+                'Klicke oben auf VSOP-Pool.',
+                'Trage einen eindeutigen Poolnamen und eine positive Anzahl Pool-Anteile ein.',
+                'Speichere und wähle links VSOP Pool.',
+                'Prüfe die Poolkarte: Volumen, Granted/Planned, Gevestet/Reserviert und frei.',
+                'Klicke eine Poolkarte zum Bearbeiten. Der Pool kann nicht unter seine belegte Kapazität verkleinert werden.',
+              ],
+              en: [
+                'Click VSOP pool at the top.',
+                'Enter a unique pool name and a positive number of pool shares.',
+                'Save and choose VSOP pool on the left.',
+                'Check the pool card: capacity, Granted/Planned, Vested/Reserved and available.',
+                'Click a pool card to edit it. The pool cannot be reduced below its reserved capacity.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-10 · VSOP-Bereich des Beispiels mit Poolkapazität und Zuteilungsübersicht.',
+              en: 'Figure EN-10 · Example VSOP area with pool capacity and grant overview.',
+            },
+            visible: {
+              de: 'Die Poolkarte erklärt, wie viel reserviert und noch verfügbar ist. Die Tabelle darunter ordnet die Ansprüche den einzelnen Personen zu.',
+              en: 'The pool card explains how much is reserved and still available. The table below assigns claims to individual people.',
+            },
+            result: {
+              de: 'Ein belastbarer virtueller Pool steht für Zuteilungen und Fully-Diluted-Berechnungen bereit.',
+              en: 'A defined virtual pool is available for grants and fully diluted calculations.',
+            },
+            notes: {
+              de: [
+                'Pool-Anteile sind virtuelle Anteile, keine echten Gesellschaftsanteile.',
+                'Geplante und freie Anteile erhalten im Exit keine Auszahlung.',
+              ],
+              en: [
+                'Pool shares are virtual shares, not actual company shares.',
+                'Planned and available shares receive no exit payout.',
+              ],
+            },
+          },
+          {
+            id: 'vsop-grants',
+            number: '11',
+            image: '11-vsop-grant.png',
+            title: {
+              de: 'VSOP-Zuteilungen, Vesting und Leaver',
+              en: 'VSOP grants, vesting and leavers',
+            },
+            purpose: {
+              de: 'Eine Zuteilung verbindet eine Person mit einem Pool und modelliert zeitabhängiges Vesting, Basispreis, Austritt, Verfall und Exit-Beschleunigung.',
+              en: 'A grant connects a person to a pool and models time-based vesting, base price, leaving, expiry and exit acceleration.',
+            },
+            when: {
+              de: 'Verwende sie für virtuelle Mitarbeiter- oder Advisor-Ansprüche, nicht für echte Equity-Anteile.',
+              en: 'Use it for virtual employee or adviser claims, not for actual equity shares.',
+            },
+            steps: {
+              de: [
+                'Klicke oben auf VSOP-Person und wähle den Pool.',
+                'Trage Name, Granted, optional Planned, Zusage- und Vestingbeginn ein.',
+                'Lege Vestingdauer, Cliff, monatliches, quartalsweises oder jährliches Intervall und eine mögliche Pause fest.',
+                'Trage den Basispreis (Strikepreis) und optional ein Ablaufdatum ein.',
+                'Bei Austritt wählst du Status, Austrittsdatum, Leaver-Kategorie und Retention. Für Beschleunigung wählst du Single oder Double Trigger und Prozentsatz.',
+                'Speichere und prüfe Vested, Auszahlbar, Reserviert und freien Pool.',
+              ],
+              en: [
+                'Click VSOP participant at the top and choose the pool.',
+                'Enter name, Granted, optional Planned, grant date and vesting start.',
+                'Set vesting period, cliff, monthly, quarterly or annual interval and any pause.',
+                'Enter the base price (strike price) and an optional expiry date.',
+                'For a leaver, choose status, leaving date, leaver category and retention. For acceleration, choose single or double trigger and a percentage.',
+                'Save and check Vested, Payable, Reserved and available pool.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-11 · VSOP-Zuteilungsformular mit Vesting-, Leaver- und Beschleunigungsfeldern.',
+              en: 'Figure EN-11 · VSOP grant form with vesting, leaver and acceleration fields.',
+            },
+            visible: {
+              de: 'Das Formular trennt Zuteilungsmenge, Zeitplan, wirtschaftlichen Basispreis und Sonderfälle. Bedingte Felder erscheinen passend zu Status und Trigger.',
+              en: 'The form separates grant amount, schedule, economic base price and special cases. Conditional fields appear for the selected status and trigger.',
+            },
+            result: {
+              de: 'Die Zuteilung wird zeitanteilig berechnet und fließt bei einem Exit nur mit auszahlbaren virtuellen Anteilen und positivem Spread ein.',
+              en: 'The grant is calculated over time and contributes to an exit only through payable virtual shares with a positive spread.',
+            },
+            notes: {
+              de: [
+                'Vor dem Cliff werden keine Anteile gevestet.',
+                'Standardmäßig bleiben bei Austritt 100 % der bis dahin gevesteten Ansprüche erhalten.',
+                'Double Trigger benötigt ein zweites Ereignisdatum; die Software ersetzt keine Vertrags-, Rechts- oder Steuerberatung.',
+              ],
+              en: [
+                'No shares vest before the cliff.',
+                'By default, 100% of claims vested by the leaving date are retained.',
+                'Double trigger requires a second-event date; the software does not replace contractual, legal or tax advice.',
+              ],
+            },
+          },
+          {
+            id: 'exit',
+            number: '12',
+            image: '12-exit.png',
+            title: {
+              de: 'Exit-Simulation und Waterfall',
+              en: 'Exit simulation and waterfall',
+            },
+            purpose: {
+              de: 'Die Exit-Simulation verteilt den Nettoerlös nach VSOP-Ansprüchen, lot-spezifischen Liquidationsbedingungen und verbleibender anteiliger Beteiligung.',
+              en: 'The exit simulation distributes net proceeds according to VSOP claims, lot-specific liquidation terms and remaining pro-rata ownership.',
+            },
+            when: {
+              de: 'Nutze sie für Szenarien, um im Beispiel zu sehen, wie Gründer, Angels, weitere Investoren und VSOP-Personen bei unterschiedlichen Verkaufspreisen abschneiden.',
+              en: 'Use it for scenarios to see how founders, angels, other investors and VSOP participants perform at different sale prices in the example.',
+            },
+            steps: {
+              de: [
+                'Wähle links Exit Simulation und stelle den gewünschten Entwicklungsstand ein.',
+                'Trage Unternehmensverkauf, Exit-Datum, Schulden und Transaktionskosten ein.',
+                'Lies Nettoerlös und die Summen für Gründer, Angels, Investoren, VSOP und Restpool.',
+                'Prüfe je Person Ownership, Auszahlung, investiertes Kapital, Multiple und – bei vollständigen Datumsangaben – IRR.',
+                'Ändere den Verkaufspreis, um Downside-, Base- und Upside-Szenarien zu vergleichen.',
+              ],
+              en: [
+                'Choose Exit simulation on the left and set the required development stage.',
+                'Enter company sale, exit date, debt and transaction costs.',
+                'Read net proceeds and totals for founders, angels, investors, VSOP and remaining pool.',
+                'For each person, check ownership, payout, invested capital, multiple and, when all dates are available, IRR.',
+                'Change the sale price to compare downside, base and upside scenarios.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-12 · Exit des Beispiels mit Eingaben, Gruppen-Summen und Auszahlungstabelle.',
+              en: 'Figure EN-12 · Example exit with inputs, group totals and payout table.',
+            },
+            visible: {
+              de: 'Oben stehen die vier Annahmen und der verteilbare Nettoerlös. Darunter zeigt die Tabelle getrennte Gruppen sowie LiqPref- und Secondary-Hinweise.',
+              en: 'The four assumptions and distributable net proceeds appear at the top. The table below separates groups and shows LiqPref and secondary notices.',
+            },
+            result: {
+              de: 'Der Nettoerlös ist vollständig nach den modellierten Bedingungen verteilt; Renditekennzahlen zeigen die wirtschaftliche Wirkung.',
+              en: 'Net proceeds are fully distributed under the modelled terms, and return metrics show the economic effect.',
+            },
+            notes: {
+              de: [
+                'Nettoerlös = Verkaufspreis minus Schulden minus Transaktionskosten.',
+                'VSOP wird über den positiven Spread oberhalb des Basispreises berechnet und vor dem Equity-Waterfall abgezogen.',
+                'Höhere Senioritätsränge werden zuerst bedient; gleiche Ränge anteilig. Nicht partizipierende Positionen wählen rechnerisch den besseren Anspruch oder die Wandlung.',
+                'Die Simulation ist vereinfacht, ohne Steuern und keine Rechts- oder Steuerberatung.',
+              ],
+              en: [
+                'Net proceeds equal sale price minus debt minus transaction costs.',
+                'VSOP is calculated from the positive spread above the base price and deducted before the equity waterfall.',
+                'Higher seniority ranks are served first; equal ranks share pro rata. Non-participating positions mathematically choose the better preference claim or conversion.',
+                'The simulation is simplified, excludes taxes and is not legal or tax advice.',
+              ],
+            },
+          },
+          {
+            id: 'data',
+            number: '13',
+            image: '13-data-safety.png',
+            title: {
+              de: 'Speichern, CSV, Rückgängig und Zurücksetzen',
+              en: 'Save, CSV, undo and reset',
+            },
+            purpose: {
+              de: 'Die Datenwerkzeuge sichern, übertragen und korrigieren den Workspace. Änderungen werden automatisch im Browser gespeichert.',
+              en: 'The data tools back up, transfer and correct the workspace. Changes are saved automatically in the browser.',
+            },
+            when: {
+              de: 'Exportiere vor größeren Änderungen oder bevor du Daten in einem anderen Browser verwenden möchtest. Nutze Rückgängig für die letzten Bearbeitungsschritte.',
+              en: 'Export before major changes or when you want to use the data in another browser. Use Undo for recent editing steps.',
+            },
+            steps: {
+              de: [
+                'Klicke CSV exportieren, um den vollständigen Workspace im Schema Version 3 herunterzuladen.',
+                'Klicke CSV laden und wähle eine zuvor exportierte Workspace-Datei. Erfolgreiche oder fehlerhafte Imports erscheinen im Statusfeld.',
+                'Nutze Rückgängig und Wiederholen für bis zu 30 gespeicherte Zustandsänderungen; Strg/Cmd+Z und Strg/Cmd+Y funktionieren außerhalb von Eingabefeldern.',
+                'Klicke Zurücksetzen. Wähle Speichern und zurücksetzen für eine letzte CSV-Sicherung oder Ohne Speichern zurücksetzen.',
+                'Lade das Beispiel erneut, um zum Ausgangspunkt dieser Anleitung zurückzukehren.',
+              ],
+              en: [
+                'Click Export CSV to download the complete workspace using schema version 3.',
+                'Click Import CSV and choose a previously exported workspace file. Successful or failed imports appear in the status area.',
+                'Use Undo and Redo for up to 30 saved state changes; Ctrl/Cmd+Z and Ctrl/Cmd+Y work outside input fields.',
+                'Click Reset. Choose Save and reset for one final CSV backup or Reset without saving.',
+                'Load the example again to return to this guide’s starting point.',
+              ],
+            },
+            caption: {
+              de: 'Abbildung DE-13 · Datenwerkzeuge, Speicherstatus und Sicherheitsabfrage vor dem Zurücksetzen.',
+              en: 'Figure EN-13 · Data tools, save status and safety prompt before reset.',
+            },
+            visible: {
+              de: 'Die linke Seitenleiste bündelt Versionsverlauf, Workspace-CSV, Beispiel und Reset. Der Dialog verhindert ein versehentliches Zurücksetzen ohne Sicherungsentscheidung.',
+              en: 'The left sidebar groups history, workspace CSV, example and reset. The dialog prevents accidental reset without a backup decision.',
+            },
+            result: {
+              de: 'Der Workspace ist gesichert, wiederhergestellt oder bewusst auf einen einzelnen Founder mit 100 % zurückgesetzt.',
+              en: 'The workspace is backed up, restored or deliberately reset to a single founder with 100%.',
+            },
+            notes: {
+              de: [
+                'Auto-Speicherung nutzt localStorage des aktuellen Browser-Ursprungs; sie ist kein Cloud-Backup.',
+                'Der Import verlangt record_type, eindeutige IDs und gültige Verweise. Verwende möglichst eine von dieser Software exportierte CSV.',
+                'Ein Ansichts-Export aus der Cap Table kann nicht als vollständiger Workspace importiert werden.',
+              ],
+              en: [
+                'Auto-save uses localStorage for the current browser origin; it is not a cloud backup.',
+                'Import requires record_type, unique IDs and valid references. Prefer a CSV exported by this software.',
+                'A cap-table view export cannot be imported as a complete workspace.',
+              ],
+            },
+          },
+        ];
+
+        const guideTerms = [
+          {
+            names: { de: 'Cap Table / cap table', en: 'Cap table / Cap Table' },
+            definition: {
+              de: 'Tabelle der Beteiligten, ihrer zugerechneten Anteile, Beteiligungsquote und ihres modellierten Werts.',
+              en: 'Table of stakeholders, their attributed shares, ownership percentage and modelled value.',
+            },
+            purpose: {
+              de: 'Macht Eigentum und Verwässerung zu jedem Finanzierungsstand sichtbar.',
+              en: 'Makes ownership and dilution visible at every financing stage.',
+            },
+            implementation: {
+              de: 'snapshots() erzeugt chronologische Stände; aggregateLots() bündelt Lots zu Beteiligten; renderOverview() und renderOwnership() geben Tabelle und Diagramm aus.',
+              en: 'snapshots() creates chronological stages; aggregateLots() bundles lots into stakeholders; renderOverview() and renderOwnership() output the table and chart.',
+            },
+            component: 'state.holders → snapshots() → aggregateLots() → #erm-cap-body',
+            sections: '03, 04',
+          },
+          {
+            names: { de: 'Beteiligte / stakeholder', en: 'Stakeholder / Beteiligte' },
+            definition: {
+              de: 'Person oder Organisation mit echten Anteilen am Gründungsstand oder aus einer Transaktion.',
+              en: 'Person or organisation with actual shares at formation or from a transaction.',
+            },
+            purpose: {
+              de: 'Identifiziert Eigentum, Gruppierung und gegebenenfalls investiertes Kapital.',
+              en: 'Identifies ownership, grouping and, where recorded, invested capital.',
+            },
+            implementation: {
+              de: 'Gründungsbeteiligte stehen in state.holders; Runden und Secondaries erzeugen zusätzliche interne Lots. Nutzertexte werden mit esc() maskiert.',
+              en: 'Formation stakeholders are stored in state.holders; rounds and secondaries create additional internal lots. User text is escaped with esc().',
+            },
+            component: 'state.holders, round investors, secondary buyer lots, esc()',
+            sections: '03, 04, 08',
+          },
+          {
+            names: { de: 'Anteil / share', en: 'Share / Anteil' },
+            definition: {
+              de: 'Recheneinheit für Eigentum; im VSOP eine virtuelle Anspruchseinheit.',
+              en: 'Unit used to calculate ownership; in VSOP, a virtual claim unit.',
+            },
+            purpose: {
+              de: 'Bildet Quoten, neue Rundenanteile, Transfers und Auszahlungen ab.',
+              en: 'Represents percentages, new round shares, transfers and payouts.',
+            },
+            implementation: {
+              de: 'Echte und virtuelle Mengen werden numerisch gespeichert. Rundenanteile sind Investment geteilt durch Preis je Anteil; Secondaries verschieben Lots ohne die Gesamtmenge zu erhöhen.',
+              en: 'Actual and virtual quantities are stored as numbers. Round shares equal investment divided by price per share; secondaries move lots without increasing the total.',
+            },
+            component: 'shares fields in holders, round allocations, lots and VSOP grants',
+            sections: '03, 04, 06, 08, 10',
+          },
+          {
+            names: { de: 'Fully Diluted (FD) / fully diluted', en: 'Fully diluted (FD) / Fully Diluted' },
+            definition: {
+              de: 'Darstellung unter Einbezug echter Anteile, virtueller Pool-Anteile und Conversion Ratios.',
+              en: 'View including actual shares, virtual pool shares and conversion ratios.',
+            },
+            purpose: {
+              de: 'Zeigt potenzielle Verwässerung und liefert je nach Einstellung die Wandlungsbasis.',
+              en: 'Shows potential dilution and, depending on the setting, supplies the conversion basis.',
+            },
+            implementation: {
+              de: 'aggregateLots() multipliziert Lot-Anteile mit conversionRatio; Pool-Lots sind mit isVirtual markiert. Die Wandlung kann fullyDilutedTotal oder equityTotal verwenden.',
+              en: 'aggregateLots() multiplies lot shares by conversionRatio; pool lots are marked isVirtual. Conversion can use fullyDilutedTotal or equityTotal.',
+            },
+            component: 'aggregateLots(), lotEquivalentShares(), fullyDilutedConversion',
+            sections: '03, 07, 10',
+          },
+          {
+            names: { de: 'Ownership / Beteiligungsquote', en: 'Ownership / Beteiligungsquote' },
+            definition: {
+              de: 'Prozentualer Anteil einer Position an der ausgewählten Fully-Diluted-Gesamtmenge.',
+              en: 'Percentage of a position in the selected fully diluted total.',
+            },
+            purpose: {
+              de: 'Vergleicht Beteiligte unabhängig von der absoluten Anzahl Anteile.',
+              en: 'Compares stakeholders independently of absolute share counts.',
+            },
+            implementation: {
+              de: 'Die Render-Funktionen teilen die zugerechneten Anteile durch die Summe des ausgewählten Snapshots.',
+              en: 'Render functions divide attributed shares by the total of the selected snapshot.',
+            },
+            component: 'renderOverview(), renderOwnership(), renderExit()',
+            sections: '03, 12',
+          },
+          {
+            names: { de: 'Workspace / Arbeitsstand', en: 'Workspace / Arbeitsstand' },
+            definition: {
+              de: 'Gesamtheit aus Beteiligten, Runden, Darlehen, Secondaries, VSOP und Exit-Annahmen.',
+              en: 'Complete set of stakeholders, rounds, loans, secondaries, VSOP and exit assumptions.',
+            },
+            purpose: {
+              de: 'Hält alle Eingaben für eine zusammenhängende Modellrechnung.',
+              en: 'Holds all inputs for one connected model.',
+            },
+            implementation: {
+              de: 'Das state-Objekt enthält holders, rounds, convertibles, secondaries, vsopParticipants und exit. save() serialisiert es in localStorage.',
+              en: 'The state object contains holders, rounds, convertibles, secondaries, vsopParticipants and exit. save() serialises it to localStorage.',
+            },
+            component: 'state, save(), loadState(), localStorage key ease-cap-table-manager-v1',
+            sections: '02, 13',
+          },
+          {
+            names: { de: 'Beispiel / example', en: 'Example / Beispiel' },
+            definition: {
+              de: 'Öffentliche CSV-Datei mit einem vollständigen, realistischen Übungsfall.',
+              en: 'Public CSV file containing a complete, realistic practice case.',
+            },
+            purpose: {
+              de: 'Liefert ohne manuelle Eingabe denselben Ausgangspunkt für die Anleitung.',
+              en: 'Provides the same starting point for the guide without manual data entry.',
+            },
+            implementation: {
+              de: 'importExampleCsv() lädt exampleCsvUrl mit fetch und cache: no-store, übergibt den Text an importCsv() und setzt einen Status. Die CSP erlaubt nur raw.githubusercontent.com als externes Datenziel.',
+              en: 'importExampleCsv() fetches exampleCsvUrl with cache: no-store, passes the text to importCsv() and sets a status. The CSP permits only raw.githubusercontent.com as an external data endpoint.',
+            },
+            component: 'exampleCsvUrl, importExampleCsv(), fetch(), Content-Security-Policy connect-src',
+            sections: '02, 13',
+          },
+          {
+            names: { de: 'CSV und Schema Version 3 / CSV and schema version 3', en: 'CSV and schema version 3 / CSV und Schema Version 3' },
+            definition: {
+              de: 'Textformat mit Zeilen für verschiedene Datensatztypen und einer festen Spaltenliste.',
+              en: 'Text format with rows for different record types and a fixed list of columns.',
+            },
+            purpose: {
+              de: 'Sichert und überträgt einen vollständigen Workspace ohne Server.',
+              en: 'Backs up and transfers a complete workspace without a server.',
+            },
+            implementation: {
+              de: 'exportCsv() schreibt schema_version 3 und record_type; parseCsv() unterstützt Semikolon oder Komma und Anführungszeichen; importCsv() validiert Typen, IDs, Verweise und abhängige Secondaries.',
+              en: 'exportCsv() writes schema_version 3 and record_type; parseCsv() supports semicolon or comma and quoted cells; importCsv() validates types, IDs, references and dependent secondaries.',
+            },
+            component: 'csvHeaders, exportCsv(), parseCsv(), importCsv(), downloadCsv()',
+            sections: '02, 03, 13',
+          },
+          {
+            names: { de: 'Ansicht exportieren / export view', en: 'Export view / Ansicht exportieren' },
+            definition: {
+              de: 'Berichts-CSV des gerade ausgewählten und gegebenenfalls gefilterten Cap-Table-Stands.',
+              en: 'Report CSV for the currently selected and, if applicable, filtered cap-table stage.',
+            },
+            purpose: {
+              de: 'Teilt eine konkrete Beteiligungsansicht, ohne den vollständigen Workspace zu exportieren.',
+              en: 'Shares a specific ownership view without exporting the complete workspace.',
+            },
+            implementation: {
+              de: 'exportCurrentCapTable() verwendet den aktuellen Snapshot und capQuery, schreibt eine flache Berichtstabelle und ruft downloadCsv() auf. Diese Datei enthält kein record_type und ist deshalb kein Workspace-Import.',
+              en: 'exportCurrentCapTable() uses the current snapshot and capQuery, writes a flat report table and calls downloadCsv(). This file has no record_type and is therefore not a workspace import.',
+            },
+            component: 'exportCurrentCapTable(), capQuery, snapshots(), downloadCsv()',
+            sections: '03, 13',
+          },
+          {
+            names: { de: 'Entwicklungsstand / development stage', en: 'Development stage / Entwicklungsstand' },
+            definition: {
+              de: 'Historischer Cap-Table-Stand nach Gründung oder einer chronologischen Equity-/Secondary-Transaktion.',
+              en: 'Historical cap-table stage after formation or a chronological equity/secondary transaction.',
+            },
+            purpose: {
+              de: 'Erlaubt den Vergleich von Eigentum und Verwässerung über die Zeit.',
+              en: 'Allows ownership and dilution to be compared over time.',
+            },
+            implementation: {
+              de: 'snapshots() sortiert Runden und Secondaries nach Datum und erzeugt je Ereignis einen Stand. stage wählt den angezeigten Index; Wandeldarlehen werden bei passenden Runden verarbeitet.',
+              en: 'snapshots() sorts rounds and secondaries by date and creates a stage for each event. stage selects the displayed index; convertible loans are processed at eligible rounds.',
+            },
+            component: 'snapshots(), chronologicalTransactions(), stage, #erm-tabs',
+            sections: '01, 03, 09, 12',
+          },
+          {
+            names: { de: 'Eigenkapitalrunde / equity round', en: 'Equity round / Eigenkapitalrunde' },
+            definition: {
+              de: 'Finanzierung, bei der das Unternehmen neue Anteile gegen Investments ausgibt.',
+              en: 'Financing in which the company issues new shares for investments.',
+            },
+            purpose: {
+              de: 'Modelliert Bridge, Seed, Series A und ähnliche Primärfinanzierungen.',
+              en: 'Models Bridge, Seed, Series A and similar primary financings.',
+            },
+            implementation: {
+              de: 'Ein Eintrag in state.rounds enthält Bewertung, Datum, Anteilsklasse, Investoren, Präferenz- und Poolfelder. snapshots() berechnet Preis und Allokationen.',
+              en: 'An entry in state.rounds contains valuation, date, share class, investors, preference and pool fields. snapshots() calculates price and allocations.',
+            },
+            component: 'state.rounds, normalizeRound(), openRound(), snapshots()',
+            sections: '05, 06, 09',
+          },
+          {
+            names: { de: 'Pre-Money / Post-Money', en: 'Pre-money / post-money' },
+            definition: {
+              de: 'Pre-Money ist die Bewertung vor dem neuen Investment; Post-Money ist Pre-Money plus Rundeninvestment.',
+              en: 'Pre-money is the valuation before the new investment; post-money is pre-money plus the round investment.',
+            },
+            purpose: {
+              de: 'Bestimmt den Anteilspreis und die neue Bewertung nach der Runde.',
+              en: 'Determines the share price and new valuation after the round.',
+            },
+            implementation: {
+              de: 'snapshots() teilt preMoney durch die aktuelle Fully-Diluted-Gesamtmenge; valuation wird auf preMoney plus roundInvestment(r) gesetzt.',
+              en: 'snapshots() divides preMoney by the current fully diluted total; valuation is set to preMoney plus roundInvestment(r).',
+            },
+            component: 'round.preMoney, roundInvestment(), snapshots().price and .valuation',
+            sections: '01, 06, 09',
+          },
+          {
+            names: { de: 'Preis je Anteil / price per share', en: 'Price per share / Preis je Anteil' },
+            definition: {
+              de: 'Preis einer neuen Runden- oder übertragenen Secondary-Einheit.',
+              en: 'Price of one new round unit or transferred secondary unit.',
+            },
+            purpose: {
+              de: 'Berechnet neue Anteile oder den Erlös einer Secondary.',
+              en: 'Calculates new shares or the proceeds of a secondary.',
+            },
+            implementation: {
+              de: 'Bei Runden ist price = preMoney / fullyDilutedTotal und shares = investment / price. Bei Secondaries wird der Preis nur für den Käufer-/Verkäufer-Cashflow verwendet.',
+              en: 'For rounds, price = preMoney / fullyDilutedTotal and shares = investment / price. For secondaries, price is used only for buyer/seller cash flow.',
+            },
+            component: 'snapshots().price, secondary.pricePerShare',
+            sections: '06, 08, 09',
+          },
+          {
+            names: { de: 'Lot und Namensbündelung / lot and name bundling', en: 'Lot and name bundling / Lot und Namensbündelung' },
+            definition: {
+              de: 'Ein Lot ist ein internes Anteilspaket mit eigenen Bedingungen; namensgleiche Pakete erscheinen als eine Beteiligtenzeile.',
+              en: 'A lot is an internal block of shares with its own terms; blocks with matching names appear as one stakeholder row.',
+            },
+            purpose: {
+              de: 'Hält unterschiedliche Exit-Bedingungen korrekt, ohne denselben Investor mehrfach in der Cap Table zu zeigen.',
+              en: 'Keeps different exit terms correct without showing the same investor multiple times in the cap table.',
+            },
+            implementation: {
+              de: 'holderKey() normalisiert Namen; bestehende holderId-Werte werden wiederverwendet. aggregateLots() summiert zur Anzeige, calculateWaterfall() rechnet weiterhin je Lot.',
+              en: 'holderKey() normalises names; existing holderId values are reused. aggregateLots() sums for display, while calculateWaterfall() continues to calculate per lot.',
+            },
+            component: 'holderKey(), snapshots() lots, aggregateLots(), calculateWaterfall()',
+            sections: '03, 06, 08, 12',
+          },
+          {
+            names: { de: 'Anteilsklasse, Common und Preferred / share class, common and preferred', en: 'Share class, common and preferred / Anteilsklasse, Common und Preferred' },
+            definition: {
+              de: 'Bezeichnung für Anteile mit gemeinsamen wirtschaftlichen Rechten; Common hat im Modell keine LiqPref, Preferred kann Präferenzbedingungen tragen.',
+              en: 'Label for shares with common economic rights; common has no LiqPref in the model, while preferred may carry preference terms.',
+            },
+            purpose: {
+              de: 'Ordnet Exit-Bedingungen und gezielte Secondary-Übertragungen den richtigen Anteilen zu.',
+              en: 'Assigns exit terms and targeted secondary transfers to the correct shares.',
+            },
+            implementation: {
+              de: 'Jedes Rundenlot speichert sourceRoundId, className und Präferenzfelder. Secondaries filtern Lots nach sourceRoundId oder Common.',
+              en: 'Each round lot stores sourceRoundId, className and preference fields. Secondaries filter lots by sourceRoundId or common.',
+            },
+            component: 'lot.sourceRoundId, lot.className, secondary.sourceRoundId',
+            sections: '06, 08',
+          },
+          {
+            names: { de: 'Verwässerung / dilution', en: 'Dilution / Verwässerung' },
+            definition: {
+              de: 'Verringerung einer bestehenden Beteiligungsquote durch zusätzliche Anteile.',
+              en: 'Reduction in an existing ownership percentage caused by additional shares.',
+            },
+            purpose: {
+              de: 'Zeigt die Wirkung neuer Runden, Wandlungen und Pool-Auffrischungen.',
+              en: 'Shows the effect of new rounds, conversions and pool refreshes.',
+            },
+            implementation: {
+              de: 'Rundenkarten vergleichen die Fully-Diluted-Gesamtmenge vor und nach der Transaktion; Eigentumsquoten werden aus dem jeweiligen Snapshot neu berechnet.',
+              en: 'Round cards compare the fully diluted total before and after the transaction; ownership percentages are recalculated from each snapshot.',
+            },
+            component: 'snapshots(), renderFinancing(), renderOverview()',
+            sections: '03, 06, 09',
+          },
+          {
+            names: { de: 'Liquidationspräferenz (LiqPref) / liquidation preference', en: 'Liquidation preference (LiqPref) / Liquidationspräferenz' },
+            definition: {
+              de: 'Vertraglicher Mindestanspruch bestimmter Rundenlots vor der verbleibenden anteiligen Verteilung.',
+              en: 'Contractual minimum claim for certain round lots before the remaining pro-rata distribution.',
+            },
+            purpose: {
+              de: 'Modelliert den Vorrang von Preferred-Investoren bei einem Exit.',
+              en: 'Models the priority of preferred investors at exit.',
+            },
+            implementation: {
+              de: 'preferenceClaimAtExit() berechnet Multiple, kumulative Dividende und optional Redemption-Floor je Lot; waterfallForElections() bedient die Ansprüche nach Rang.',
+              en: 'preferenceClaimAtExit() calculates the multiple, cumulative dividend and optional redemption floor per lot; waterfallForElections() serves claims by rank.',
+            },
+            component: 'preferenceClaimAtExit(), waterfallForElections(), lot.preferenceType',
+            sections: '06, 09, 12',
+          },
+          {
+            names: { de: 'Nicht partizipierend / non-participating', en: 'Non-participating / nicht partizipierend' },
+            definition: {
+              de: 'Die Position erhält entweder ihren Präferenzanspruch oder wandelt wirtschaftlich in die anteilige Verteilung.',
+              en: 'The position receives either its preference claim or economically converts into the pro-rata distribution.',
+            },
+            purpose: {
+              de: 'Verhindert eine doppelte Teilnahme an Präferenz und Restverteilung.',
+              en: 'Prevents double participation in both preference and residual distribution.',
+            },
+            implementation: {
+              de: 'calculateWaterfall() testet Lot für Lot alternative Elections und behält Änderungen, die die jeweilige Auszahlung verbessern.',
+              en: 'calculateWaterfall() tests alternative elections lot by lot and keeps changes that improve that lot’s payout.',
+            },
+            component: 'calculateWaterfall(), elected Set',
+            sections: '06, 12',
+          },
+          {
+            names: { de: 'Partizipierend / participating', en: 'Participating / partizipierend' },
+            definition: {
+              de: 'Die Position erhält zuerst Präferenz und nimmt danach grundsätzlich an der Restverteilung teil.',
+              en: 'The position first receives its preference and then generally participates in the residual distribution.',
+            },
+            purpose: {
+              de: 'Modelliert eine weitergehende Beteiligung, optional begrenzt durch ein Cap.',
+              en: 'Models broader participation, optionally limited by a cap.',
+            },
+            implementation: {
+              de: 'waterfallForElections() addiert preferencePaid und residualPaid. Eine positive participationCapMultiple begrenzt die Gesamtauszahlung; calculateWaterfall() prüft gegebenenfalls die wirtschaftliche Wandlung.',
+              en: 'waterfallForElections() adds preferencePaid and residualPaid. A positive participationCapMultiple limits total payout; calculateWaterfall() checks economic conversion where applicable.',
+            },
+            component: 'waterfallForElections(), participationCapMultiple, convertedParticipating Set',
+            sections: '06, 12',
+          },
+          {
+            names: { de: 'Senioritätsrang und pari passu / seniority rank and pari passu', en: 'Seniority rank and pari passu / Senioritätsrang und pari passu' },
+            definition: {
+              de: 'Rangfolge der Präferenzansprüche; pari passu bedeutet anteilige Gleichbehandlung im selben Rang.',
+              en: 'Ordering of preference claims; pari passu means proportional equal treatment within the same rank.',
+            },
+            purpose: {
+              de: 'Bestimmt, welche Präferenzschicht bei knappem Erlös zuerst bezahlt wird.',
+              en: 'Determines which preference layer is paid first when proceeds are limited.',
+            },
+            implementation: {
+              de: 'Ränge werden auf ganze Zahlen ab 1 normalisiert und absteigend sortiert. Reicht der Erlös in einem Rang nicht, skaliert waterfallForElections() alle Ansprüche dieses Rangs proportional.',
+              en: 'Ranks are normalised to integers starting at 1 and sorted descending. If proceeds are insufficient within a rank, waterfallForElections() scales all claims in that rank proportionally.',
+            },
+            component: 'liquidationSeniority, normalizeRound(), waterfallForElections()',
+            sections: '06, 12',
+          },
+          {
+            names: { de: 'Participation Cap / Beteiligungsobergrenze', en: 'Participation cap / Beteiligungsobergrenze' },
+            definition: {
+              de: 'Maximales Vielfaches der ursprünglichen Präferenzbasis für eine partizipierende Position; 0 bedeutet unbegrenzt.',
+              en: 'Maximum multiple of the original preference base for a participating position; 0 means unlimited.',
+            },
+            purpose: {
+              de: 'Begrenzt Präferenz plus Restbeteiligung.',
+              en: 'Limits preference plus residual participation.',
+            },
+            implementation: {
+              de: 'waterfallForElections() berechnet capTotal aus preferenceBasePerShare, Anteilen und participationCapMultiple und entfernt ausgeschöpfte Lots iterativ aus der Restverteilung.',
+              en: 'waterfallForElections() calculates capTotal from preferenceBasePerShare, shares and participationCapMultiple, and iteratively removes exhausted lots from the residual distribution.',
+            },
+            component: 'participationCapMultiple, waterfallForElections() residual loop',
+            sections: '06, 12',
+          },
+          {
+            names: { de: 'Conversion Ratio / Wandlungsverhältnis', en: 'Conversion ratio / Wandlungsverhältnis' },
+            definition: {
+              de: 'Faktor, mit dem rechtliche Anteile in wirtschaftlich äquivalente Common-Anteile umgerechnet werden.',
+              en: 'Factor converting legal shares into economically equivalent common shares.',
+            },
+            purpose: {
+              de: 'Modelliert abweichende As-converted-Beteiligung einer Anteilsklasse.',
+              en: 'Models a share class with a different as-converted participation.',
+            },
+            implementation: {
+              de: 'lotEquivalentShares() und aggregateLots() multiplizieren legalShares mit conversionRatio; der Wert wird mindestens auf 0,0001 normalisiert.',
+              en: 'lotEquivalentShares() and aggregateLots() multiply legalShares by conversionRatio; the value is normalised to at least 0.0001.',
+            },
+            component: 'lot.conversionRatio, lotEquivalentShares(), aggregateLots()',
+            sections: '03, 06, 12',
+          },
+          {
+            names: { de: 'Kumulative Dividende / cumulative dividend', en: 'Cumulative dividend / kumulative Dividende' },
+            definition: {
+              de: 'Zeitanteiliger zusätzlicher Präferenzanspruch auf die ursprüngliche Basis.',
+              en: 'Time-based additional preference claim on the original base.',
+            },
+            purpose: {
+              de: 'Erhöht den Präferenzanspruch zwischen Closing und Exit.',
+              en: 'Increases the preference claim between closing and exit.',
+            },
+            implementation: {
+              de: 'preferenceClaimAtExit() verwendet den hinterlegten Jahressatz und tatsächliche Tage geteilt durch 365 ab dividendStartDate.',
+              en: 'preferenceClaimAtExit() uses the stored annual rate and actual days divided by 365 from dividendStartDate.',
+            },
+            component: 'cumulativeDividendRate, dividendStartDate, preferenceClaimAtExit()',
+            sections: '06, 12',
+          },
+          {
+            names: { de: 'Redemption-Floor / redemption floor', en: 'Redemption floor / Redemption-Floor' },
+            definition: {
+              de: 'Alternativer Mindestanspruch ab einem festgelegten Stichtag.',
+              en: 'Alternative minimum claim from a specified date.',
+            },
+            purpose: {
+              de: 'Modelliert einen Rückzahlungsbetrag, der die sonstige Präferenzbasis übersteigen kann.',
+              en: 'Models a redemption amount that may exceed the otherwise applicable preference base.',
+            },
+            implementation: {
+              de: 'Ist redemptionEnabled aktiv und das Exit-Datum am oder nach redemptionDate, verwendet preferenceClaimAtExit() das Maximum aus LiqPref- und Redemption-Betrag, jeweils plus kumulativer Dividende.',
+              en: 'When redemptionEnabled is active and the exit date is on or after redemptionDate, preferenceClaimAtExit() uses the maximum of the LiqPref and redemption amounts, each plus cumulative dividend.',
+            },
+            component: 'redemptionEnabled, redemptionDate, redemptionMultiple, preferenceClaimAtExit()',
+            sections: '06, 12',
+          },
+          {
+            names: { de: 'Wandeldarlehen / convertible loan', en: 'Convertible loan / Wandeldarlehen' },
+            definition: {
+              de: 'Darlehen, dessen Anspruch bei einer späteren Runde in Anteile umgerechnet wird.',
+              en: 'Loan whose claim converts into shares in a later round.',
+            },
+            purpose: {
+              de: 'Ermöglicht eine frühe Finanzierung ohne sofort festgelegten Anteilspreis.',
+              en: 'Enables early financing without setting an immediate share price.',
+            },
+            implementation: {
+              de: 'state.convertibles speichert principal, date, interest, discount, valuationCap und fullyDilutedConversion. snapshots() wandelt jedes noch nicht gewandelte, ältere Darlehen in der späteren Runde.',
+              en: 'state.convertibles stores principal, date, interest, discount, valuationCap and fullyDilutedConversion. snapshots() converts each unconverted earlier loan in the later round.',
+            },
+            component: 'state.convertibles, loanClaim(), snapshots() conversion loop',
+            sections: '05, 07, 09',
+          },
+          {
+            names: { de: 'Einfache Verzinsung / simple interest', en: 'Simple interest / einfache Verzinsung' },
+            definition: {
+              de: 'Lineare Verzinsung des ursprünglichen Darlehensbetrags ohne Zinseszins.',
+              en: 'Linear interest on the original principal without compounding.',
+            },
+            purpose: {
+              de: 'Erhöht den in Anteile wandelnden Darlehensanspruch.',
+              en: 'Increases the loan claim that converts into shares.',
+            },
+            implementation: {
+              de: 'loanClaim() berechnet principal × (1 + Zinssatz × tatsächliche Tage / 365).',
+              en: 'loanClaim() calculates principal × (1 + interest rate × actual days / 365).',
+            },
+            component: 'loanClaim()',
+            sections: '07',
+          },
+          {
+            names: { de: 'Discount und Valuation Cap / discount and valuation cap', en: 'Discount and valuation cap / Discount und Valuation Cap' },
+            definition: {
+              de: 'Zwei Schutzmechanismen, die den Wandlungspreis gegenüber der späteren Runde reduzieren können.',
+              en: 'Two protections that can reduce the conversion price compared with the later round.',
+            },
+            purpose: {
+              de: 'Belohnt frühes Finanzierungsrisiko mit potenziell mehr Anteilen.',
+              en: 'Rewards early financing risk with potentially more shares.',
+            },
+            implementation: {
+              de: 'snapshots() berechnet discountPrice und capPrice und verwendet Math.min. Ein Valuation Cap von 0 wird als unendlich und damit nicht begrenzend behandelt.',
+              en: 'snapshots() calculates discountPrice and capPrice and uses Math.min. A valuation cap of 0 is treated as infinity and therefore does not limit the price.',
+            },
+            component: 'convertible.discount, convertible.valuationCap, snapshots()',
+            sections: '07, 09',
+          },
+          {
+            names: { de: 'Wandlungsbasis / conversion basis', en: 'Conversion basis / Wandlungsbasis' },
+            definition: {
+              de: 'Gesamtmenge, durch die die Bewertungsgröße zur Ermittlung des Wandlungspreises geteilt wird.',
+              en: 'Total quantity by which the valuation measure is divided to determine the conversion price.',
+            },
+            purpose: {
+              de: 'Legt fest, ob virtuelle Pool-Anteile die Wandlung verwässern.',
+              en: 'Determines whether virtual pool shares dilute the conversion.',
+            },
+            implementation: {
+              de: 'fullyDilutedConversion wählt in snapshots() zwischen fullyDilutedTotal und equityTotal.',
+              en: 'fullyDilutedConversion selects between fullyDilutedTotal and equityTotal in snapshots().',
+            },
+            component: 'convertible.fullyDilutedConversion, snapshots()',
+            sections: '07',
+          },
+          {
+            names: { de: 'Secondary / Sekundärtransaktion', en: 'Secondary / Sekundärtransaktion' },
+            definition: {
+              de: 'Kauf und Verkauf bereits bestehender Anteile zwischen zwei Parteien.',
+              en: 'Purchase and sale of existing shares between two parties.',
+            },
+            purpose: {
+              de: 'Ändert Eigentum ohne Kapitalerhöhung und erfasst realisierte Erlöse für Renditekennzahlen.',
+              en: 'Changes ownership without increasing share capital and records realised proceeds for return metrics.',
+            },
+            implementation: {
+              de: 'state.secondaries speichert Datum, Verkäufer, Käufer, Menge, Preis und optionale Quellrunde. snapshots() reduziert Verkäufer-Lots und erzeugt entsprechende Käufer-Lots.',
+              en: 'state.secondaries stores date, seller, buyer, quantity, price and optional source round. snapshots() reduces seller lots and creates matching buyer lots.',
+            },
+            component: 'state.secondaries, snapshots() secondary branch, renderExit() cash flows',
+            sections: '05, 08, 09, 12',
+          },
+          {
+            names: { de: 'Cashflow / cash flow', en: 'Cash flow / Cashflow' },
+            definition: {
+              de: 'Datierter Geldzufluss oder Geldabfluss einer beteiligten Person oder Organisation.',
+              en: 'Dated inflow or outflow of money for a participating person or organisation.',
+            },
+            purpose: {
+              de: 'Verbindet Investments, Darlehen, Secondaries und Exit-Auszahlungen für Renditeberechnungen.',
+              en: 'Connects investments, loans, secondaries and exit payouts for return calculations.',
+            },
+            implementation: {
+              de: 'renderExit() baut cashflowsByName aus Gründungskosten, Rundeninvestments, Darlehensauszahlungen und Secondary-Kaufpreisen auf; der Exit-Payout wird für xirr() als letzter positiver Flow ergänzt.',
+              en: 'renderExit() builds cashflowsByName from formation costs, round investments, loan funding and secondary purchase prices; the exit payout is added as the final positive flow for xirr().',
+            },
+            component: 'renderExit(), cashflowsByName, secondaryProceedsByName, xirr()',
+            sections: '04, 08, 12',
+          },
+          {
+            names: { de: 'VSOP-Pool und Zuteilung / VSOP pool and grant', en: 'VSOP pool and grant / VSOP-Pool und Zuteilung' },
+            definition: {
+              de: 'Pool reserviert virtuelle Einheiten; eine Zuteilung verspricht einer Person einen Teil davon unter Bedingungen.',
+              en: 'A pool reserves virtual units; a grant promises part of them to a person under conditions.',
+            },
+            purpose: {
+              de: 'Modelliert virtuelle Mitarbeiterbeteiligung getrennt von echten Gesellschaftsanteilen.',
+              en: 'Models virtual employee participation separately from actual company shares.',
+            },
+            implementation: {
+              de: 'Pools sind holder mit isVirtual = true; Zuteilungen stehen in state.vsopParticipants und verweisen über poolId. renderVsop() aggregiert Kapazität, Reservierung und Vesting.',
+              en: 'Pools are holders with isVirtual = true; grants are stored in state.vsopParticipants and reference poolId. renderVsop() aggregates capacity, reservation and vesting.',
+            },
+            component: 'state.holders.isVirtual, state.vsopParticipants, poolId, renderVsop()',
+            sections: '10, 11, 12',
+          },
+          {
+            names: { de: 'Pool-Auffrischung / pool refresh', en: 'Pool refresh / Pool-Auffrischung' },
+            definition: {
+              de: 'Zusätzliche virtuelle Pool-Anteile, die im Zusammenhang mit einer Equity-Runde entstehen.',
+              en: 'Additional virtual pool shares created in connection with an equity round.',
+            },
+            purpose: {
+              de: 'Erweitert die verfügbare VSOP-Kapazität vor oder nach einer Finanzierung.',
+              en: 'Increases available VSOP capacity before or after a financing.',
+            },
+            implementation: {
+              de: 'Ein Rundenobjekt speichert poolRefresh, poolId und poolRefreshTiming. snapshots() addiert die Menge bei pre vor der Preisberechnung und bei post danach zum virtuellen Pool-Lot.',
+              en: 'A round object stores poolRefresh, poolId and poolRefreshTiming. snapshots() adds the amount to the virtual pool lot before pricing for pre and after pricing for post.',
+            },
+            component: 'round.poolRefresh, round.poolId, round.poolRefreshTiming, snapshots()',
+            sections: '06, 09, 10',
+          },
+          {
+            names: { de: 'Granted, Planned, Vested, Reserved und Available / VSOP capacity states', en: 'Granted, planned, vested, reserved and available / VSOP-Kapazitätsstände' },
+            definition: {
+              de: 'Zustände für zugesagte, geplante, verdiente, belegte und noch freie virtuelle Pool-Anteile.',
+              en: 'States for granted, planned, earned, reserved and still available virtual pool shares.',
+            },
+            purpose: {
+              de: 'Zeigt, wie eine Poolkapazität verwendet wird und verhindert Überbelegung.',
+              en: 'Shows how pool capacity is used and prevents over-allocation.',
+            },
+            implementation: {
+              de: 'renderVsop() summiert Zuteilungen je Pool; vestedShares() liefert Vested, reservedVsopShares() liefert Reserved und Available ist max(0, capacity − reserved). Die Speicherformulare validieren gegen die verfügbare Kapazität.',
+              en: 'renderVsop() totals grants by pool; vestedShares() supplies vested, reservedVsopShares() supplies reserved, and available is max(0, capacity − reserved). Save forms validate against available capacity.',
+            },
+            component: 'renderVsop(), vestedShares(), reservedVsopShares(), VSOP save validation',
+            sections: '10, 11',
+          },
+          {
+            names: { de: 'Vesting, Cliff, Intervall und Pause / vesting, cliff, interval and pause', en: 'Vesting, cliff, interval and pause / Vesting, Cliff, Intervall und Pause' },
+            definition: {
+              de: 'Zeitregeln dafür, wann virtuelle Ansprüche verdient werden.',
+              en: 'Time rules determining when virtual claims are earned.',
+            },
+            purpose: {
+              de: 'Bindet Ansprüche an Betriebszugehörigkeit und vereinbarte Zeitpunkte.',
+              en: 'Links claims to service and agreed time points.',
+            },
+            implementation: {
+              de: 'earnedVsopShares() ermittelt volle Monate, zieht Pausen ab, blockiert vor dem Cliff und rundet auf Intervalle von 1, 3 oder 12 Monaten; maximal wird die Vestingdauer gutgeschrieben.',
+              en: 'earnedVsopShares() calculates completed months, subtracts pauses, blocks before the cliff and rounds to intervals of 1, 3 or 12 months; credit is capped at the vesting period.',
+            },
+            component: 'earnedVsopShares(), completedMonths(), vesting fields',
+            sections: '11',
+          },
+          {
+            names: { de: 'Leaver, Retention und Ablauf / leaver, retention and expiry', en: 'Leaver, retention and expiry / Leaver, Retention und Ablauf' },
+            definition: {
+              de: 'Regeln für Austritt, erhaltenen Anteil bereits verdienter Ansprüche und deren Verfallsdatum.',
+              en: 'Rules for leaving, the retained portion of earned claims and their expiry date.',
+            },
+            purpose: {
+              de: 'Bestimmt, welche Ansprüche nach einem Austritt reserviert und auszahlbar bleiben.',
+              en: 'Determines which claims remain reserved and payable after a person leaves.',
+            },
+            implementation: {
+              de: 'vestedShares() wendet vestedRetentionPct ab leaverDate an; grantExpiredAt() sperrt abgelaufene Zuteilungen; reservedVsopShares() gibt nicht mehr benötigte Poolkapazität frei.',
+              en: 'vestedShares() applies vestedRetentionPct from leaverDate; grantExpiredAt() blocks expired grants; reservedVsopShares() releases no-longer-needed pool capacity.',
+            },
+            component: 'vestedShares(), grantExpiredAt(), reservedVsopShares()',
+            sections: '11, 12',
+          },
+          {
+            names: { de: 'Basispreis (Strikepreis) / base price (strike price)', en: 'Base price (strike price) / Basispreis (Strikepreis)' },
+            definition: {
+              de: 'Betrag je virtuellem Anteil, der vom modellierten Wert je Anteil abgezogen wird.',
+              en: 'Amount per virtual share deducted from the modelled value per share.',
+            },
+            purpose: {
+              de: 'Sorgt dafür, dass nur der positive Wertzuwachs oberhalb des Basispreises ausgezahlt wird.',
+              en: 'Ensures that only positive value growth above the base price is paid.',
+            },
+            implementation: {
+              de: 'calculateVsopPayout() setzt spread auf max(0, valuePerShare − hurdle) und multipliziert mit payable. Das Datenfeld heißt hurdle; die CSV-Spalte strike_price_eur.',
+              en: 'calculateVsopPayout() sets spread to max(0, valuePerShare − hurdle) and multiplies it by payable. The data field is hurdle; the CSV column is strike_price_eur.',
+            },
+            component: 'grant.hurdle, calculateVsopPayout(), CSV strike_price_eur',
+            sections: '11, 12',
+          },
+          {
+            names: { de: 'Single Trigger und Double Trigger / single trigger and double trigger', en: 'Single trigger and double trigger / Single Trigger und Double Trigger' },
+            definition: {
+              de: 'Bedingungen für eine beschleunigte Vesting-Gutschrift im Exit.',
+              en: 'Conditions for accelerated vesting credit at exit.',
+            },
+            purpose: {
+              de: 'Modelliert vertraglich vereinbarte Beschleunigung bei einem oder zwei Ereignissen.',
+              en: 'Models contractual acceleration on one or two events.',
+            },
+            implementation: {
+              de: 'vsopEntitlement() beschleunigt beim Single Trigger aktive Zuteilungen. Double Trigger verlangt ausgeschieden, Good oder Neutral Leaver, Austritts- und zweites Ereignisdatum bis zum Exit; accelerationPct gilt auf noch nicht verdiente Anteile.',
+              en: 'vsopEntitlement() accelerates active grants for a single trigger. Double trigger requires left status, good or neutral leaver, leaving date and second-event date by exit; accelerationPct applies to unearned shares.',
+            },
+            component: 'vsopEntitlement(), accelerationTrigger, accelerationPct, secondTriggerDate',
+            sections: '11, 12',
+          },
+          {
+            names: { de: 'Exit und Nettoerlös / exit and net proceeds', en: 'Exit and net proceeds / Exit und Nettoerlös' },
+            definition: {
+              de: 'Unternehmensverkauf und der nach Schulden sowie Transaktionskosten verbleibende Betrag.',
+              en: 'Company sale and the amount remaining after debt and transaction costs.',
+            },
+            purpose: {
+              de: 'Liefert die zu verteilende Basis für VSOP und Equity.',
+              en: 'Provides the amount available for distribution to VSOP and equity.',
+            },
+            implementation: {
+              de: 'renderExit() setzt exitNet auf max(0, value − debt − costs), berechnet einen Fully-Diluted-Wert je Anteil, zieht VSOP-Auszahlungen ab und übergibt den Rest an calculateWaterfall().',
+              en: 'renderExit() sets exitNet to max(0, value − debt − costs), calculates a fully diluted value per share, deducts VSOP payouts and passes the remainder to calculateWaterfall().',
+            },
+            component: 'state.exit, renderExit(), calculateVsopPayout(), calculateWaterfall()',
+            sections: '12',
+          },
+          {
+            names: { de: 'Gründer-, Angel-, Investoren- und VSOP-Gruppen / exit groups', en: 'Founder, angel, investor and VSOP groups / Exit-Gruppen' },
+            definition: {
+              de: 'Darstellungsgruppen für die zusammengefassten Exit-Auszahlungen.',
+              en: 'Display groups for summarised exit payouts.',
+            },
+            purpose: {
+              de: 'Macht die Verteilung zwischen Gründern, frühen Darlehensgebern, weiteren Investoren und virtuellen Berechtigten leichter lesbar.',
+              en: 'Makes the distribution among founders, early lenders, other investors and virtual participants easier to read.',
+            },
+            implementation: {
+              de: 'renderExit() ordnet holder vom Typ Gründer der Founder-Gruppe zu, Namen aus state.convertibles der Angel-Gruppe und übrige Equity-Halter der Investoren-Gruppe; VSOP-Personen werden aus den Zuteilungen separat aggregiert.',
+              en: 'renderExit() assigns holders of type Founder to the founder group, names from state.convertibles to the angel group and remaining equity holders to investors; VSOP participants are aggregated separately from grants.',
+            },
+            component: 'renderExit(), holder.type, angelNames, state.convertibles, vsopPeople',
+            sections: '12',
+          },
+          {
+            names: { de: 'Waterfall / Auszahlungsreihenfolge', en: 'Waterfall / Auszahlungsreihenfolge' },
+            definition: {
+              de: 'Rechenfolge, die Erlöse auf Präferenzen und verbleibende anteilige Ansprüche verteilt.',
+              en: 'Calculation sequence distributing proceeds to preferences and remaining pro-rata claims.',
+            },
+            purpose: {
+              de: 'Vergleicht wirtschaftliche Rechte verschiedener Anteilspakete bei einem Exit.',
+              en: 'Compares the economic rights of different share lots at exit.',
+            },
+            implementation: {
+              de: 'waterfallForElections() bedient Ränge absteigend und verteilt den Rest nach äquivalenten Anteilen unter Caps. calculateWaterfall() iteriert Präferenz-/Wandlungsentscheidungen bis keine Position sich verbessert oder 100 Iterationen erreicht sind.',
+              en: 'waterfallForElections() serves ranks descending and distributes the remainder by equivalent shares subject to caps. calculateWaterfall() iterates preference/conversion elections until no position improves or 100 iterations are reached.',
+            },
+            component: 'preferenceClaimAtExit(), waterfallForElections(), calculateWaterfall()',
+            sections: '06, 12',
+          },
+          {
+            names: { de: 'Multiple und IRR/XIRR / multiple and IRR/XIRR', en: 'Multiple and IRR/XIRR / Multiple und IRR/XIRR' },
+            definition: {
+              de: 'Multiple vergleicht Gesamterlös mit investiertem Kapital; IRR ist die annualisierte, datumsgewichtete Rendite.',
+              en: 'Multiple compares total return with invested capital; IRR is the annualised date-weighted return.',
+            },
+            purpose: {
+              de: 'Vergleicht Renditen trotz unterschiedlicher Investitionszeitpunkte.',
+              en: 'Compares returns despite different investment dates.',
+            },
+            implementation: {
+              de: 'renderExit() baut Cashflows aus Gründungskosten, Runden, Darlehen, Secondaries und Exit auf. xirr() löst den Kapitalwert per Bisektion; fehlen gültige Daten oder Vorzeichen, erscheint kein IRR.',
+              en: 'renderExit() builds cash flows from formation costs, rounds, loans, secondaries and exit. xirr() solves net present value by bisection; if valid dates or opposing signs are missing, no IRR is shown.',
+            },
+            component: 'renderExit() cashflowsByName, multipleLabel(), xirr()',
+            sections: '04, 08, 12',
+          },
+          {
+            names: { de: 'Währungssymbol / currency symbol', en: 'Currency symbol / Währungssymbol' },
+            definition: {
+              de: 'Anzeigeeinstellung für Euro oder US-Dollar.',
+              en: 'Display setting for euros or US dollars.',
+            },
+            purpose: {
+              de: 'Passt die Beschriftung an die gewünschte Darstellung an.',
+              en: 'Adapts labels to the preferred display.',
+            },
+            implementation: {
+              de: 'currentCurrency wird separat in localStorage gespeichert; Intl.NumberFormat formatiert Werte als EUR oder USD. Die numerischen state-Werte bleiben unverändert.',
+              en: 'currentCurrency is stored separately in localStorage; Intl.NumberFormat formats values as EUR or USD. Numeric state values remain unchanged.',
+            },
+            component: 'currentCurrency, currencyStorageKey, euro(), euroCompact()',
+            sections: '01',
+          },
+          {
+            names: { de: 'Rückgängig/Wiederholen / undo/redo', en: 'Undo/redo / Rückgängig/Wiederholen' },
+            definition: {
+              de: 'Lokaler Verlauf gespeicherter Workspace-Zustände.',
+              en: 'Local history of saved workspace states.',
+            },
+            purpose: {
+              de: 'Erlaubt das Zurücknehmen und Wiederherstellen jüngster Änderungen.',
+              en: 'Allows recent changes to be reversed and restored.',
+            },
+            implementation: {
+              de: 'save() legt den vorherigen serialisierten state in undoStack und begrenzt den Stapel auf 30; restoreHistory() verschiebt Zustände zwischen undoStack und redoStack. Der Verlauf selbst wird nicht über einen Reload persistiert.',
+              en: 'save() places the previous serialised state in undoStack and limits the stack to 30; restoreHistory() moves states between undoStack and redoStack. The history itself is not persisted across a reload.',
+            },
+            component: 'save(), undoStack, redoStack, restoreHistory(), keyboard handler',
+            sections: '13',
+          },
+          {
+            names: { de: 'localStorage / lokaler Browserspeicher', en: 'localStorage / lokaler Browserspeicher' },
+            definition: {
+              de: 'Speicherbereich des Browsers für denselben Ursprung.',
+              en: 'Browser storage area for the same origin.',
+            },
+            purpose: {
+              de: 'Erhält den aktuellen Workspace nach Neuladen ohne Serverkonto.',
+              en: 'Keeps the current workspace after reload without a server account.',
+            },
+            implementation: {
+              de: 'save() schreibt JSON unter ease-cap-table-manager-v1; loadState() liest und normalisiert es. Sprache und Währung haben eigene Schlüssel.',
+              en: 'save() writes JSON under ease-cap-table-manager-v1; loadState() reads and normalises it. Language and currency use separate keys.',
+            },
+            component: 'save(), loadState(), storageKey, languageStorageKey, currencyStorageKey',
+            sections: '01, 13',
+          },
+          {
+            names: { de: 'AGPL-3.0-only / Lizenz', en: 'AGPL-3.0-only / licence' },
+            definition: {
+              de: 'Freie Softwarelizenz GNU Affero General Public License Version 3, ausschließlich diese Version.',
+              en: 'Free-software licence GNU Affero General Public License version 3, this version only.',
+            },
+            purpose: {
+              de: 'Regelt Nutzung, Veränderung und Weitergabe der Software einschließlich Netzwerkbereitstellung.',
+              en: 'Governs use, modification and distribution of the software, including network deployment.',
+            },
+            implementation: {
+              de: 'index.html trägt den SPDX-Hinweis AGPL-3.0-only; der vollständige Lizenztext liegt in LICENSE. Die Software enthält keine Laufzeit-Lizenzprüfung.',
+              en: 'index.html carries the SPDX notice AGPL-3.0-only; the full licence text is in LICENSE. The software contains no runtime licence check.',
+            },
+            component: 'index.html SPDX header, LICENSE, README.md',
+            sections: 'Guide footer',
+          },
+          {
+            names: { de: 'Content Security Policy (CSP) / Inhaltssicherheitsrichtlinie', en: 'Content Security Policy (CSP) / Inhaltssicherheitsrichtlinie' },
+            definition: {
+              de: 'Browserregel, die erlaubte Quellen für Skripte, Bilder und Netzwerkzugriffe einschränkt.',
+              en: 'Browser rule restricting allowed sources for scripts, images and network access.',
+            },
+            purpose: {
+              de: 'Reduziert unerwartete externe Inhalte und Datenverbindungen.',
+              en: 'Reduces unexpected external content and data connections.',
+            },
+            implementation: {
+              de: 'Ein Meta-Tag setzt default-src auf none, erlaubt lokale Guide-Bilder über img-src self und den Beispielabruf über connect-src raw.githubusercontent.com. Die Bibliotheksquellen stehen explizit in der Richtlinie.',
+              en: 'A meta tag sets default-src to none, permits local guide images through img-src self and the example request through connect-src raw.githubusercontent.com. Library sources are explicitly listed in the policy.',
+            },
+            component: 'index.html meta http-equiv="Content-Security-Policy"',
+            sections: '02, Guide footer',
+          },
+        ];
+
+        function renderGuide() {
+          const language = currentLanguage === 'en' ? 'en' : 'de',
+            ui =
+              language === 'en'
+                ? {
+                    title: 'Guide',
+                    close: 'Close',
+                    introTitle: 'From formation to exit — one continuous example',
+                    intro:
+                      'This guide follows the public example built into the app. You do not need an account or prior cap-table knowledge. Follow the numbered sections in order, or jump directly to a topic.',
+                    toc: 'Contents',
+                    purpose: 'Purpose',
+                    when: 'When and why',
+                    steps: 'Steps',
+                    visible: 'What the screenshot shows',
+                    result: 'Expected result',
+                    notes: 'Prerequisites, limitations and common errors',
+                    figure: 'Screenshot',
+                    support:
+                      'Bug reports and other inquiries can be sent to captable@ease-systems.de.',
+                    license:
+                      'Licensed under AGPL-3.0-only. The software is provided without warranty. See LICENSE for the complete terms.',
+                    source: 'Source repository',
+                  }
+                : {
+                    title: 'Anleitung',
+                    close: 'Schließen',
+                    introTitle: 'Von der Gründung bis zum Exit — ein durchgängiges Beispiel',
+                    intro:
+                      'Diese Anleitung folgt dem öffentlichen, in die App eingebauten Beispiel. Du brauchst weder ein Konto noch Cap-Table-Vorkenntnisse. Arbeite die nummerierten Abschnitte nacheinander durch oder springe direkt zu einem Thema.',
+                    toc: 'Inhalt',
+                    purpose: 'Zweck',
+                    when: 'Wann und warum',
+                    steps: 'Schritte',
+                    visible: 'Was im Screenshot zu sehen ist',
+                    result: 'Erwartetes Ergebnis',
+                    notes: 'Voraussetzungen, Grenzen und häufige Fehler',
+                    figure: 'Screenshot',
+                    support:
+                      'Fehlerberichte und andere Anfragen können an captable@ease-systems.de gesendet werden.',
+                    license:
+                      'Lizenziert unter AGPL-3.0-only. Die Software wird ohne Gewährleistung bereitgestellt. Die vollständigen Bedingungen stehen in LICENSE.',
+                    source: 'Quellcode-Repository',
+                  };
+          $('#erm-guide-title').textContent = ui.title;
+          $('#erm-guide-close-label').textContent = ui.close;
+          $('#erm-close-guide').setAttribute('aria-label', ui.close);
+          const toc = guideSections
+              .map(
+                (section) =>
+                  `<a href="#erm-guide-${section.id}"><span>${section.number}</span><span>${section.title[language]}</span></a>`,
+              )
+              .join(''),
+            sections = guideSections
+              .map(
+                (section) => `
+                  <section class="erm-guide-section" id="erm-guide-${section.id}">
+                    <h3>${section.title[language]}</h3>
+                    <div class="erm-guide-summary-grid">
+                      <div><h4>${ui.purpose}</h4><p>${section.purpose[language]}</p></div>
+                      <div><h4>${ui.when}</h4><p>${section.when[language]}</p></div>
+                    </div>
+                    <div>
+                      <h4>${ui.steps}</h4>
+                      <ol class="erm-guide-steps">${section.steps[language]
+                        .map(
+                          (step, index) =>
+                            `<li><strong>${section.number}.${index + 1}</strong> ${step}</li>`,
+                        )
+                        .join('')}</ol>
+                    </div>
+                    <figure class="erm-guide-figure">
+                      <img src="guide/screenshots/${language}/${section.image}" alt="${section.caption[language]}" />
+                      <figcaption>
+                        <strong>${section.caption[language]}</strong>
+                        <span>${section.visible[language]}</span>
+                      </figcaption>
+                    </figure>
+                    <div class="erm-guide-summary-grid">
+                      <div><h4>${ui.result}</h4><p>${section.result[language]}</p></div>
+                      <div class="erm-guide-notes"><h4>${ui.notes}</h4><ul>${section.notes[language]
+                        .map((note) => `<li>${note}</li>`)
+                        .join('')}</ul></div>
+                    </div>
+                  </section>`,
+              )
+              .join('');
+          $('#erm-guide-content').innerHTML = `
+            <section class="erm-guide-intro" id="erm-guide-top">
+              <h3>${ui.introTitle}</h3>
+              <p>${ui.intro}</p>
+            </section>
+            <nav class="erm-guide-toc" aria-label="${ui.toc}">
+              <strong>${ui.toc}</strong>
+              ${toc}
+            </nav>
+            ${sections}
+            <footer class="erm-guide-footer">
+              <p>${ui.support}</p>
+              <p>${ui.license}</p>
+              <p><a href="LICENSE" target="_blank" rel="noopener">LICENSE</a> · <a href="https://github.com/fleischer-EASE/EASECapTableManager" target="_blank" rel="noopener">${ui.source}</a></p>
+            </footer>`;
+        }
+
         function refreshIcons() {
           if (window.lucide) lucide.createIcons({ attrs: { width: 16, height: 16 } });
         }
+
+        let guideReturnNav = null;
+        $('#erm-open-guide').addEventListener('click', () => {
+          guideReturnNav = root.querySelector('.erm-nav a.is-selected');
+          root.querySelectorAll('.erm-nav .btn').forEach((item) => {
+            item.classList.remove('is-selected');
+            item.removeAttribute('aria-current');
+          });
+          $('#erm-open-guide').classList.add('is-selected');
+          $('#erm-open-guide').setAttribute('aria-current', 'page');
+          renderGuide();
+          $('#erm-guide-scroll').scrollTop = 0;
+          $('#erm-guide-dialog').showModal();
+          queueMicrotask(() => $('#erm-close-guide').focus());
+        });
+        $('#erm-close-guide').addEventListener('click', () => $('#erm-guide-dialog').close());
+        $('#erm-guide-dialog').addEventListener('close', () => {
+          $('#erm-open-guide').classList.remove('is-selected');
+          $('#erm-open-guide').removeAttribute('aria-current');
+          if (guideReturnNav?.isConnected) {
+            guideReturnNav.classList.add('is-selected');
+            guideReturnNav.setAttribute('aria-current', 'page');
+          }
+        });
+        $('#erm-guide-content').addEventListener('click', (event) => {
+          const link = event.target.closest('a[href^="#erm-guide-"]');
+          if (!link) return;
+          const target = root.querySelector(link.getAttribute('href'));
+          if (!target) return;
+          event.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
 
         // Overview interactions
         $('#erm-tabs').addEventListener('click', (e) => {
