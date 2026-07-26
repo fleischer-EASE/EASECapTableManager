@@ -19,6 +19,7 @@ Lokale Single-Page-App für Cap Tables, Eigenkapitalrunden, Wandeldarlehen, Seco
 - Exit-Simulation mit senioritätsbasiertem LiqPref-Waterfall, wirtschaftlicher Konversionswahl, Multiple und IRR; die Rangfolge beginnt bei 1 und höhere Senioritätsränge werden zuerst bedient
 - Export der gerade ausgewählten und optional gefilterten Cap Table
 - Lokale automatische Speicherung, Rückgängig/Wiederholen, Suche sowie CSV-Backups
+- Direkter Import der aktuellen GitHub-Beispieldaten mit vorgelagerter Auswahl, den bestehenden Workspace als CSV zu sichern
 
 ## Dokumentation und Beispiel
 
@@ -45,4 +46,6 @@ Die Eingaben werden lokal im Browser gespeichert. Über **CSV exportieren** und 
 Die VSOP-Funktionen bilden vertragliche Rechenparameter ab und ersetzen keine rechtliche oder steuerliche Prüfung des konkreten Beteiligungsprogramms.
 
 Der €/$-Schalter ändert ausschließlich Symbol und Zahlenformat in der Oberfläche. Er führt keine Währungsumrechnung durch; gespeicherte Zahlen und die bestehenden EUR-Felder des CSV-Schemas bleiben unverändert.
+
+Für **GitHub-Beispiel laden** erlaubt die Content Security Policy ausschließlich eine zusätzliche Leseverbindung zu `raw.githubusercontent.com`. Dabei wird nur die versionierte Beispiel-CSV aus diesem Repository abgerufen; lokale Workspace-Daten werden nicht übertragen.
 

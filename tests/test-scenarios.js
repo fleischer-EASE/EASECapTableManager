@@ -15,6 +15,18 @@ const marker = text => {
   if (index < 0) throw new Error(`Project source marker not found: ${text}`);
   return index;
 };
+[
+  'id="erm-import-example"',
+  'id="erm-example-dialog"',
+  'id="erm-example-without-save"',
+  'id="erm-example-save"',
+  'https://raw.githubusercontent.com/fleischer-EASE/EASECapTableManager/main/examples/ease-cap-table-example.csv',
+  'connect-src blob: data: https://raw.githubusercontent.com',
+  'importExampleCsv(false)',
+  'importExampleCsv(true)'
+].forEach(contract => marker(contract));
+if (source.includes('<span class="erm-page-kicker">EASE Cap Table Manager</span>'))
+  throw new Error('Redundant main-section product label is still present.');
 
 const declarationMarker = name => marker(`const ${name} =`);
 const functionMarker = name => marker(`function ${name}(`);
