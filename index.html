@@ -1542,7 +1542,7 @@
       }
       #equity-round-manager .erm-sidebar-actions {
         align-self: end;
-        gap: 5.76px;
+        gap: 4.608px;
         padding: 10.368px 4.608px 0;
         border-top: 1px solid rgb(255 255 255 / 10%);
       }
@@ -1554,11 +1554,11 @@
         text-transform: uppercase;
       }
       #equity-round-manager .erm-data-buttons {
-        gap: 3.456px;
+        gap: 2.304px;
       }
       #equity-round-manager .erm-data-buttons .btn {
         justify-content: flex-start;
-        min-height: 36px;
+        min-height: 32px;
         padding: 0 9px;
         border-color: transparent;
         color: rgb(240 245 242 / 64%);
@@ -2295,7 +2295,15 @@
           flex: 0 0 auto;
         }
         #equity-round-manager .erm-sidebar-actions {
-          display: none;
+          display: grid;
+          align-self: stretch;
+          padding: 10.368px 0 0;
+        }
+        #equity-round-manager .erm-data-buttons {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        #equity-round-manager .erm-data-buttons .btn {
+          min-height: 38px;
         }
         #equity-round-manager .erm-content {
           padding-top: 28px;
@@ -2331,6 +2339,9 @@
         #equity-round-manager .erm-financing-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+        #equity-round-manager .erm-data-buttons {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
       @media (max-width: 520px) {
         #equity-round-manager .erm-sidebar {
@@ -2344,6 +2355,9 @@
           grid-template-columns: 1fr;
         }
         #equity-round-manager .erm-financing-grid {
+          grid-template-columns: 1fr;
+        }
+        #equity-round-manager .erm-data-buttons {
           grid-template-columns: 1fr;
         }
         #equity-round-manager .erm-guide-toc,
@@ -2507,10 +2521,22 @@
               <button type="button" class="btn btn-block" id="erm-import-csv">
                 <i data-lucide="upload" aria-hidden="true"></i> CSV laden
               </button>
+              <button type="button" class="btn btn-block" id="erm-export-ocf">
+                <i data-lucide="download" aria-hidden="true"></i> OCF exportieren
+              </button>
+              <button type="button" class="btn btn-block" id="erm-import-ocf">
+                <i data-lucide="upload" aria-hidden="true"></i> OCF laden
+              </button>
               <button type="button" class="btn btn-block" id="erm-import-example">
                 <i data-lucide="file-down" aria-hidden="true"></i> Beispiel laden
               </button>
               <input id="erm-csv-file" type="file" accept=".csv,text/csv" hidden />
+              <input
+                id="erm-ocf-file"
+                type="file"
+                accept=".ocf.zip,.zip,application/zip"
+                hidden
+              />
               <button type="button" class="btn btn-block text-destructive" id="erm-reset">
                 <i data-lucide="rotate-ccw" aria-hidden="true"></i> Zurücksetzen
               </button>
@@ -3457,6 +3483,45 @@
             </form>
           </dialog>
 
+          <dialog id="erm-ocf-export-dialog">
+            <form class="erm-form" id="erm-ocf-export-form">
+              <h3>OCF exportieren</h3>
+              <p class="text-small text-muted">
+                OCF benötigt Angaben zur Gesellschaft. Sie werden nur in die Exportdatei
+                geschrieben.
+              </p>
+              <label class="form-label"
+                >Rechtlicher Unternehmensname<input
+                  class="form-control"
+                  id="erm-ocf-issuer-name"
+                  required
+                  placeholder="z. B. Example GmbH"
+              /></label>
+              <div class="erm-fields">
+                <label class="form-label"
+                  >Gründungsdatum<input
+                    class="form-control"
+                    id="erm-ocf-formation-date"
+                    type="date"
+                    required
+                /></label>
+                <label class="form-label"
+                  >Gründungsland (ISO)<input
+                    class="form-control"
+                    id="erm-ocf-country"
+                    value="DE"
+                    maxlength="2"
+                    pattern="[A-Za-z]{2}"
+                    required
+                /></label>
+              </div>
+              <div class="erm-form-actions">
+                <button type="button" class="btn" id="erm-ocf-export-cancel">Abbrechen</button
+                ><button type="submit" class="btn btn-primary">OCF exportieren</button>
+              </div>
+            </form>
+          </dialog>
+
         </main>
       </div>
     </div>
@@ -3820,6 +3885,26 @@
             'Would you like to save the current workspace as CSV before importing?',
           ],
           [
+            'OCF benötigt Angaben zur Gesellschaft. Sie werden nur in die Exportdatei geschrieben.',
+            'OCF requires issuer details. They are written only to the export file.',
+          ],
+          [
+            'Bitte die OCF-Gesellschaftsangaben vollständig prüfen.',
+            'Check all OCF issuer details.',
+          ],
+          [
+            'Für einen verlustfreien Import bitte eine von dieser App exportierte OCF-Datei verwenden.',
+            'For a lossless import, use an OCF file exported by this app.',
+          ],
+          [
+            'Komprimierte OCF-Dateien werden von diesem Browser nicht unterstützt.',
+            'This browser does not support compressed OCF files.',
+          ],
+          [
+            'Eine komprimierte OCF-Datei konnte nicht entpackt werden.',
+            'A compressed OCF file could not be unpacked.',
+          ],
+          [
             'Der aktuelle Workspace wird durch die Beispieldaten ersetzt.',
             'The current workspace will be replaced with the example data.',
           ],
@@ -3944,6 +4029,11 @@
           ['Ansicht exportieren', 'Export view'],
           ['CSV exportieren', 'Export CSV'],
           ['CSV laden', 'Import CSV'],
+          ['OCF exportieren', 'Export OCF'],
+          ['OCF laden', 'Import OCF'],
+          ['Rechtlicher Unternehmensname', 'Issuer legal name'],
+          ['Gründungsdatum', 'Formation date'],
+          ['Gründungsland (ISO)', 'Country of formation (ISO)'],
           ['Beispiel laden', 'Load example'],
           ['Lokal gespeichert', 'Saved locally'],
           ['Rückgängig', 'Undo'],
@@ -4083,6 +4173,39 @@
           ['Die CSV enthält keine Datensätze.', 'The CSV contains no records.'],
           ['Spalte record_type fehlt.', 'The record_type column is missing.'],
           ['CSV konnte nicht geladen werden.', 'The CSV could not be imported.'],
+          ['OCF-Paket exportiert.', 'OCF package exported.'],
+          ['als OCF geladen.', 'imported as OCF.'],
+          [
+            'Das OCF-Paket konnte nicht exportiert werden.',
+            'The OCF package could not be exported.',
+          ],
+          [
+            'Das OCF-Paket konnte nicht geladen werden.',
+            'The OCF package could not be imported.',
+          ],
+          ['Die Datei ist kein gültiges OCF-ZIP.', 'The file is not a valid OCF ZIP.'],
+          ['Im OCF-ZIP fehlt das Manifest.', 'The OCF ZIP does not contain a manifest.'],
+          ['Das OCF-ZIP ist beschädigt.', 'The OCF ZIP is corrupt.'],
+          ['Das OCF-ZIP ist unvollständig.', 'The OCF ZIP is incomplete.'],
+          ['Das OCF-ZIP enthält zu viele Dateien.', 'The OCF ZIP contains too many files.'],
+          [
+            'Das OCF-ZIP überschreitet die Größenbegrenzung.',
+            'The OCF ZIP exceeds the size limit.',
+          ],
+          ['OCF enthält einen ungültigen Dateipfad.', 'OCF contains an invalid file path.'],
+          ['OCF enthält einen ungültigen Zahlenwert.', 'OCF contains an invalid numeric value.'],
+          ['OCF enthält noch nicht unterstützte Transaktionstypen:', 'OCF contains unsupported transaction types:'],
+          ['OCF-Version', 'OCF version'],
+          ['wird nicht unterstützt.', 'is not supported.'],
+          ['enthält kein gültiges JSON.', 'does not contain valid JSON.'],
+          ['enthält keine Beteiligten.', 'does not contain any stakeholders.'],
+          ['enthält keine importierbaren Equity-Beteiligten.', 'does not contain importable equity stakeholders.'],
+          ['enthält keine gültigen Gesellschaftsangaben.', 'does not contain valid issuer details.'],
+          ['enthält keinen gültigen Plan.', 'does not reference a valid plan.'],
+          ['hat den falschen Typ.', 'has the wrong type.'],
+          ['stimmt nicht.', 'does not match.'],
+          ['ist beschädigt.', 'is corrupt.'],
+          ['fehlt.', 'is missing.'],
           ['Beispieldaten werden geladen…', 'Loading example data…'],
           ['Beispieldaten geladen.', 'Example data imported.'],
           [
@@ -4733,9 +4856,8 @@
           'fully_diluted_granted_vsop_only',
         ];
         const csvCell = (value) => '"' + String(value ?? '').replace(/"/g, '""') + '"';
-        function downloadCsv(csv, filename) {
-          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }),
-            url = URL.createObjectURL(blob),
+        function downloadBlob(blob, filename) {
+          const url = URL.createObjectURL(blob),
             a = document.createElement('a');
           a.href = url;
           a.download = filename;
@@ -4744,6 +4866,9 @@
           a.click();
           a.remove();
           setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        function downloadCsv(csv, filename) {
+          downloadBlob(new Blob([csv], { type: 'text/csv;charset=utf-8' }), filename);
         }
         function exportCsv() {
           const rows = [];
@@ -4904,6 +5029,1447 @@
           );
           setCsvStatus(`Cap Table „${snap.label}“${capQuery ? ' (gefiltert)' : ''} exportiert.`);
         }
+
+        // Open Cap Format (OCF) 1.2 import and export
+        const ocfVersion = '1.2.0';
+        const ocfStateCommentPrefix = 'CAP_TABLE_MANAGER_STATE_V1:';
+        const ocfEncoder = new TextEncoder();
+        const ocfDecoder = new TextDecoder();
+        let lastOcfIssuer = null;
+
+        const ocfNumber = (value) => {
+          const number = Number(value);
+          if (!Number.isFinite(number) || Math.abs(number) >= 1e21)
+            throw new Error('OCF enthält einen ungültigen Zahlenwert.');
+          const fixed = number.toFixed(10).replace(/\.?0+$/, '');
+          return fixed === '-0' ? '0' : fixed;
+        };
+        const ocfMoney = (value) => ({ amount: ocfNumber(value), currency: 'EUR' });
+        const ocfSafeId = (prefix, value, index = 0) =>
+          `${prefix}-${index}-${String(value || index)
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9._-]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 80) || 'item'}`;
+        const ocfJson = (value) => JSON.stringify(value, null, 2) + '\n';
+        const ocfDateValues = (source) => [
+          ...(source.holders || []).map((holder) => holder.investmentDate),
+          ...(source.rounds || []).map((round) => round.date),
+          ...(source.convertibles || []).map((convertible) => convertible.date),
+          ...(source.secondaries || []).map((secondary) => secondary.date),
+          ...(source.vsopParticipants || []).flatMap((grant) => [
+            grant.grantDate,
+            grant.startDate,
+            grant.leaverDate,
+            grant.expiryDate,
+            grant.secondTriggerDate,
+          ]),
+          source.exit?.date,
+        ].filter(validDate);
+        const earliestOcfDate = (source) =>
+          [...ocfDateValues(source), today].sort((a, b) => a.localeCompare(b))[0];
+        const latestOcfDate = (source, formationDate) =>
+          [...ocfDateValues(source), formationDate, today]
+            .filter(validDate)
+            .sort((a, b) => b.localeCompare(a))[0];
+        const ocfRelationship = (type) =>
+          ({
+            Gründer: 'FOUNDER',
+            Mitarbeitende: 'EMPLOYEE',
+            Mitarbeiter: 'EMPLOYEE',
+            Advisor: 'ADVISOR',
+            Investor: 'INVESTOR',
+          })[type] || 'OTHER';
+        const ocfStakeholderType = (name) =>
+          /\b(gmbh|ag|ug|ltd|limited|inc|llc|fund|capital|ventures?|vc)\b/i.test(name)
+            ? 'INSTITUTION'
+            : 'INDIVIDUAL';
+
+        function ocfVestings(grant) {
+          if (!validDate(grant.startDate)) return [];
+          const shares = Math.max(0, Number(grant.shares) || 0),
+            duration = Math.max(1, Math.round(Number(grant.vestingMonths) || 1)),
+            cliff = Math.min(duration, Math.max(0, Math.round(Number(grant.cliffMonths) || 0))),
+            interval = [1, 3, 12].includes(Number(grant.vestingIntervalMonths))
+              ? Number(grant.vestingIntervalMonths)
+              : 1,
+            pause = Math.max(0, Math.round(Number(grant.vestingPauseMonths) || 0)),
+            milestones = [];
+          for (let month = interval; month < duration; month += interval) {
+            if (month >= cliff) milestones.push(month);
+          }
+          if (!milestones.includes(duration)) milestones.push(duration);
+          let vested = 0;
+          return milestones.map((month, index) => {
+            const target =
+                index === milestones.length - 1 ? shares : (shares * month) / duration,
+              amount = Math.max(0, target - vested);
+            vested = target;
+            return {
+              date: addMonths(grant.startDate, month + pause).toISOString().slice(0, 10),
+              amount: ocfNumber(amount),
+            };
+          });
+        }
+
+        function buildOcfData(source, issuer, generatedAt = new Date()) {
+          const stakeholders = [],
+            stakeholderByName = new Map(),
+            addStakeholder = (name, relationship = 'OTHER') => {
+              const legalName = String(name || '').trim() || 'Unknown stakeholder',
+                key = legalName.toLocaleLowerCase('de-DE'),
+                relationshipPriority = {
+                  OTHER: 0,
+                  INVESTOR: 1,
+                  ADVISOR: 2,
+                  EMPLOYEE: 3,
+                  FOUNDER: 4,
+                };
+              let stakeholder = stakeholderByName.get(key);
+              if (!stakeholder) {
+                stakeholder = {
+                  id: ocfSafeId('stakeholder', legalName, stakeholders.length + 1),
+                  object_type: 'STAKEHOLDER',
+                  name: { legal_name: legalName },
+                  stakeholder_type: ocfStakeholderType(legalName),
+                  current_relationship: relationship,
+                };
+                stakeholders.push(stakeholder);
+                stakeholderByName.set(key, stakeholder);
+              }
+              if (
+                relationshipPriority[relationship] >
+                relationshipPriority[stakeholder.current_relationship]
+              )
+                stakeholder.current_relationship = relationship;
+              return stakeholder.id;
+            };
+
+          (source.holders || [])
+            .filter((holder) => !holder.isVirtual)
+            .forEach((holder) => addStakeholder(holder.name, ocfRelationship(holder.type)));
+          (source.rounds || []).forEach((round) =>
+            roundInvestors(round).forEach((investor) =>
+              addStakeholder(investor.name, 'INVESTOR'),
+            ),
+          );
+          (source.convertibles || []).forEach((convertible) =>
+            addStakeholder(convertible.lender, 'INVESTOR'),
+          );
+          (source.secondaries || []).forEach((secondary) => {
+            addStakeholder(secondary.seller, 'INVESTOR');
+            addStakeholder(secondary.buyer, 'INVESTOR');
+          });
+          (source.vsopParticipants || []).forEach((grant) =>
+            addStakeholder(grant.name, 'EMPLOYEE'),
+          );
+
+          const sourceSnapshots = snapshots(source),
+            roundSnapshotById = new Map(
+              sourceSnapshots
+                .filter((snapshot) => snapshot.eventType === 'round')
+                .map((snapshot) => [snapshot.eventId, snapshot]),
+            ),
+            commonClassId = 'stock-class-common',
+            roundClassIdById = new Map(),
+            initialActualShares = (source.holders || [])
+              .filter((holder) => !holder.isVirtual)
+              .reduce((sum, holder) => sum + Math.max(0, Number(holder.shares) || 0), 0),
+            initialPoolShares = (source.holders || [])
+              .filter((holder) => holder.isVirtual)
+              .reduce((sum, holder) => sum + Math.max(0, Number(holder.shares) || 0), 0),
+            stockClasses = [
+              {
+                id: commonClassId,
+                object_type: 'STOCK_CLASS',
+                name: 'Common',
+                class_type: 'COMMON',
+                default_id_prefix: 'CS-',
+                initial_shares_authorized: ocfNumber(
+                  Math.max(1, initialActualShares + initialPoolShares),
+                ),
+                votes_per_share: '1',
+                seniority: '1',
+              },
+            ];
+
+          (source.rounds || []).forEach((round, index) => {
+            const snapshot = roundSnapshotById.get(round.id),
+              allocations = snapshot?.roundAllocations || [],
+              price = Number(snapshot?.price) || 0,
+              classId = ocfSafeId('stock-class', round.id, index + 1),
+              preferenceType = round.liquidationPreferenceType || 'none',
+              stockClass = {
+                id: classId,
+                object_type: 'STOCK_CLASS',
+                name: round.className || round.name || `Round ${index + 1}`,
+                class_type: preferenceType === 'none' ? 'COMMON' : 'PREFERRED',
+                default_id_prefix: `R${index + 1}-`,
+                initial_shares_authorized: ocfNumber(
+                  Math.max(
+                    1,
+                    allocations.reduce(
+                      (sum, allocation) => sum + (Number(allocation.shares) || 0),
+                      0,
+                    ),
+                  ),
+                ),
+                votes_per_share: '1',
+                seniority: ocfNumber(
+                  Math.max(1, Number(round.liquidationSeniority) || 1),
+                ),
+              };
+            if (preferenceType !== 'none')
+              stockClass.liquidation_preference_multiple = ocfNumber(
+                Math.max(0.1, Number(round.liquidationPreferenceMultiple) || 1),
+              );
+            if (
+              preferenceType === 'participating' &&
+              Number(round.participationCapMultiple) > 0
+            )
+              stockClass.participation_cap_multiple = ocfNumber(
+                round.participationCapMultiple,
+              );
+            if (price > 0) stockClass.price_per_share = ocfMoney(price);
+            if (preferenceType !== 'none' || Number(round.conversionRatio) !== 1)
+              stockClass.conversion_rights = [
+                {
+                  type: 'STOCK_CLASS_CONVERSION_RIGHT',
+                  converts_to_stock_class_id: commonClassId,
+                  conversion_mechanism: {
+                    type: 'RATIO_CONVERSION',
+                    conversion_price: ocfMoney(price),
+                    ratio: {
+                      numerator: ocfNumber(
+                        Math.max(0.0001, Number(round.conversionRatio) || 1),
+                      ),
+                      denominator: '1',
+                    },
+                    rounding_type: 'NORMAL',
+                  },
+                },
+              ];
+            stockClasses.push(stockClass);
+            roundClassIdById.set(round.id, classId);
+          });
+
+          const poolPlanIdById = new Map(),
+            stockPlans = (source.holders || [])
+              .filter((holder) => holder.isVirtual)
+              .map((pool, index) => {
+                const planId = ocfSafeId('stock-plan', pool.id, index + 1);
+                poolPlanIdById.set(pool.id, planId);
+                return {
+                  id: planId,
+                  object_type: 'STOCK_PLAN',
+                  plan_name: pool.name,
+                  initial_shares_reserved: ocfNumber(Math.max(0, Number(pool.shares) || 0)),
+                  stock_class_ids: [commonClassId],
+                };
+              }),
+            transactions = [],
+            securityByNameAndSource = new Map(),
+            rememberSecurity = (name, sourceId, securityId) =>
+              securityByNameAndSource.set(
+                `${String(name || '').toLocaleLowerCase('de-DE')}|${sourceId || 'common'}`,
+                securityId,
+              ),
+            formationDate = issuer.formation_date;
+
+          (source.holders || [])
+            .filter((holder) => !holder.isVirtual)
+            .forEach((holder, index) => {
+              const transactionId = ocfSafeId('tx-stock-issuance', holder.id, index + 1),
+                securityId = ocfSafeId('security-stock', holder.id, index + 1),
+                date = validDate(holder.investmentDate)
+                  ? holder.investmentDate
+                  : formationDate,
+                shares = Math.max(0, Number(holder.shares) || 0),
+                costBasis = Math.max(0, Number(holder.costBasis) || 0);
+              transactions.push({
+                id: transactionId,
+                object_type: 'TX_STOCK_ISSUANCE',
+                security_id: securityId,
+                date,
+                security_law_exemptions: [],
+                stakeholder_id: addStakeholder(holder.name, ocfRelationship(holder.type)),
+                custom_id: `CS-${index + 1}`,
+                stock_class_id: commonClassId,
+                share_price: ocfMoney(shares ? costBasis / shares : 0),
+                quantity: ocfNumber(shares),
+                cost_basis: ocfMoney(costBasis),
+                stock_legend_ids: [],
+              });
+              rememberSecurity(holder.name, 'common', securityId);
+            });
+
+          const financings = [];
+          (source.rounds || []).forEach((round, roundIndex) => {
+            const snapshot = roundSnapshotById.get(round.id),
+              price = Number(snapshot?.price) || 0,
+              issuanceIds = [];
+            (snapshot?.roundAllocations || []).forEach((allocation, investorIndex) => {
+              const transactionId = ocfSafeId(
+                  'tx-round-issuance',
+                  `${round.id}-${allocation.id || investorIndex}`,
+                  investorIndex + 1,
+                ),
+                securityId = ocfSafeId(
+                  'security-round',
+                  `${round.id}-${allocation.id || investorIndex}`,
+                  investorIndex + 1,
+                );
+              issuanceIds.push(transactionId);
+              transactions.push({
+                id: transactionId,
+                object_type: 'TX_STOCK_ISSUANCE',
+                security_id: securityId,
+                date: round.date,
+                security_law_exemptions: [],
+                stakeholder_id: addStakeholder(allocation.name, 'INVESTOR'),
+                custom_id: `R${roundIndex + 1}-${investorIndex + 1}`,
+                stock_class_id: roundClassIdById.get(round.id),
+                share_price: ocfMoney(price),
+                quantity: ocfNumber(allocation.shares),
+                cost_basis: ocfMoney(allocation.investment),
+                stock_legend_ids: [],
+              });
+              rememberSecurity(allocation.name, round.id, securityId);
+            });
+            if (issuanceIds.length)
+              financings.push({
+                id: ocfSafeId('financing', round.id, roundIndex + 1),
+                object_type: 'FINANCING',
+                name: round.name,
+                issuance_ids: issuanceIds,
+                date: round.date,
+              });
+          });
+
+          (source.convertibles || []).forEach((convertible, index) => {
+            const securityId = ocfSafeId('security-convertible', convertible.id, index + 1),
+              triggerId = ocfSafeId('trigger', convertible.id, index + 1),
+              rules = {
+                include_outstanding_shares: true,
+                include_outstanding_options: Boolean(convertible.fullyDilutedConversion),
+                include_outstanding_unissued_options:
+                  Boolean(convertible.fullyDilutedConversion) &&
+                  !Boolean(convertible.fullyDilutedGrantedVsopOnly),
+                include_this_security: false,
+                include_other_converting_securities: false,
+                include_option_pool_topup_for_promised_options: false,
+                include_additional_option_pool_topup: false,
+                include_new_money: false,
+              },
+              mechanism = {
+                type: 'CONVERTIBLE_NOTE_CONVERSION',
+                interest_rates: [
+                  {
+                    rate: ocfNumber(
+                      Math.min(100, Math.max(0, Number(convertible.interest) || 0)) / 100,
+                    ),
+                    accrual_start_date: convertible.date,
+                  },
+                ],
+                day_count_convention: 'ACTUAL_365',
+                interest_payout: 'DEFERRED',
+                interest_accrual_period: 'ANNUAL',
+                compounding_type: 'SIMPLE',
+                capitalization_definition: convertible.fullyDilutedConversion
+                  ? convertible.fullyDilutedGrantedVsopOnly
+                    ? 'Outstanding equity and granted VSOP shares'
+                    : 'Outstanding equity and all shares reserved in VSOP pools'
+                  : 'Outstanding equity shares only',
+                capitalization_definition_rules: rules,
+              };
+            if (Number(convertible.discount) > 0)
+              mechanism.conversion_discount = ocfNumber(
+                Math.min(100, Number(convertible.discount)) / 100,
+              );
+            if (Number(convertible.valuationCap) > 0)
+              mechanism.conversion_valuation_cap = ocfMoney(convertible.valuationCap);
+            transactions.push({
+              id: ocfSafeId('tx-convertible-issuance', convertible.id, index + 1),
+              object_type: 'TX_CONVERTIBLE_ISSUANCE',
+              security_id: securityId,
+              date: convertible.date,
+              security_law_exemptions: [],
+              stakeholder_id: addStakeholder(convertible.lender, 'INVESTOR'),
+              custom_id: convertible.name || `CN-${index + 1}`,
+              investment_amount: ocfMoney(convertible.principal),
+              convertible_type: 'NOTE',
+              conversion_triggers: [
+                {
+                  trigger_id: triggerId,
+                  nickname: 'Next equity financing',
+                  trigger_description:
+                    'Automatic conversion at the next equity financing modelled by Cap Table Manager.',
+                  type: 'AUTOMATIC_ON_CONDITION',
+                  trigger_condition: 'Closing of the next equity financing',
+                  conversion_right: {
+                    type: 'CONVERTIBLE_CONVERSION_RIGHT',
+                    converts_to_future_round: true,
+                    conversion_mechanism: mechanism,
+                  },
+                },
+              ],
+              seniority: 1,
+            });
+            const conversionSnapshot = sourceSnapshots.find(
+              (snapshot) =>
+                snapshot.eventType === 'round' &&
+                (snapshot.conversions || []).some(
+                  (conversion) => conversion.id === convertible.id,
+                ),
+            );
+            if (conversionSnapshot)
+              transactions.push({
+                id: ocfSafeId('tx-convertible-conversion', convertible.id, index + 1),
+                object_type: 'TX_CONVERTIBLE_CONVERSION',
+                security_id: securityId,
+                date: conversionSnapshot.asOfDate,
+                quantity_converted: ocfNumber(convertible.principal),
+                trigger_id: triggerId,
+                reason_text: 'Automatic conversion at the next equity financing',
+                resulting_security_ids: [
+                  ocfSafeId('security-converted', convertible.id, index + 1),
+                ],
+              });
+          });
+
+          const reservedByPool = new Map(
+            (source.holders || [])
+              .filter((holder) => holder.isVirtual)
+              .map((holder) => [holder.id, Math.max(0, Number(holder.shares) || 0)]),
+          );
+          (source.rounds || [])
+            .map((round, index) => ({ round, index }))
+            .sort(
+              (a, b) =>
+                String(a.round.date || '').localeCompare(String(b.round.date || '')) ||
+                a.index - b.index,
+            )
+            .forEach(({ round, index }) => {
+              const refresh = Math.max(0, Number(round.poolRefresh) || 0),
+                planId = poolPlanIdById.get(round.poolId);
+              if (!(refresh > 0) || !planId) return;
+              const reserved = (reservedByPool.get(round.poolId) || 0) + refresh;
+              reservedByPool.set(round.poolId, reserved);
+              transactions.push({
+                id: ocfSafeId('tx-stock-plan-adjustment', round.id, index + 1),
+                object_type: 'TX_STOCK_PLAN_POOL_ADJUSTMENT',
+                date: round.date,
+                stock_plan_id: planId,
+                shares_reserved: ocfNumber(reserved),
+                comments: [`Pool refresh timing in Cap Table Manager: ${round.poolRefreshTiming}`],
+              });
+            });
+
+          (source.vsopParticipants || []).forEach((grant, index) => {
+            const planId = poolPlanIdById.get(grant.poolId);
+            if (!planId) return;
+            const vestings = ocfVestings(grant);
+            transactions.push({
+              id: ocfSafeId('tx-equity-compensation', grant.id, index + 1),
+              object_type: 'TX_EQUITY_COMPENSATION_ISSUANCE',
+              security_id: ocfSafeId('security-equity-compensation', grant.id, index + 1),
+              date: grant.grantDate,
+              security_law_exemptions: [],
+              stakeholder_id: addStakeholder(grant.name, 'EMPLOYEE'),
+              custom_id: grant.name || `VSOP-${index + 1}`,
+              stock_plan_id: planId,
+              stock_class_id: commonClassId,
+              compensation_type: 'CSAR',
+              quantity: ocfNumber(grant.shares),
+              base_price: ocfMoney(grant.hurdle || 0),
+              ...(vestings.length ? { vestings } : {}),
+              expiration_date: validDate(grant.expiryDate) ? grant.expiryDate : null,
+              termination_exercise_windows: [],
+            });
+          });
+
+          (source.secondaries || []).forEach((secondary, index) => {
+            const sourceKey =
+                secondary.sourceRoundId && secondary.sourceRoundId !== 'common'
+                  ? secondary.sourceRoundId
+                  : 'common',
+              sellerKey = `${String(secondary.seller || '').toLocaleLowerCase(
+                'de-DE',
+              )}|${sourceKey}`,
+              securityId = securityByNameAndSource.get(sellerKey);
+            if (!securityId) return;
+            const buyerSecurityId = ocfSafeId('security-secondary', secondary.id, index + 1),
+              balanceSecurityId = ocfSafeId(
+                'security-secondary-balance',
+                secondary.id,
+                index + 1,
+              );
+            transactions.push({
+              id: ocfSafeId('tx-stock-transfer', secondary.id, index + 1),
+              object_type: 'TX_STOCK_TRANSFER',
+              security_id: securityId,
+              date: secondary.date,
+              quantity: ocfNumber(secondary.shares),
+              consideration_text: `${ocfNumber(
+                Number(secondary.shares) * Number(secondary.pricePerShare),
+              )} EUR; buyer: ${secondary.buyer}`,
+              balance_security_id: balanceSecurityId,
+              resulting_security_ids: [buyerSecurityId, balanceSecurityId],
+            });
+            securityByNameAndSource.set(
+              `${String(secondary.buyer || '').toLocaleLowerCase('de-DE')}|${sourceKey}`,
+              buyerSecurityId,
+            );
+            securityByNameAndSource.set(sellerKey, balanceSecurityId);
+          });
+
+          const initialAuthorized = stockClasses.reduce(
+            (sum, stockClass) =>
+              sum + Math.max(0, Number(stockClass.initial_shares_authorized) || 0),
+            0,
+          );
+          return {
+            issuer: {
+              id: 'issuer-cap-table-manager',
+              object_type: 'ISSUER',
+              legal_name: issuer.legal_name,
+              formation_date: issuer.formation_date,
+              country_of_formation: issuer.country_of_formation,
+              initial_shares_authorized: ocfNumber(Math.max(1, initialAuthorized)),
+            },
+            asOf: latestOcfDate(source, issuer.formation_date),
+            generatedAt: generatedAt.toISOString(),
+            stakeholders,
+            stockClasses,
+            stockPlans,
+            transactions,
+            financings,
+          };
+        }
+
+        function md5Bytes(bytes) {
+          const shifts = [
+              7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+              5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
+              4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+              6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
+            ],
+            constants = Array.from(
+              { length: 64 },
+              (_, index) => Math.floor(Math.abs(Math.sin(index + 1)) * 4294967296) >>> 0,
+            ),
+            paddedLength = Math.ceil((bytes.length + 9) / 64) * 64,
+            padded = new Uint8Array(paddedLength);
+          padded.set(bytes);
+          padded[bytes.length] = 0x80;
+          const paddedView = new DataView(padded.buffer),
+            bitLength = bytes.length * 8;
+          paddedView.setUint32(paddedLength - 8, bitLength >>> 0, true);
+          paddedView.setUint32(paddedLength - 4, Math.floor(bitLength / 4294967296), true);
+          let a0 = 0x67452301,
+            b0 = 0xefcdab89,
+            c0 = 0x98badcfe,
+            d0 = 0x10325476;
+          const rotateLeft = (value, shift) =>
+            ((value << shift) | (value >>> (32 - shift))) >>> 0;
+          for (let offset = 0; offset < paddedLength; offset += 64) {
+            const words = Array.from({ length: 16 }, (_, index) =>
+              paddedView.getUint32(offset + index * 4, true),
+            );
+            let a = a0,
+              b = b0,
+              c = c0,
+              d = d0;
+            for (let index = 0; index < 64; index++) {
+              let f,
+                wordIndex;
+              if (index < 16) {
+                f = (b & c) | (~b & d);
+                wordIndex = index;
+              } else if (index < 32) {
+                f = (d & b) | (~d & c);
+                wordIndex = (5 * index + 1) % 16;
+              } else if (index < 48) {
+                f = b ^ c ^ d;
+                wordIndex = (3 * index + 5) % 16;
+              } else {
+                f = c ^ (b | ~d);
+                wordIndex = (7 * index) % 16;
+              }
+              const nextD = d;
+              d = c;
+              c = b;
+              b =
+                (b +
+                  rotateLeft(
+                    (a + (f >>> 0) + constants[index] + words[wordIndex]) >>> 0,
+                    shifts[index],
+                  )) >>>
+                0;
+              a = nextD;
+            }
+            a0 = (a0 + a) >>> 0;
+            b0 = (b0 + b) >>> 0;
+            c0 = (c0 + c) >>> 0;
+            d0 = (d0 + d) >>> 0;
+          }
+          const digest = new Uint8Array(16),
+            digestView = new DataView(digest.buffer);
+          [a0, b0, c0, d0].forEach((value, index) =>
+            digestView.setUint32(index * 4, value, true),
+          );
+          return [...digest].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        let ocfCrcTable;
+        function crc32(bytes) {
+          if (!ocfCrcTable)
+            ocfCrcTable = Array.from({ length: 256 }, (_, value) => {
+              let crc = value;
+              for (let bit = 0; bit < 8; bit++)
+                crc = crc & 1 ? 0xedb88320 ^ (crc >>> 1) : crc >>> 1;
+              return crc >>> 0;
+            });
+          let crc = 0xffffffff;
+          bytes.forEach((byte) => (crc = ocfCrcTable[(crc ^ byte) & 0xff] ^ (crc >>> 8)));
+          return (crc ^ 0xffffffff) >>> 0;
+        }
+        const concatBytes = (parts) => {
+          const output = new Uint8Array(
+            parts.reduce((total, part) => total + part.length, 0),
+          );
+          let offset = 0;
+          parts.forEach((part) => {
+            output.set(part, offset);
+            offset += part.length;
+          });
+          return output;
+        };
+        const ocfDosDateTime = (date) => {
+          const year = Math.max(1980, date.getUTCFullYear()),
+            dosDate =
+              ((year - 1980) << 9) | ((date.getUTCMonth() + 1) << 5) | date.getUTCDate(),
+            dosTime =
+              (date.getUTCHours() << 11) |
+              (date.getUTCMinutes() << 5) |
+              Math.floor(date.getUTCSeconds() / 2);
+          return { dosDate, dosTime };
+        };
+
+        function createStoredZip(files, generatedAt = new Date()) {
+          const localParts = [],
+            centralParts = [],
+            { dosDate, dosTime } = ocfDosDateTime(generatedAt);
+          let localOffset = 0;
+          files.forEach(({ name, data }) => {
+            const nameBytes = ocfEncoder.encode(name),
+              bytes = data instanceof Uint8Array ? data : ocfEncoder.encode(String(data)),
+              crc = crc32(bytes),
+              localHeader = new Uint8Array(30),
+              localView = new DataView(localHeader.buffer);
+            localView.setUint32(0, 0x04034b50, true);
+            localView.setUint16(4, 20, true);
+            localView.setUint16(6, 0x0800, true);
+            localView.setUint16(8, 0, true);
+            localView.setUint16(10, dosTime, true);
+            localView.setUint16(12, dosDate, true);
+            localView.setUint32(14, crc, true);
+            localView.setUint32(18, bytes.length, true);
+            localView.setUint32(22, bytes.length, true);
+            localView.setUint16(26, nameBytes.length, true);
+            localParts.push(localHeader, nameBytes, bytes);
+
+            const centralHeader = new Uint8Array(46),
+              centralView = new DataView(centralHeader.buffer);
+            centralView.setUint32(0, 0x02014b50, true);
+            centralView.setUint16(4, 20, true);
+            centralView.setUint16(6, 20, true);
+            centralView.setUint16(8, 0x0800, true);
+            centralView.setUint16(10, 0, true);
+            centralView.setUint16(12, dosTime, true);
+            centralView.setUint16(14, dosDate, true);
+            centralView.setUint32(16, crc, true);
+            centralView.setUint32(20, bytes.length, true);
+            centralView.setUint32(24, bytes.length, true);
+            centralView.setUint16(28, nameBytes.length, true);
+            centralView.setUint32(42, localOffset, true);
+            centralParts.push(centralHeader, nameBytes);
+            localOffset += localHeader.length + nameBytes.length + bytes.length;
+          });
+          const central = concatBytes(centralParts),
+            end = new Uint8Array(22),
+            endView = new DataView(end.buffer);
+          endView.setUint32(0, 0x06054b50, true);
+          endView.setUint16(8, files.length, true);
+          endView.setUint16(10, files.length, true);
+          endView.setUint32(12, central.length, true);
+          endView.setUint32(16, localOffset, true);
+          return concatBytes([...localParts, central, end]);
+        }
+
+        function createOcfPackage(source, issuer, generatedAt = new Date()) {
+          const model = buildOcfData(source, issuer, generatedAt),
+            payloads = [
+              {
+                name: 'Stakeholders.ocf.json',
+                field: 'stakeholders_files',
+                value: {
+                  file_type: 'OCF_STAKEHOLDERS_FILE',
+                  items: model.stakeholders,
+                },
+              },
+              {
+                name: 'StockClasses.ocf.json',
+                field: 'stock_classes_files',
+                value: {
+                  file_type: 'OCF_STOCK_CLASSES_FILE',
+                  items: model.stockClasses,
+                },
+              },
+              {
+                name: 'StockPlans.ocf.json',
+                field: 'stock_plans_files',
+                value: {
+                  file_type: 'OCF_STOCK_PLANS_FILE',
+                  items: model.stockPlans,
+                },
+              },
+              {
+                name: 'Transactions.ocf.json',
+                field: 'transactions_files',
+                value: {
+                  file_type: 'OCF_TRANSACTIONS_FILE',
+                  items: model.transactions,
+                },
+              },
+              {
+                name: 'Financings.ocf.json',
+                field: 'financings_files',
+                value: {
+                  file_type: 'OCF_FINANCINGS_FILE',
+                  items: model.financings,
+                },
+              },
+            ].map((file) => {
+              const text = ocfJson(file.value),
+                data = ocfEncoder.encode(text);
+              return {
+                ...file,
+                text,
+                data,
+                reference: { filepath: file.name, md5: md5Bytes(data) },
+              };
+            }),
+            references = Object.fromEntries(
+              payloads.map((file) => [file.field, [file.reference]]),
+            ),
+            manifest = {
+              ocf_version: ocfVersion,
+              file_type: 'OCF_MANIFEST_FILE',
+              issuer: model.issuer,
+              as_of: model.asOf,
+              generated_at: model.generatedAt,
+              comments: [
+                'Exported by Cap Table Manager.',
+                ocfStateCommentPrefix +
+                  JSON.stringify({
+                    format: 'cap-table-manager-state',
+                    version: 1,
+                    state: source,
+                    issuer,
+                  }),
+              ],
+              stock_legend_templates_files: [],
+              vesting_terms_files: [],
+              valuations_files: [],
+              ...references,
+            },
+            manifestText = ocfJson(manifest),
+            files = [
+              {
+                name: 'Manifest.ocf.json',
+                data: ocfEncoder.encode(manifestText),
+                text: manifestText,
+              },
+              ...payloads.map(({ name, data, text }) => ({ name, data, text })),
+            ];
+          return { manifest, files, archive: createStoredZip(files, generatedAt) };
+        }
+
+        const normalizeOcfPath = (path) => {
+          const parts = String(path || '')
+            .replace(/\\/g, '/')
+            .split('/')
+            .filter((part) => part && part !== '.');
+          if (!parts.length || parts.includes('..'))
+            throw new Error('OCF enthält einen ungültigen Dateipfad.');
+          return parts.join('/');
+        };
+
+        async function inflateOcfEntry(bytes) {
+          if (typeof DecompressionStream !== 'function')
+            throw new Error('Komprimierte OCF-Dateien werden von diesem Browser nicht unterstützt.');
+          try {
+            const stream = new Blob([bytes])
+              .stream()
+              .pipeThrough(new DecompressionStream('deflate-raw'));
+            return new Uint8Array(await new Response(stream).arrayBuffer());
+          } catch {
+            throw new Error('Eine komprimierte OCF-Datei konnte nicht entpackt werden.');
+          }
+        }
+
+        async function readOcfZip(buffer) {
+          const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer),
+            view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+          let endOffset = -1;
+          for (
+            let offset = bytes.length - 22;
+            offset >= Math.max(0, bytes.length - 65557);
+            offset--
+          ) {
+            if (view.getUint32(offset, true) === 0x06054b50) {
+              endOffset = offset;
+              break;
+            }
+          }
+          if (endOffset < 0) throw new Error('Die Datei ist kein gültiges OCF-ZIP.');
+          const entryCount = view.getUint16(endOffset + 10, true),
+            centralOffset = view.getUint32(endOffset + 16, true);
+          if (entryCount > 1000) throw new Error('Das OCF-ZIP enthält zu viele Dateien.');
+          const entries = new Map();
+          let offset = centralOffset,
+            totalSize = 0;
+          for (let index = 0; index < entryCount; index++) {
+            if (offset + 46 > bytes.length || view.getUint32(offset, true) !== 0x02014b50)
+              throw new Error('Das OCF-ZIP ist beschädigt.');
+            const method = view.getUint16(offset + 10, true),
+              expectedCrc = view.getUint32(offset + 16, true),
+              compressedSize = view.getUint32(offset + 20, true),
+              uncompressedSize = view.getUint32(offset + 24, true),
+              nameLength = view.getUint16(offset + 28, true),
+              extraLength = view.getUint16(offset + 30, true),
+              commentLength = view.getUint16(offset + 32, true),
+              localOffset = view.getUint32(offset + 42, true),
+              name = normalizeOcfPath(
+                ocfDecoder.decode(bytes.slice(offset + 46, offset + 46 + nameLength)),
+              );
+            if (uncompressedSize > 50 * 1024 * 1024)
+              throw new Error('Eine OCF-Datei überschreitet die Größenbegrenzung.');
+            totalSize += uncompressedSize;
+            if (totalSize > 100 * 1024 * 1024)
+              throw new Error('Das OCF-ZIP überschreitet die Größenbegrenzung.');
+            if (
+              localOffset + 30 > bytes.length ||
+              view.getUint32(localOffset, true) !== 0x04034b50
+            )
+              throw new Error('Das OCF-ZIP ist beschädigt.');
+            const localNameLength = view.getUint16(localOffset + 26, true),
+              localExtraLength = view.getUint16(localOffset + 28, true),
+              dataOffset = localOffset + 30 + localNameLength + localExtraLength,
+              compressed = bytes.slice(dataOffset, dataOffset + compressedSize);
+            if (compressed.length !== compressedSize)
+              throw new Error('Das OCF-ZIP ist unvollständig.');
+            const data =
+              method === 0
+                ? compressed
+                : method === 8
+                  ? await inflateOcfEntry(compressed)
+                  : null;
+            if (!data)
+              throw new Error(`OCF-ZIP-Kompressionsmethode ${method} wird nicht unterstützt.`);
+            if (data.length !== uncompressedSize || crc32(data) !== expectedCrc)
+              throw new Error(`OCF-Datei ${name} ist beschädigt.`);
+            entries.set(name, data);
+            offset += 46 + nameLength + extraLength + commentLength;
+          }
+          return entries;
+        }
+
+        function parseOcfPackage(entries) {
+          const jsonEntries = new Map(),
+            lowerPath = new Map();
+          entries.forEach((data, path) => {
+            lowerPath.set(path.toLocaleLowerCase('en-US'), path);
+            if (!path.toLocaleLowerCase('en-US').endsWith('.json')) return;
+            try {
+              jsonEntries.set(path, JSON.parse(ocfDecoder.decode(data)));
+            } catch {
+              throw new Error(`OCF-Datei ${path} enthält kein gültiges JSON.`);
+            }
+          });
+          const manifestEntry = [...jsonEntries.entries()].find(
+            ([, value]) => value?.file_type === 'OCF_MANIFEST_FILE',
+          );
+          if (!manifestEntry) throw new Error('Im OCF-ZIP fehlt das Manifest.');
+          const [manifestPath, manifest] = manifestEntry,
+            version = String(manifest.ocf_version || '');
+          if (!/^1\.2(?:\.|$)/.test(version))
+            throw new Error(`OCF-Version ${version || 'unbekannt'} wird nicht unterstützt.`);
+          if (
+            !manifest.issuer?.legal_name ||
+            !validDate(manifest.issuer?.formation_date) ||
+            !/^[A-Z]{2}$/.test(manifest.issuer?.country_of_formation || '')
+          )
+            throw new Error('Das OCF-Manifest enthält keine gültigen Gesellschaftsangaben.');
+          const manifestDirectory = manifestPath.includes('/')
+              ? manifestPath.slice(0, manifestPath.lastIndexOf('/') + 1)
+              : '',
+            resolveReference = (reference) => {
+              const requested = normalizeOcfPath(reference?.filepath),
+                candidates = [
+                  requested,
+                  normalizeOcfPath(manifestDirectory + requested),
+                ],
+                path = candidates
+                  .map((candidate) => lowerPath.get(candidate.toLocaleLowerCase('en-US')))
+                  .find(Boolean);
+              if (!path) throw new Error(`OCF-Datei ${requested} fehlt.`);
+              const data = entries.get(path);
+              if (
+                reference.md5 &&
+                md5Bytes(data).toLocaleLowerCase('en-US') !==
+                  String(reference.md5).toLocaleLowerCase('en-US')
+              )
+                throw new Error(`OCF-Prüfsumme für ${requested} stimmt nicht.`);
+              const value = jsonEntries.get(path);
+              if (!value) throw new Error(`OCF-Datei ${requested} enthält kein JSON.`);
+              return value;
+            },
+            loadItems = (field, fileType) =>
+              (manifest[field] || []).flatMap((reference) => {
+                const file = resolveReference(reference);
+                if (file.file_type !== fileType || !Array.isArray(file.items))
+                  throw new Error(`OCF-Datei ${reference.filepath} hat den falschen Typ.`);
+                return file.items;
+              });
+          return {
+            manifest,
+            stakeholders: loadItems('stakeholders_files', 'OCF_STAKEHOLDERS_FILE'),
+            stockClasses: loadItems('stock_classes_files', 'OCF_STOCK_CLASSES_FILE'),
+            stockPlans: loadItems('stock_plans_files', 'OCF_STOCK_PLANS_FILE'),
+            transactions: loadItems('transactions_files', 'OCF_TRANSACTIONS_FILE'),
+            financings: loadItems('financings_files', 'OCF_FINANCINGS_FILE'),
+          };
+        }
+
+        const ocfImportedNumber = (value) => {
+          const number = Number(value);
+          return Number.isFinite(number) ? number : 0;
+        };
+        const ocfImportedMoney = (value) => ocfImportedNumber(value?.amount);
+        const ocfImportedRatio = (value) =>
+          value && typeof value === 'object'
+            ? ocfImportedNumber(value.numerator) /
+              Math.max(0.0000000001, ocfImportedNumber(value.denominator))
+            : ocfImportedNumber(value);
+        const ocfImportedName = (stakeholder) =>
+          String(
+            stakeholder?.name?.legal_name ||
+              [stakeholder?.name?.first_name, stakeholder?.name?.last_name]
+                .filter(Boolean)
+                .join(' ') ||
+              stakeholder?.issuer_assigned_id ||
+              stakeholder?.id ||
+              'Unknown stakeholder',
+          ).trim();
+        const ocfHolderType = (stakeholder) => {
+          const relationships = stakeholder?.current_relationships || [
+            stakeholder?.current_relationship,
+          ];
+          if (relationships.includes('FOUNDER')) return 'Gründer';
+          if (
+            relationships.includes('EMPLOYEE') ||
+            relationships.includes('NON_US_EMPLOYEE') ||
+            relationships.includes('EXECUTIVE')
+          )
+            return 'Mitarbeitende';
+          if (relationships.includes('ADVISOR') || relationships.includes('CONSULTANT'))
+            return 'Advisor';
+          if (relationships.includes('INVESTOR')) return 'Investor';
+          return 'Sonstige';
+        };
+
+        function stateFromGenericOcf(ocf) {
+          const stakeholderById = new Map(
+              ocf.stakeholders.map((stakeholder) => [stakeholder.id, stakeholder]),
+            ),
+            stockClassById = new Map(
+              ocf.stockClasses.map((stockClass) => [stockClass.id, stockClass]),
+            ),
+            transactionById = new Map(
+              ocf.transactions.map((transaction) => [transaction.id, transaction]),
+            ),
+            financingIssuanceIds = new Set(
+              ocf.financings.flatMap((financing) => financing.issuance_ids || []),
+            ),
+            allowedTypes = new Set([
+              'TX_STOCK_ISSUANCE',
+              'TX_CONVERTIBLE_ISSUANCE',
+              'TX_EQUITY_COMPENSATION_ISSUANCE',
+              'TX_PLAN_SECURITY_ISSUANCE',
+              'TX_STOCK_PLAN_POOL_ADJUSTMENT',
+            ]),
+            ignoredTypes = new Set([
+              'TX_STOCK_ACCEPTANCE',
+              'TX_CONVERTIBLE_ACCEPTANCE',
+              'TX_EQUITY_COMPENSATION_ACCEPTANCE',
+              'TX_ISSUER_AUTHORIZED_SHARES_ADJUSTMENT',
+              'TX_STOCK_CLASS_AUTHORIZED_SHARES_ADJUSTMENT',
+            ]),
+            unsupported = [
+              ...new Set(
+                ocf.transactions
+                  .map((transaction) => transaction.object_type)
+                  .filter((type) => !allowedTypes.has(type) && !ignoredTypes.has(type)),
+              ),
+            ];
+          if (unsupported.length)
+            throw new Error(
+              `OCF enthält noch nicht unterstützte Transaktionstypen: ${unsupported.join(
+                ', ',
+              )}. Für einen verlustfreien Import bitte eine von dieser App exportierte OCF-Datei verwenden.`,
+            );
+
+          const usedIds = new Set(),
+            internalId = (prefix, value) => {
+              const base =
+                `${prefix}-${String(value || 'item')
+                  .normalize('NFKD')
+                  .replace(/[\u0300-\u036f]/g, '')
+                  .replace(/[^a-zA-Z0-9_-]+/g, '-')
+                  .replace(/^-+|-+$/g, '')
+                  .slice(0, 64)}` || `${prefix}-item`;
+              let candidate = base,
+                index = 2;
+              while (usedIds.has(candidate)) candidate = `${base}-${index++}`;
+              usedIds.add(candidate);
+              return candidate;
+            },
+            imported = {
+              founderSetVersion: 'mf-ch-ng-jb-v3',
+              financingSetVersion: 'preseed-seed-v1',
+              vsopSetVersion: 'vsop-standard-v3',
+              holders: [],
+              rounds: [],
+              convertibles: [],
+              secondaries: [],
+              vsopParticipants: [],
+              exit: { value: 0, debt: 0, costs: 0, date: '' },
+            },
+            holderByStakeholderId = new Map();
+
+          ocf.transactions
+            .filter(
+              (transaction) =>
+                transaction.object_type === 'TX_STOCK_ISSUANCE' &&
+                !financingIssuanceIds.has(transaction.id),
+            )
+            .forEach((issuance) => {
+              const stakeholder = stakeholderById.get(issuance.stakeholder_id),
+                name = ocfImportedName(stakeholder),
+                shares = ocfImportedNumber(issuance.quantity),
+                existing = holderByStakeholderId.get(issuance.stakeholder_id);
+              if (!(shares > 0)) return;
+              if (existing) {
+                existing.shares += shares;
+                existing.costBasis += ocfImportedMoney(issuance.cost_basis);
+                if (
+                  validDate(issuance.date) &&
+                  (!validDate(existing.investmentDate) ||
+                    issuance.date < existing.investmentDate)
+                )
+                  existing.investmentDate = issuance.date;
+                return;
+              }
+              const holder = {
+                id: internalId('holder', issuance.stakeholder_id || issuance.id),
+                name,
+                type: ocfHolderType(stakeholder),
+                shares,
+                costBasis: Math.max(0, ocfImportedMoney(issuance.cost_basis)),
+                investmentDate: validDate(issuance.date) ? issuance.date : '',
+                isVirtual: false,
+              };
+              imported.holders.push(holder);
+              holderByStakeholderId.set(issuance.stakeholder_id, holder);
+            });
+
+          const planIdByOcfId = new Map(),
+            planCapacity = new Map();
+          ocf.stockPlans.forEach((plan) => {
+            const id = internalId('pool', plan.id),
+              shares = Math.max(0, ocfImportedNumber(plan.initial_shares_reserved));
+            planIdByOcfId.set(plan.id, id);
+            planCapacity.set(plan.id, shares);
+            imported.holders.push({
+              id,
+              name: String(plan.plan_name || plan.id || 'VSOP Pool'),
+              type: 'VSOP-Pool',
+              shares,
+              costBasis: 0,
+              investmentDate: '',
+              isVirtual: true,
+            });
+          });
+
+          const adjustments = ocf.transactions
+              .filter(
+                (transaction) =>
+                  transaction.object_type === 'TX_STOCK_PLAN_POOL_ADJUSTMENT',
+              )
+              .sort((a, b) => String(a.date || '').localeCompare(String(b.date || ''))),
+            financings = [...ocf.financings].sort((a, b) =>
+              String(a.date || '').localeCompare(String(b.date || '')),
+            );
+          let fullyDilutedBefore = imported.holders.reduce(
+              (sum, holder) => sum + (Number(holder.shares) || 0),
+              0,
+            ),
+            adjustmentIndex = 0;
+          financings.forEach((financing) => {
+            const sameDateRefreshes = [];
+            while (
+              adjustmentIndex < adjustments.length &&
+              String(adjustments[adjustmentIndex].date || '') <= String(financing.date || '')
+            ) {
+              const adjustment = adjustments[adjustmentIndex++],
+                previous = planCapacity.get(adjustment.stock_plan_id) || 0,
+                next = Math.max(0, ocfImportedNumber(adjustment.shares_reserved)),
+                delta = next - previous;
+              if (
+                Math.abs(delta) > 0.0000001 &&
+                (adjustment.date !== financing.date || delta < 0)
+              )
+                throw new Error(
+                  `OCF-Pool-Anpassung ${adjustment.id} kann keiner positiven Finanzierungs-Auffrischung zugeordnet werden.`,
+                );
+              planCapacity.set(adjustment.stock_plan_id, next);
+              fullyDilutedBefore += delta;
+              if (adjustment.date === financing.date && delta > 0)
+                sameDateRefreshes.push({
+                  planId: adjustment.stock_plan_id,
+                  shares: delta,
+                });
+            }
+            const issuances = (financing.issuance_ids || [])
+                .map((id) => transactionById.get(id))
+                .filter((transaction) => transaction?.object_type === 'TX_STOCK_ISSUANCE'),
+              classIds = new Set(issuances.map((issuance) => issuance.stock_class_id));
+            if (!issuances.length) return;
+            if (classIds.size !== 1)
+              throw new Error(
+                `OCF-Finanzierung ${financing.name} verwendet mehrere Anteilsklassen.`,
+              );
+            const prices = issuances.map((issuance) =>
+                ocfImportedMoney(issuance.share_price),
+              ),
+              price = prices[0],
+              inconsistentPrice = prices.some(
+                (candidate) => Math.abs(candidate - price) > Math.max(1e-8, price * 1e-8),
+              );
+            if (!(price > 0) || inconsistentPrice)
+              throw new Error(
+                `OCF-Finanzierung ${financing.name} hat keinen einheitlichen positiven Anteilspreis.`,
+              );
+            if (!(fullyDilutedBefore > 0))
+              throw new Error(
+                `OCF-Finanzierung ${financing.name} hat keine gültige Pre-Money-Basis.`,
+              );
+            const investorsByName = new Map();
+            issuances.forEach((issuance) => {
+              const name = ocfImportedName(stakeholderById.get(issuance.stakeholder_id)),
+                investment =
+                  ocfImportedMoney(issuance.share_price) *
+                  ocfImportedNumber(issuance.quantity),
+                key = name.toLocaleLowerCase('de-DE'),
+                existing = investorsByName.get(key);
+              if (existing) existing.investment += investment;
+              else
+                investorsByName.set(key, {
+                  id: internalId('investor', issuance.id),
+                  name,
+                  investment,
+                });
+            });
+            const stockClass = stockClassById.get([...classIds][0]) || {},
+              preferenceMultiple = Math.max(
+                0,
+                ocfImportedNumber(stockClass.liquidation_preference_multiple),
+              ),
+              participationCap = Math.max(
+                0,
+                ocfImportedNumber(stockClass.participation_cap_multiple),
+              ),
+              preferred =
+                stockClass.class_type === 'PREFERRED' || preferenceMultiple > 0,
+              conversionMechanism = (stockClass.conversion_rights || []).find(
+                (right) => right?.conversion_mechanism?.type === 'RATIO_CONVERSION',
+              )?.conversion_mechanism,
+              refreshPlans = [...new Set(sameDateRefreshes.map((refresh) => refresh.planId))];
+            if (refreshPlans.length > 1)
+              throw new Error(
+                `OCF-Finanzierung ${financing.name} ändert mehrere VSOP-Pools gleichzeitig.`,
+              );
+            const round = normalizeRound({
+              id: internalId('round', financing.id),
+              name: String(financing.name || financing.id || 'Financing'),
+              className: String(stockClass.name || financing.name || 'Share class'),
+              investors: [...investorsByName.values()],
+              preMoney: price * fullyDilutedBefore,
+              date: financing.date,
+              liquidationPreferenceType: preferred
+                ? participationCap > 0
+                  ? 'participating'
+                  : 'non-participating'
+                : 'none',
+              liquidationPreferenceMultiple: preferred
+                ? Math.max(0.1, preferenceMultiple || 1)
+                : 1,
+              liquidationSeniority: Math.max(
+                1,
+                Math.round(ocfImportedNumber(stockClass.seniority) || 1),
+              ),
+              participationCapMultiple: participationCap,
+              conversionRatio: Math.max(
+                0.0001,
+                ocfImportedRatio(conversionMechanism?.ratio) || 1,
+              ),
+              cumulativeDividendRate: 0,
+              redemptionEnabled: false,
+              redemptionDate: '',
+              redemptionMultiple: 1,
+              poolRefresh: sameDateRefreshes.reduce(
+                (sum, refresh) => sum + refresh.shares,
+                0,
+              ),
+              poolRefreshTiming: 'pre',
+              poolId: refreshPlans.length
+                ? planIdByOcfId.get(refreshPlans[0]) || ''
+                : '',
+            });
+            imported.rounds.push(round);
+            fullyDilutedBefore += issuances.reduce(
+              (sum, issuance) => sum + ocfImportedNumber(issuance.quantity),
+              0,
+            );
+          });
+          if (adjustmentIndex < adjustments.length)
+            throw new Error(
+              `OCF-Pool-Anpassung ${adjustments[adjustmentIndex].id} kann keiner Finanzierungsrunde zugeordnet werden.`,
+            );
+
+          ocf.transactions
+            .filter(
+              (transaction) => transaction.object_type === 'TX_CONVERTIBLE_ISSUANCE',
+            )
+            .forEach((issuance) => {
+              const mechanism = (issuance.conversion_triggers || [])
+                  .map((trigger) => trigger?.conversion_right?.conversion_mechanism)
+                  .find((candidate) => candidate?.type === 'CONVERTIBLE_NOTE_CONVERSION') || {
+                  },
+                rules = mechanism.capitalization_definition_rules || {},
+                fullyDiluted = Boolean(
+                  rules.include_outstanding_options ||
+                    rules.include_outstanding_unissued_options,
+                );
+              imported.convertibles.push({
+                id: internalId('convertible', issuance.id),
+                name: String(issuance.custom_id || issuance.id || 'Convertible note'),
+                lender: ocfImportedName(stakeholderById.get(issuance.stakeholder_id)),
+                principal: Math.max(0, ocfImportedMoney(issuance.investment_amount)),
+                date: issuance.date,
+                interest: Math.max(
+                  0,
+                  ocfImportedNumber(mechanism.interest_rates?.[0]?.rate) * 100,
+                ),
+                discount: Math.max(
+                  0,
+                  ocfImportedNumber(mechanism.conversion_discount) * 100,
+                ),
+                valuationCap: Math.max(
+                  0,
+                  ocfImportedMoney(mechanism.conversion_valuation_cap),
+                ),
+                fullyDilutedConversion: fullyDiluted,
+                fullyDilutedGrantedVsopOnly:
+                  fullyDiluted &&
+                  Boolean(rules.include_outstanding_options) &&
+                  !Boolean(rules.include_outstanding_unissued_options),
+              });
+            });
+
+          ocf.transactions
+            .filter((transaction) =>
+              [
+                'TX_EQUITY_COMPENSATION_ISSUANCE',
+                'TX_PLAN_SECURITY_ISSUANCE',
+              ].includes(transaction.object_type),
+            )
+            .forEach((issuance) => {
+              const poolId = planIdByOcfId.get(issuance.stock_plan_id);
+              if (!poolId)
+                throw new Error(
+                  `OCF-Zuteilung ${issuance.custom_id || issuance.id} verweist auf keinen gültigen Plan.`,
+                );
+              const vestings = [...(issuance.vestings || [])]
+                  .filter((vesting) => validDate(vesting.date))
+                  .sort((a, b) => a.date.localeCompare(b.date)),
+                firstVesting = vestings[0]?.date,
+                lastVesting = vestings[vestings.length - 1]?.date,
+                startDate = validDate(issuance.date) ? issuance.date : firstVesting,
+                vestingMonths =
+                  startDate && lastVesting
+                    ? Math.max(
+                        1,
+                        completedMonths(
+                          startDate,
+                          new Date(lastVesting + 'T00:00:00Z'),
+                        ),
+                      )
+                    : 1,
+                cliffMonths =
+                  startDate && firstVesting
+                    ? Math.min(
+                        vestingMonths,
+                        completedMonths(
+                          startDate,
+                          new Date(firstVesting + 'T00:00:00Z'),
+                        ),
+                      )
+                    : 0,
+                intervalMonths =
+                  vestings.length > 1
+                    ? completedMonths(
+                        vestings[0].date,
+                        new Date(vestings[1].date + 'T00:00:00Z'),
+                      )
+                    : 1;
+              imported.vsopParticipants.push(
+                normalizeVsopGrant({
+                  id: internalId('vsop', issuance.id),
+                  name: ocfImportedName(stakeholderById.get(issuance.stakeholder_id)),
+                  poolId,
+                  shares: Math.max(0, ocfImportedNumber(issuance.quantity)),
+                  plannedShares: 0,
+                  grantDate: validDate(issuance.date) ? issuance.date : startDate,
+                  startDate,
+                  vestingMonths,
+                  cliffMonths,
+                  vestingIntervalMonths: [1, 3, 12].includes(intervalMonths)
+                    ? intervalMonths
+                    : 1,
+                  vestingPauseMonths: 0,
+                  hurdle: Math.max(
+                    0,
+                    ocfImportedMoney(issuance.base_price || issuance.exercise_price),
+                  ),
+                  status: 'Aktiv',
+                  leaverDate: '',
+                  leaverType: 'none',
+                  vestedRetentionPct: 100,
+                  expiryDate: validDate(issuance.expiration_date)
+                    ? issuance.expiration_date
+                    : '',
+                  accelerationTrigger: 'none',
+                  accelerationPct: 0,
+                  secondTriggerDate: '',
+                }),
+              );
+            });
+
+          if (!imported.holders.some((holder) => !holder.isVirtual))
+            throw new Error('Das OCF-Paket enthält keine importierbaren Equity-Beteiligten.');
+          return imported;
+        }
+
+        function installOcfState(candidate) {
+          const imported = normalizeState(structuredClone(candidate)),
+            ids = [
+              ...imported.holders,
+              ...imported.rounds,
+              ...imported.convertibles,
+              ...imported.secondaries,
+              ...imported.vsopParticipants,
+              ...imported.rounds.flatMap((round) => roundInvestors(round)),
+            ].map((item) => item.id);
+          if (!imported.holders.length)
+            throw new Error('Das OCF-Paket enthält keine Beteiligten.');
+          if (ids.some((id) => !id) || new Set(ids).size !== ids.length)
+            throw new Error('OCF-IDs müssen über alle importierten Datensätze eindeutig sein.');
+          const pools = imported.holders.filter((holder) => holder.isVirtual),
+            poolIds = new Set(pools.map((pool) => pool.id));
+          imported.vsopParticipants.forEach((grant) => {
+            if (!poolIds.has(grant.poolId))
+              throw new Error(
+                `OCF-Zuteilung ${grant.name} verweist auf keinen gültigen VSOP-Pool.`,
+              );
+          });
+          imported.rounds.forEach((round) => {
+            if (round.poolRefresh > 0 && !poolIds.has(round.poolId))
+              throw new Error(
+                `OCF-Pool-Auffrischung in ${round.name} hat keinen gültigen Zielpool.`,
+              );
+          });
+          const importedSnapshots = snapshots(imported),
+            invalidSecondary = importedSnapshots.find((snapshot) => snapshot.secondaryError);
+          if (invalidSecondary) throw new Error(invalidSecondary.secondaryError);
+          state = imported;
+          stage = importedSnapshots.length - 1;
+          save();
+          render();
+        }
+
+        async function importOcf(buffer) {
+          const ocf = parseOcfPackage(await readOcfZip(buffer)),
+            stateComment = (ocf.manifest.comments || []).find((comment) =>
+              String(comment).startsWith(ocfStateCommentPrefix),
+            );
+          if (stateComment) {
+            let metadata;
+            try {
+              metadata = JSON.parse(String(stateComment).slice(ocfStateCommentPrefix.length));
+            } catch {
+              throw new Error('Die eingebetteten Cap-Table-Manager-Daten sind beschädigt.');
+            }
+            if (
+              metadata?.format !== 'cap-table-manager-state' ||
+              metadata?.version !== 1 ||
+              !metadata?.state
+            )
+              throw new Error('Die eingebetteten Cap-Table-Manager-Daten sind ungültig.');
+            if (metadata.issuer) lastOcfIssuer = metadata.issuer;
+            installOcfState(metadata.state);
+            return;
+          }
+          lastOcfIssuer = {
+            legal_name: ocf.manifest.issuer.legal_name,
+            formation_date: ocf.manifest.issuer.formation_date,
+            country_of_formation: ocf.manifest.issuer.country_of_formation,
+          };
+          installOcfState(stateFromGenericOcf(ocf));
+        }
+
+        function exportOcf(issuer) {
+          const generatedAt = new Date(),
+            packageData = createOcfPackage(state, issuer, generatedAt),
+            safeName =
+              issuer.legal_name
+                .toLocaleLowerCase('de-DE')
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .slice(0, 50) || 'cap-table',
+            stamp = generatedAt.toISOString().slice(0, 10);
+          downloadBlob(
+            new Blob([packageData.archive], { type: 'application/zip' }),
+            `${safeName}-${stamp}.ocf.zip`,
+          );
+          setCsvStatus('OCF-Paket exportiert.');
+        }
+
         function parseCsv(text) {
           const source = String(text || '').replace(/^\ufeff/, ''),
             firstLine = source.split(/\r?\n/, 1)[0],
@@ -6942,12 +8508,12 @@
             number: '13',
             image: '13-data-safety.png',
             title: {
-              de: 'Speichern, CSV, Rückgängig und Zurücksetzen',
-              en: 'Save, CSV, undo and reset',
+              de: 'Speichern, CSV/OCF, Rückgängig und Zurücksetzen',
+              en: 'Save, CSV/OCF, undo and reset',
             },
             purpose: {
-              de: 'Die Datenwerkzeuge sichern, übertragen und korrigieren den Workspace. Änderungen werden automatisch im Browser gespeichert.',
-              en: 'The data tools back up, transfer and correct the workspace. Changes are saved automatically in the browser.',
+              de: 'Die Datenwerkzeuge sichern, übertragen und korrigieren den Workspace. CSV dient als kompakte App-Sicherung; OCF ermöglicht den Austausch mit kompatiblen Cap-Table-Systemen. Änderungen werden automatisch im Browser gespeichert.',
+              en: 'The data tools back up, transfer and correct the workspace. CSV is a compact app backup; OCF enables exchange with compatible cap-table systems. Changes are saved automatically in the browser.',
             },
             when: {
               de: 'Exportiere vor größeren Änderungen oder bevor du Daten in einem anderen Browser verwenden möchtest. Nutze Rückgängig für die letzten Bearbeitungsschritte.',
@@ -6957,6 +8523,8 @@
               de: [
                 'Klicke CSV exportieren, um den vollständigen Workspace im Schema Version 4 herunterzuladen.',
                 'Klicke CSV laden und wähle eine zuvor exportierte Workspace-Datei. Erfolgreiche oder fehlerhafte Imports erscheinen im Statusfeld.',
+                'Klicke OCF exportieren, ergänze rechtlichen Unternehmensnamen, Gründungsdatum und ISO-Ländercode und lade das OCF-1.2-Paket als .ocf.zip herunter.',
+                'Klicke OCF laden, um ein OCF-1.2-Paket zu importieren. Von dieser App exportierte Pakete werden verlustfrei wiederhergestellt.',
                 'Nutze Rückgängig und Wiederholen für bis zu 30 gespeicherte Zustandsänderungen; Strg/Cmd+Z und Strg/Cmd+Y funktionieren außerhalb von Eingabefeldern.',
                 'Klicke Zurücksetzen. Wähle Speichern und zurücksetzen für eine letzte CSV-Sicherung oder Ohne Speichern zurücksetzen.',
                 'Lade das Beispiel erneut, um zum Ausgangspunkt dieser Anleitung zurückzukehren.',
@@ -6964,6 +8532,8 @@
               en: [
                 'Click Export CSV to download the complete workspace using schema version 4.',
                 'Click Import CSV and choose a previously exported workspace file. Successful or failed imports appear in the status area.',
+                'Click Export OCF, enter the issuer legal name, formation date and ISO country code, then download the OCF 1.2 package as an .ocf.zip file.',
+                'Click Import OCF to import an OCF 1.2 package. Packages exported by this app are restored losslessly.',
                 'Use Undo and Redo for up to 30 saved state changes; Ctrl/Cmd+Z and Ctrl/Cmd+Y work outside input fields.',
                 'Click Reset. Choose Save and reset for one final CSV backup or Reset without saving.',
                 'Load the example again to return to this guide’s starting point.',
@@ -6974,8 +8544,8 @@
               en: 'Figure EN-13 · Data tools, save status and safety prompt before reset.',
             },
             visible: {
-              de: 'Die linke Seitenleiste bündelt Versionsverlauf, Workspace-CSV, Beispiel und Reset. Der Dialog verhindert ein versehentliches Zurücksetzen ohne Sicherungsentscheidung.',
-              en: 'The left sidebar groups history, workspace CSV, example and reset. The dialog prevents accidental reset without a backup decision.',
+              de: 'Die linke Seitenleiste bündelt Versionsverlauf, Workspace-CSV, OCF-Austausch, Beispiel und Reset. Der Dialog verhindert ein versehentliches Zurücksetzen ohne Sicherungsentscheidung.',
+              en: 'The left sidebar groups history, workspace CSV, OCF exchange, example and reset. The dialog prevents accidental reset without a backup decision.',
             },
             result: {
               de: 'Der Workspace ist gesichert, wiederhergestellt oder bewusst auf einen einzelnen Founder mit 100 % zurückgesetzt.',
@@ -6985,11 +8555,15 @@
               de: [
                 'Auto-Speicherung nutzt localStorage des aktuellen Browser-Ursprungs; sie ist kein Cloud-Backup.',
                 'Der Import verlangt record_type, eindeutige IDs und gültige Verweise. Verwende möglichst eine von dieser Software exportierte CSV.',
+                'Der generische OCF-Import unterstützt OCF 1.2 für Beteiligte, Anteilsklassen, Pläne, Finanzierungs-Issuances, Wandeldarlehen und Equity Compensation. Nicht abbildbare Ereignisketten werden mit einer Fehlermeldung abgelehnt.',
+                'App-spezifische Details wie Secondaries, Exit, Leaver- und Beschleunigungsregeln bleiben im eingebetteten Metadatenblock eines App-Exports erhalten.',
                 'Ein Ansichts-Export aus der Cap Table kann nicht als vollständiger Workspace importiert werden.',
               ],
               en: [
                 'Auto-save uses localStorage for the current browser origin; it is not a cloud backup.',
                 'Import requires record_type, unique IDs and valid references. Prefer a CSV exported by this software.',
+                'Generic OCF import supports OCF 1.2 stakeholders, stock classes, plans, financing issuances, convertible notes and equity compensation. Event chains that cannot be represented are rejected with an error.',
+                'App-specific details such as secondaries, exit, leaver and acceleration rules remain available in the embedded metadata block of an app export.',
                 'A cap-table view export cannot be imported as a complete workspace.',
               ],
             },
@@ -7744,6 +9318,23 @@
             },
             component: 'save(), loadState(), storageKey, languageStorageKey, currencyStorageKey',
             sections: '01, 13',
+          },
+          {
+            names: { de: 'OCF / Open Cap Format', en: 'OCF / Open Cap Format' },
+            definition: {
+              de: 'Offenes, ereignisbasiertes JSON-Austauschformat für Cap Tables; ein Paket besteht aus Manifest und referenzierten Dateien in einem ZIP-Container.',
+              en: 'Open, event-based JSON interchange format for cap tables; a package contains a manifest and referenced files in a ZIP container.',
+            },
+            purpose: {
+              de: 'Überträgt Beteiligte, Anteilsklassen, Pläne und Transaktionen zwischen kompatiblen Cap-Table-Systemen.',
+              en: 'Transfers stakeholders, stock classes, plans and transactions between compatible cap-table systems.',
+            },
+            implementation: {
+              de: 'createOcfPackage() erzeugt ein OCF-1.2-.ocf.zip mit MD5-Prüfsummen. importOcf() prüft ZIP, Prüfsummen, Manifest und Referenzen; ein App-Metadatenblock ermöglicht den verlustfreien Rückimport.',
+              en: 'createOcfPackage() creates an OCF 1.2 .ocf.zip with MD5 checksums. importOcf() validates the ZIP, checksums, manifest and references; an app metadata block enables lossless re-import.',
+            },
+            component: 'createOcfPackage(), readOcfZip(), parseOcfPackage(), importOcf()',
+            sections: '13',
           },
           {
             names: { de: 'AGPL-3.0-only / Lizenz', en: 'AGPL-3.0-only / licence' },
@@ -8839,6 +10430,44 @@
         $('#erm-export-csv').addEventListener('click', exportCsv);
         $('#erm-export-current-cap').addEventListener('click', exportCurrentCapTable);
         $('#erm-import-csv').addEventListener('click', () => $('#erm-csv-file').click());
+        $('#erm-export-ocf').addEventListener('click', () => {
+          $('#erm-ocf-issuer-name').value = lastOcfIssuer?.legal_name || '';
+          $('#erm-ocf-formation-date').value =
+            lastOcfIssuer?.formation_date || earliestOcfDate(state);
+          $('#erm-ocf-country').value = lastOcfIssuer?.country_of_formation || 'DE';
+          $('#erm-ocf-export-dialog').showModal();
+          queueMicrotask(() => $('#erm-ocf-issuer-name').focus());
+        });
+        $('#erm-import-ocf').addEventListener('click', () => $('#erm-ocf-file').click());
+        $('#erm-ocf-export-cancel').addEventListener('click', () =>
+          $('#erm-ocf-export-dialog').close(),
+        );
+        $('#erm-ocf-export-form').addEventListener('submit', (event) => {
+          event.preventDefault();
+          const issuer = {
+            legal_name: $('#erm-ocf-issuer-name').value.trim(),
+            formation_date: $('#erm-ocf-formation-date').value,
+            country_of_formation: $('#erm-ocf-country').value.trim().toUpperCase(),
+          };
+          if (
+            !issuer.legal_name ||
+            !validDate(issuer.formation_date) ||
+            !/^[A-Z]{2}$/.test(issuer.country_of_formation)
+          ) {
+            setCsvStatus('Bitte die OCF-Gesellschaftsangaben vollständig prüfen.', true);
+            return;
+          }
+          try {
+            lastOcfIssuer = issuer;
+            exportOcf(issuer);
+            $('#erm-ocf-export-dialog').close();
+          } catch (error) {
+            setCsvStatus(
+              error?.message || 'Das OCF-Paket konnte nicht exportiert werden.',
+              true,
+            );
+          }
+        });
         $('#erm-import-example').addEventListener('click', () => {
           $('#erm-example-dialog').showModal();
           queueMicrotask(() => $('#erm-example-save').focus());
@@ -8883,6 +10512,20 @@
             );
           }
           e.target.value = '';
+        });
+        $('#erm-ocf-file').addEventListener('change', async (event) => {
+          const file = event.target.files && event.target.files[0];
+          if (!file) return;
+          try {
+            await importOcf(await file.arrayBuffer());
+            setCsvStatus(`${file.name} als OCF geladen.`);
+          } catch (error) {
+            setCsvStatus(
+              error?.message || 'Das OCF-Paket konnte nicht geladen werden.',
+              true,
+            );
+          }
+          event.target.value = '';
         });
         root
           .querySelectorAll('[data-money]')

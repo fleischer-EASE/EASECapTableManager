@@ -32,7 +32,8 @@ same local workspace between sessions.
 4. Move between development stages to review dilution and ownership.
 5. Check the chronological financing cards and edit an event when required.
 6. Enter an exit value, date, debt, and transaction costs to run the waterfall.
-7. Export the workspace CSV before moving data to another browser or resetting.
+7. Export the workspace as CSV for an app backup or as OCF for exchange with
+   compatible cap-table systems before moving data or resetting.
 
 ## Modelling coverage
 
@@ -53,7 +54,7 @@ same local workspace between sessions.
 - Exit simulation with a seniority-based liquidation-preference waterfall,
   economic conversion choice, payout multiples, and IRR.
 - Local automatic saving, a 30-state undo/redo history, cap-table search, view
-  export, and complete CSV workspace backups.
+  export, complete CSV workspace backups, and OCF 1.2 import/export.
 
 Stakeholders with the same name are grouped into one cap-table and exit row.
 Their individual lots, financing terms, cash flows, and VSOP grants remain
@@ -87,7 +88,7 @@ Chrome screenshots. Each section explains the purpose, when to use the feature,
 the exact workflow, the expected result, and common errors. The terminology
 table also maps product concepts to the relevant state fields and functions.
 
-## Data and CSV files
+## Data, CSV, and OCF files
 
 Application data is stored in `localStorage` for the current browser origin.
 This makes reloads convenient, but it is not a cloud backup.
@@ -95,6 +96,13 @@ This makes reloads convenient, but it is not a cloud backup.
 - **Export CSV** downloads the complete workspace in CSV schema v4.
 - **Import CSV** restores a complete workspace. Schema v2 and v3 exports remain
   importable.
+- **Export OCF** asks for the issuer legal name, formation date, and ISO
+  country code, then creates a standards-based OCF 1.2 `.ocf.zip` package with
+  manifest checksums.
+- **Import OCF** reads OCF 1.2 ZIP packages. Packages produced by this app
+  restore the workspace losslessly; generic packages import supported
+  stakeholders, stock classes, stock plans, financing issuances, convertible
+  notes, and equity-compensation issuances.
 - **Export view** downloads only the selected and optionally filtered cap-table
   stage. It is a report and cannot be imported as a workspace.
 - **Load example** can download the current workspace first, then replace it
@@ -103,6 +111,12 @@ This makes reloads convenient, but it is not a cloud backup.
 Schema v4 adds
 `fully_diluted_granted_vsop_only` to convertible records. Currency fields keep
 their historical EUR names; selecting `$` changes only display formatting.
+
+OCF is event-based and does not have direct equivalents for every modelling
+field in this app. App exports therefore include a namespaced metadata comment
+for exact re-import. Generic OCF imports reject transaction chains that cannot
+be represented instead of silently discarding them. The implementation targets
+[Open Cap Format 1.2](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/).
 
 ## Testing
 

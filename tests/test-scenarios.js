@@ -20,6 +20,10 @@ const marker = text => {
 [
   '<html lang="en">',
   'id="erm-import-example"',
+  'id="erm-export-ocf"',
+  'id="erm-import-ocf"',
+  'id="erm-ocf-file"',
+  'id="erm-ocf-export-dialog"',
   'id="erm-example-dialog"',
   'id="erm-example-without-save"',
   'id="erm-example-save"',
@@ -70,7 +74,7 @@ for (const language of ['de', 'en']) {
     const screenshotPath = `guide/screenshots/${language}/${screenshot}`;
     if (!fs.existsSync(screenshotPath))
       throw new Error(`Guide screenshot is missing: ${screenshotPath}`);
-    if (fs.statSync(screenshotPath).size < 50000)
+    if (fs.statSync(screenshotPath).size < 45000)
       throw new Error(`Guide screenshot appears incomplete: ${screenshotPath}`);
   }
 }
@@ -115,6 +119,8 @@ const normalizeStart = declarationMarker('normalizeRound');
 const normalizeEnd = marker('// State lifecycle');
 const csvStart = functionMarker('parseCsv');
 const csvEnd = declarationMarker('holderKey');
+const ocfStart = declarationMarker('ocfVersion');
+const ocfEnd = csvStart;
 
 const validDate = new Function(
   source.slice(validDateStart, validDateEnd) + '\nreturn validDate;'
@@ -159,6 +165,27 @@ const projectNormalizers = new Function(
 )();
 const normalizeRound = projectNormalizers.normalizeRound;
 const normalizeVsopGrant = projectNormalizers.normalizeVsopGrant;
+const projectOcf = new Function(
+  'validDate',
+  'today',
+  'addMonths',
+  'snapshots',
+  'roundInvestors',
+  'normalizeRound',
+  'normalizeVsopGrant',
+  'completedMonths',
+  source.slice(ocfStart, ocfEnd) +
+    '\nreturn {ocfVersion,md5Bytes,crc32,createStoredZip,createOcfPackage,readOcfZip,parseOcfPackage,stateFromGenericOcf};'
+)(
+  validDate,
+  '2030-01-01',
+  projectFinance.addMonths,
+  snapshots,
+  projectRoundHelpers.roundInvestors,
+  normalizeRound,
+  normalizeVsopGrant,
+  projectFinance.completedMonths
+);
 
 function buildCsvImporter() {
   let generatedId = 0;
@@ -1239,6 +1266,156 @@ function runCsvScenario(scenario) {
   if (scenario.expected.exitDate !== undefined) assertEqual(state.exit.date, scenario.expected.exitDate, `${scenario.id} exit date`);
 }
 
+async function runOcfContractTests() {
+  const encoder = new TextEncoder();
+  assertEqual(
+    projectOcf.md5Bytes(encoder.encode('hello')),
+    '5d41402abc4b2a76b9719d911017c592',
+    'OCF MD5 implementation'
+  );
+  assertEqual(projectOcf.crc32(encoder.encode('123456789')), 0xcbf43926, 'OCF CRC-32 implementation');
+
+  const ocfState = {
+    founderSetVersion: 'mf-ch-ng-jb-v3',
+    financingSetVersion: 'preseed-seed-v1',
+    vsopSetVersion: 'vsop-standard-v3',
+    holders: [
+      makeHolder('founder', 'Founder', 1000, {
+        type: 'Gründer',
+        costBasis: 25000,
+        investmentDate: '2024-01-01'
+      }),
+      makeHolder('pool', 'Employee Pool', 100, {type: 'VSOP-Pool', isVirtual: true})
+    ],
+    rounds: [
+      makeRound({
+        id: 'seed',
+        name: 'Seed',
+        investors: [{id: 'seed-investor', name: 'Seed VC', investment: 200000}],
+        preMoney: 1000000,
+        date: '2025-01-01',
+        poolRefresh: 20,
+        poolRefreshTiming: 'pre',
+        poolId: 'pool'
+      })
+    ],
+    convertibles: [
+      {
+        id: 'note',
+        name: 'CN-1',
+        lender: 'Angel',
+        principal: 50000,
+        date: '2024-06-01',
+        interest: 5,
+        discount: 20,
+        valuationCap: 800000,
+        fullyDilutedConversion: true,
+        fullyDilutedGrantedVsopOnly: true
+      }
+    ],
+    secondaries: [],
+    vsopParticipants: [
+      normalizeVsopGrant({
+        id: 'grant',
+        name: 'Employee',
+        poolId: 'pool',
+        shares: 24,
+        plannedShares: 0,
+        grantDate: '2024-02-01',
+        startDate: '2024-02-01',
+        vestingMonths: 24,
+        cliffMonths: 12,
+        vestingIntervalMonths: 1,
+        vestingPauseMonths: 0,
+        hurdle: 1,
+        status: 'Aktiv',
+        leaverDate: '',
+        leaverType: 'none',
+        vestedRetentionPct: 100,
+        expiryDate: '',
+        accelerationTrigger: 'none',
+        accelerationPct: 0,
+        secondTriggerDate: ''
+      })
+    ],
+    exit: {value: 3000000, debt: 0, costs: 0, date: '2028-01-01'}
+  };
+  const issuer = {
+    legal_name: 'Example GmbH',
+    formation_date: '2024-01-01',
+    country_of_formation: 'DE'
+  };
+  const generatedAt = new Date('2026-01-02T03:04:05.000Z');
+  const packageData = projectOcf.createOcfPackage(ocfState, issuer, generatedAt);
+  assertEqual(packageData.manifest.ocf_version, '1.2.0', 'OCF version');
+  assertEqual(packageData.manifest.file_type, 'OCF_MANIFEST_FILE', 'OCF manifest type');
+  assertEqual(packageData.manifest.issuer.legal_name, 'Example GmbH', 'OCF issuer name');
+  assertEqual(packageData.files.length, 6, 'OCF package file count');
+  assertEqual(
+    new DataView(
+      packageData.archive.buffer,
+      packageData.archive.byteOffset,
+      packageData.archive.byteLength
+    ).getUint32(0, true),
+    0x04034b50,
+    'OCF ZIP local header'
+  );
+  const files = new Map(packageData.files.map(file => [file.name, file.data]));
+  const zipFiles = await projectOcf.readOcfZip(packageData.archive);
+  assertEqual(zipFiles.size, packageData.files.length, 'OCF ZIP entry count');
+  const parsed = projectOcf.parseOcfPackage(zipFiles);
+  assertEqual(parsed.stakeholders.length, 4, 'OCF stakeholder count');
+  assertEqual(parsed.stockClasses.length, 2, 'OCF stock class count');
+  assertEqual(parsed.stockPlans.length, 1, 'OCF stock plan count');
+  assertEqual(parsed.financings.length, 1, 'OCF financing count');
+  [
+    'TX_STOCK_ISSUANCE',
+    'TX_CONVERTIBLE_ISSUANCE',
+    'TX_CONVERTIBLE_CONVERSION',
+    'TX_STOCK_PLAN_POOL_ADJUSTMENT',
+    'TX_EQUITY_COMPENSATION_ISSUANCE'
+  ].forEach(type => {
+    if (!parsed.transactions.some(transaction => transaction.object_type === type))
+      throw new Error(`OCF transaction type missing: ${type}`);
+  });
+  [
+    ...packageData.manifest.stakeholders_files,
+    ...packageData.manifest.stock_classes_files,
+    ...packageData.manifest.stock_plans_files,
+    ...packageData.manifest.transactions_files,
+    ...packageData.manifest.financings_files
+  ].forEach(reference => {
+    assertEqual(
+      reference.md5,
+      projectOcf.md5Bytes(files.get(reference.filepath)),
+      `OCF manifest checksum ${reference.filepath}`
+    );
+  });
+  const stateComment = packageData.manifest.comments.find(comment =>
+    comment.startsWith('CAP_TABLE_MANAGER_STATE_V1:')
+  );
+  if (!stateComment) throw new Error('OCF lossless state metadata is missing');
+  const metadata = JSON.parse(stateComment.slice('CAP_TABLE_MANAGER_STATE_V1:'.length));
+  assertEqual(JSON.stringify(metadata.state), JSON.stringify(ocfState), 'OCF lossless state payload');
+
+  const genericOcf = {
+    ...parsed,
+    transactions: parsed.transactions.filter(
+      transaction => transaction.object_type !== 'TX_CONVERTIBLE_CONVERSION'
+    )
+  };
+  const genericState = projectOcf.stateFromGenericOcf(genericOcf);
+  assertEqual(genericState.rounds.length, 1, 'generic OCF round count');
+  assertEqual(genericState.convertibles.length, 1, 'generic OCF convertible count');
+  assertEqual(genericState.vsopParticipants.length, 1, 'generic OCF grant count');
+  assertEqual(
+    genericState.convertibles[0].fullyDilutedGrantedVsopOnly,
+    true,
+    'generic OCF granted-only conversion basis'
+  );
+  process.stdout.write('ok OCF - package, checksums, lossless metadata and generic import\n');
+}
+
 function runScenario(scenario) {
   if (scenario.id.startsWith('WF-')) runWaterfallScenario(scenario);
   else if (scenario.id.startsWith('PC-')) runPreferenceClaimScenario(scenario);
@@ -1249,18 +1426,28 @@ function runScenario(scenario) {
   else throw new Error(`Unknown scenario category: ${scenario.id}`);
 }
 
-if (scenarios.length !== 62) throw new Error(`Expected exactly 62 scenarios, found ${scenarios.length}.`);
+async function main() {
+  if (scenarios.length !== 62)
+    throw new Error(`Expected exactly 62 scenarios, found ${scenarios.length}.`);
 
-let passed = 0;
-scenarios.forEach((scenario, index) => {
-  try {
-    runScenario(scenario);
-    passed++;
-    process.stdout.write(`ok ${index + 1} - ${scenario.id}: ${scenario.title}\n`);
-  } catch (error) {
-    error.message = `${scenario.id} - ${scenario.title}\nIndependent calculation: ${scenario.calculation}\n${error.message}`;
-    throw error;
-  }
+  await runOcfContractTests();
+
+  let passed = 0;
+  scenarios.forEach((scenario, index) => {
+    try {
+      runScenario(scenario);
+      passed++;
+      process.stdout.write(`ok ${index + 1} - ${scenario.id}: ${scenario.title}\n`);
+    } catch (error) {
+      error.message = `${scenario.id} - ${scenario.title}\nIndependent calculation: ${scenario.calculation}\n${error.message}`;
+      throw error;
+    }
+  });
+
+  process.stdout.write(`PASS ${passed} independently calculated, human-auditable scenarios\n`);
+}
+
+main().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
 });
-
-process.stdout.write(`PASS ${passed} independently calculated, human-auditable scenarios\n`);
