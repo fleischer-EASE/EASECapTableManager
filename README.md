@@ -32,17 +32,6 @@ starten mit insgesamt 25.000 Anteilen. Darauf folgen zwei
 Pre-Seed-Angel-Wandeldarlehen, Bridge-, Seed- und Series-A-Runde sowie ein
 Mitarbeitenden-Pool und eine Exit-Annahme.
 
-## Starten
-
-Öffne `index.html` direkt in einem modernen Browser. Alternativ kann die Datei
-über einen lokalen Webserver bereitgestellt werden:
-
-```powershell
-python -m http.server 8000
-```
-
-Danach `http://localhost:8000` öffnen.
-
 ## Berechnungen testen
 
 Die regressionskritischen Berechnungen lassen sich ohne Installation mit Node.js prüfen:
