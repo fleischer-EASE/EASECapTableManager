@@ -18,11 +18,14 @@ const marker = text => {
   return index;
 };
 [
+  '<html lang="en">',
   'id="erm-import-example"',
   'id="erm-example-dialog"',
   'id="erm-example-without-save"',
   'id="erm-example-save"',
   'id="erm-open-guide"',
+  'id="erm-report-bug"',
+  'href="mailto:captable@ease-systems.de?subject=EASE%20Cap%20Table%20Manager%20-%20Bug%20report"',
   'id="erm-guide-dialog"',
   'id="erm-guide-content"',
   'const guideSections =',
@@ -30,6 +33,8 @@ const marker = text => {
   "guide/screenshots/${language}/${section.image}",
   "['Beispiel laden', 'Load example']",
   "['Beispieldaten laden?', 'Load example data?']",
+  "['Fehler melden', 'Report bug']",
+  "return supportedLanguages.has(savedLanguage) ? savedLanguage : 'en';",
   'Bug reports and other inquiries can be sent to captable@ease-systems.de.',
   'Fehlerberichte und andere Anfragen können an captable@ease-systems.de gesendet werden.',
   "img-src 'self'",

@@ -1,6 +1,6 @@
 ﻿<!doctype html>
 <!-- SPDX-License-Identifier: AGPL-3.0-only -->
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -2281,7 +2281,7 @@
                     class="erm-language-button"
                     data-language="de"
                     aria-label="Deutsch"
-                    aria-pressed="true"
+                    aria-pressed="false"
                     data-i18n-ignore
                   >
                     DE
@@ -2291,7 +2291,7 @@
                     class="erm-language-button"
                     data-language="en"
                     aria-label="English"
-                    aria-pressed="false"
+                    aria-pressed="true"
                     data-i18n-ignore
                   >
                     EN
@@ -2346,6 +2346,14 @@
             <button type="button" class="btn btn-ghost" id="erm-open-guide">
               <i data-lucide="book-open" aria-hidden="true"></i> Anleitung
             </button>
+            <a
+              class="btn btn-ghost"
+              id="erm-report-bug"
+              href="mailto:captable@ease-systems.de?subject=EASE%20Cap%20Table%20Manager%20-%20Bug%20report"
+              aria-label="Fehler melden"
+            >
+              <i data-lucide="bug" aria-hidden="true"></i> Fehler melden
+            </a>
           </nav>
           <div class="erm-sidebar-actions" aria-label="Daten verwalten">
             <span class="text-small text-muted">Versionen &amp; Daten</span>
@@ -3564,9 +3572,9 @@
         let currentLanguage = (() => {
           try {
             const savedLanguage = localStorage.getItem(languageStorageKey);
-            return supportedLanguages.has(savedLanguage) ? savedLanguage : 'de';
+            return supportedLanguages.has(savedLanguage) ? savedLanguage : 'en';
           } catch {
-            return 'de';
+            return 'en';
           }
         })();
         let currentCurrency = (() => {
@@ -3784,6 +3792,7 @@
           ['Zurücksetzen', 'Reset'],
           ['Übersicht', 'Overview'],
           ['Anleitung', 'Guide'],
+          ['Fehler melden', 'Report bug'],
           ['Mitarbeitenden-Pool', 'Employee Pool'],
           ['Finanzierungen', 'Financing'],
           ['Kennzahlen', 'Key metrics'],

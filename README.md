@@ -22,7 +22,8 @@ Then open `http://localhost:8000`.
 
 ## Features
 
-- Switchable German and English interface with a persistent €/$ display toggle
+- English-by-default interface switchable between English and German, with a
+  persistent €/$ display toggle
 - Cap table views across chronological equity and secondary stages
 - A shared **New transaction** entry point for equity rounds, convertible loans,
   and secondary transactions
@@ -56,6 +57,8 @@ Then open `http://localhost:8000`.
   workspace as CSV before it is replaced
 - An integrated bilingual **Guide / Anleitung** with 13 continuous practical
   sections and 26 language-specific Chrome screenshots
+- A bilingual **Report bug / Fehler melden** button that opens a pre-addressed
+  email in the user’s configured email application
 
 ## Guide and example
 
@@ -116,7 +119,8 @@ the example files.
 
 ## Contact
 
-Bug reports and other inquiries can be sent to captable@ease-systems.de.
+Bug reports and other inquiries can be sent to
+[captable@ease-systems.de](mailto:captable@ease-systems.de).
 
 ## License
 
