@@ -2924,6 +2924,17 @@
                     type="date"
                     required
                 /></label>
+                <label class="erm-check-card"
+                  ><input id="erm-round-include-convertibles-fd" type="checkbox" /><span
+                    class="erm-check-copy"
+                    ><strong>Wandelbare Rechte in Fully Diluted einbeziehen</strong
+                    ><span class="text-small text-muted"
+                      >Die Pre-Money-Preisgrundlage umfasst das gezeichnete Kapital, modellierte
+                      virtuelle Optionen und Anteile sowie die As-converted-Anteile aller beim
+                      Closing ausstehenden CLAs.</span
+                    ></span
+                  ></label
+                >
                 <section class="erm-round-investors" aria-labelledby="erm-round-investors-title">
                   <div class="viz-row">
                     <strong id="erm-round-investors-title">Investoren</strong
@@ -3613,6 +3624,8 @@
           r.participationCapMultiple = Math.max(0, Number(r.participationCapMultiple) || 0);
           r.conversionRatio = Math.max(0.0001, Number(r.conversionRatio) || 1);
           r.cumulativeDividendRate = Math.max(0, Number(r.cumulativeDividendRate) || 0);
+          if (typeof r.includeConvertiblesInFullyDiluted !== 'boolean')
+            r.includeConvertiblesInFullyDiluted = false;
           r.redemptionEnabled = Boolean(r.redemptionEnabled);
           r.redemptionDate = r.redemptionDate || '';
           r.redemptionMultiple = Math.max(0.1, Number(r.redemptionMultiple) || 1);
@@ -3809,6 +3822,10 @@
             'Includes all shares in VSOP-Pools in the conversion basis.',
           ],
           [
+            'Die Pre-Money-Preisgrundlage umfasst das gezeichnete Kapital, modellierte virtuelle Optionen und Anteile sowie die As-converted-Anteile aller beim Closing ausstehenden CLAs.',
+            'The pre-money pricing basis includes issued equity, modelled virtual options and shares, and the as-converted shares of all CLAs outstanding at closing.',
+          ],
+          [
             'Berücksichtigt nur bis zum Wandlungsstichtag gewährte VSOP-Anteile. Freie, geplante, stornierte und erst später gewährte Anteile bleiben unberücksichtigt.',
             'Includes only VSOP shares granted by the conversion date. Free, planned, cancelled and subsequently granted shares are excluded.',
           ],
@@ -3979,6 +3996,8 @@
           ['Seniorität', 'Seniority'],
           ['Kumulative Dividende p. a. (%)', 'Cumulative dividend p.a. (%)'],
           ['Kumul. Dividende', 'Cum. dividend'],
+          ['Wandelbare Rechte in Fully Diluted einbeziehen', 'Include convertible rights in fully diluted'],
+          ['CLA-Anteile in FD-Basis', 'CLA shares in FD basis'],
           ['Redemption-Floor simulieren', 'Apply redemption floor'],
           ['Redemption-Stichtag', 'Redemption date'],
           ['Zusätzliche Pool-Anteile', 'Additional pool shares'],
@@ -4076,6 +4095,7 @@
           ['Investor hinzufügen', 'Add investor'],
           ['Investor entfernen', 'Remove investor'],
           ['Keine', 'None'],
+          ['Ja', 'Yes'],
           ['Nein', 'No'],
           ['Typ', 'Type'],
           ['Gründer', 'Founder'],
@@ -4854,6 +4874,7 @@
           'acceleration_pct',
           'second_trigger_date',
           'fully_diluted_granted_vsop_only',
+          'include_convertibles_in_fully_diluted',
         ];
         const csvCell = (value) => '"' + String(value ?? '').replace(/"/g, '""') + '"';
         function downloadBlob(blob, filename) {
@@ -4873,7 +4894,7 @@
         function exportCsv() {
           const rows = [];
           const add = (record_type, data = {}) =>
-            rows.push({ schema_version: 4, record_type, ...data });
+            rows.push({ schema_version: 5, record_type, ...data });
           state.holders.forEach((h) =>
             add('holder', {
               id: h.id,
@@ -4905,6 +4926,9 @@
               closing_date: r.date,
               pool_refresh_shares: r.poolRefresh || 0,
               pool_refresh_timing: r.poolRefreshTiming || 'pre',
+              include_convertibles_in_fully_diluted: r.includeConvertiblesInFullyDiluted
+                ? 'true'
+                : 'false',
             });
             roundInvestors(r).forEach((investor) =>
               add('round_investor', {
@@ -6413,8 +6437,11 @@
               );
           });
           const importedSnapshots = snapshots(imported),
-            invalidSecondary = importedSnapshots.find((snapshot) => snapshot.secondaryError);
-          if (invalidSecondary) throw new Error(invalidSecondary.secondaryError);
+            invalidSnapshot = importedSnapshots.find(
+              (snapshot) => snapshot.secondaryError || snapshot.calculationError,
+            );
+          if (invalidSnapshot)
+            throw new Error(invalidSnapshot.secondaryError || invalidSnapshot.calculationError);
           state = imported;
           stage = importedSnapshots.length - 1;
           save();
@@ -6605,6 +6632,11 @@
                 poolRefresh: Math.max(0, n('pool_refresh_shares') || 0),
                 poolRefreshTiming: r.pool_refresh_timing.trim() === 'post' ? 'post' : 'pre',
                 poolId: String(r.pool_id ?? '').trim(),
+                includeConvertiblesInFullyDiluted: ['true', '1', 'ja', 'yes'].includes(
+                  String(r.include_convertibles_in_fully_diluted || '')
+                    .trim()
+                    .toLowerCase(),
+                ),
               });
               if (
                 round.redemptionEnabled &&
@@ -6790,8 +6822,11 @@
               throw new Error(`Secondary ${s.name} verweist auf keine gültige Anteilsklasse.`);
           });
           const importedSnapshots = snapshots(imported),
-            invalidSecondary = importedSnapshots.find((snapshot) => snapshot.secondaryError);
-          if (invalidSecondary) throw new Error(invalidSecondary.secondaryError);
+            invalidSnapshot = importedSnapshots.find(
+              (snapshot) => snapshot.secondaryError || snapshot.calculationError,
+            );
+          if (invalidSnapshot)
+            throw new Error(invalidSnapshot.secondaryError || invalidSnapshot.calculationError);
           state = imported;
           stage = importedSnapshots.length - 1;
           save();
@@ -7232,17 +7267,16 @@
                 )
                 .reduce((sum, grant) => sum + (Number(grant.shares) || 0), 0),
               grantedFullyDilutedTotal = equityTotal + grantedVsopTotal;
-            const price = Number(r.preMoney) / Math.max(0.000001, fullyDilutedTotal),
-              conversions = [];
-            source.convertibles.forEach((c) => {
-              if (
-                converted.has(c.id) ||
-                !validDate(c.date) ||
-                !validDate(r.date) ||
-                c.date > r.date
+            const conversionInputs = source.convertibles
+              .filter(
+                (c) =>
+                  !converted.has(c.id) &&
+                  validDate(c.date) &&
+                  validDate(r.date) &&
+                  c.date <= r.date,
               )
-                return;
-              const conversionBaseTotal = Math.max(
+              .map((c) => {
+                const conversionBaseTotal = Math.max(
                   0.000001,
                   c.fullyDilutedConversion
                     ? c.fullyDilutedGrantedVsopOnly
@@ -7250,15 +7284,48 @@
                       : fullyDilutedTotal
                     : equityTotal,
                 ),
-                discount = Math.min(99, Math.max(0, Number(c.discount) || 0));
-              const discountPrice =
-                  (Number(r.preMoney) * (1 - discount / 100)) / conversionBaseTotal,
-                capPrice =
-                  Number(c.valuationCap) > 0
-                    ? Number(c.valuationCap) / conversionBaseTotal
-                    : Infinity,
-                conversionPrice = Math.min(discountPrice, capPrice);
-              const claim = loanClaim(c, r.date),
+                discount = Math.min(99, Math.max(0, Number(c.discount) || 0)),
+                conversionValuation = Math.min(
+                  Number(r.preMoney) * (1 - discount / 100),
+                  Number(c.valuationCap) > 0 ? Number(c.valuationCap) : Infinity,
+                ),
+                claim = loanClaim(c, r.date);
+                return {
+                  convertible: c,
+                  conversionBaseTotal,
+                  conversionValuation,
+                  claim,
+                  ownershipFraction: claim / Math.max(0.000001, conversionValuation),
+                };
+              }),
+              totalOwnershipFraction = conversionInputs.reduce(
+                (sum, input) => sum + input.ownershipFraction,
+                0,
+              ),
+              calculationError =
+                r.includeConvertiblesInFullyDiluted && totalOwnershipFraction >= 1
+                  ? `Runde „${r.name}“: Die Ansprüche der CLAs erreichen oder übersteigen die für ihre Wandlung maßgebliche Bewertung. Die Fully-Diluted-Pre-Money-Basis ist so nicht berechenbar.`
+                  : '',
+              includeConvertibleRights =
+                Boolean(r.includeConvertiblesInFullyDiluted) && !calculationError,
+              convertibleFullyDilutedShares = includeConvertibleRights
+                ? conversionInputs.reduce(
+                    (sum, input) =>
+                      sum + input.ownershipFraction * input.conversionBaseTotal,
+                    0,
+                  ) / Math.max(0.000001, 1 - totalOwnershipFraction)
+                : 0,
+              price =
+                Number(r.preMoney) /
+                Math.max(0.000001, fullyDilutedTotal + convertibleFullyDilutedShares),
+              conversions = [];
+            conversionInputs.forEach((input) => {
+              const c = input.convertible,
+                conversionBaseTotal =
+                  input.conversionBaseTotal + convertibleFullyDilutedShares,
+                conversionPrice =
+                  input.conversionValuation / Math.max(0.000001, conversionBaseTotal),
+                claim = input.claim,
                 shares = claim / Math.max(0.000001, conversionPrice),
                 existing = lots.find(
                   (lot) =>
@@ -7357,6 +7424,8 @@
               eventId: r.id,
               asOfDate: r.date,
               secondaryError: '',
+              calculationError,
+              convertibleFullyDilutedShares,
             });
           });
           return out;
@@ -7572,7 +7641,7 @@
                       r.redemptionEnabled && validDate(r.redemptionDate)
                         ? `${Number(r.redemptionMultiple).toLocaleString(currentLocale())}× ab ${dateLabel(r.redemptionDate)}`
                         : 'Nein';
-                  return `<article class="erm-round erm-financing-card is-equity"><div class="viz-row"><span class="viz-badge erm-type-badge">Eigenkapitalrunde</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(investorNames)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date ? esc(dateLabel(r.date)) : 'Datum fehlt'}</span><span class="text-muted">Anteilsklasse</span><span>${esc(r.className || r.name)}</span><span class="text-muted">Investoren</span><span>${investors.length}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(roundInvestment(r))}</span><span class="text-muted">LiqPref</span><span>${esc(preferenceLabel)}</span><span class="text-muted">Seniorität</span><span>${r.liquidationPreferenceType === 'none' ? '–' : Number(r.liquidationSeniority).toLocaleString(currentLocale())}</span><span class="text-muted">Conversion Ratio</span><span>${Number(r.conversionRatio || 1).toLocaleString(currentLocale(), { maximumFractionDigits: 4 })}:1</span><span class="text-muted">Kumul. Dividende</span><span>${r.liquidationPreferenceType === 'none' ? '–' : pct(Number(r.cumulativeDividendRate) || 0) + ' p. a.'}</span><span class="text-muted">Redemption</span><span>${esc(redemptionLabel)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(roundSnap.price)}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh || 0)} · ${esc(poolName)} · ${r.poolRefreshTiming === 'post' ? 'Post-Money' : 'Pre-Money'}</span></div></article>`;
+                  return `<article class="erm-round erm-financing-card is-equity"><div class="viz-row"><span class="viz-badge erm-type-badge">Eigenkapitalrunde</span><span class="erm-financing-index">${String(displayIndex + 1).padStart(2, '0')}</span></div><div class="erm-round-top"><strong>${esc(r.name)}</strong><div class="erm-round-actions"><button type="button" class="btn btn-ghost" data-edit="${entry.index}" aria-label="${esc(r.name)} bearbeiten"><i data-lucide="pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-ghost" data-delete="${entry.index}" aria-label="${esc(r.name)} löschen"><i data-lucide="trash-2" aria-hidden="true"></i></button></div></div><span class="text-small">${esc(investorNames)}</span><div class="erm-round-meta text-small"><span class="text-muted">Closing</span><span>${r.date ? esc(dateLabel(r.date)) : 'Datum fehlt'}</span><span class="text-muted">Anteilsklasse</span><span>${esc(r.className || r.name)}</span><span class="text-muted">Investoren</span><span>${investors.length}</span><span class="text-muted">Pre-Money</span><span>${euro(r.preMoney)}</span><span class="text-muted">Investment</span><span>${euro(roundInvestment(r))}</span><span class="text-muted">LiqPref</span><span>${esc(preferenceLabel)}</span><span class="text-muted">Seniorität</span><span>${r.liquidationPreferenceType === 'none' ? '–' : Number(r.liquidationSeniority).toLocaleString(currentLocale())}</span><span class="text-muted">Conversion Ratio</span><span>${Number(r.conversionRatio || 1).toLocaleString(currentLocale(), { maximumFractionDigits: 4 })}:1</span><span class="text-muted">Kumul. Dividende</span><span>${r.liquidationPreferenceType === 'none' ? '–' : pct(Number(r.cumulativeDividendRate) || 0) + ' p. a.'}</span><span class="text-muted">Redemption</span><span>${esc(redemptionLabel)}</span><span class="text-muted">Verwässerung</span><span>${pct(dilution)}</span><span class="text-muted">Preis / Anteil</span><span>${euroPerShare(roundSnap.price)}</span><span class="text-muted">CLA-Anteile in FD-Basis</span><span>${r.includeConvertiblesInFullyDiluted ? 'Ja' : 'Nein'}</span><span class="text-muted">Pool-Auffrischung</span><span>${num(r.poolRefresh || 0)} · ${esc(poolName)} · ${r.poolRefreshTiming === 'post' ? 'Post-Money' : 'Pre-Money'}</span></div></article>`;
                 })
                 .join('')
             : '<div class="erm-empty">Noch keine Finanzierungen.</div>';
@@ -8132,6 +8201,7 @@
               de: [
                 'Öffne Neue Transaktion → Eigenkapitalrunde und trage Runde, Anteilsklasse, Pre-Money-Bewertung und Closing-Datum ein.',
                 'Füge alle Investoren und ihre Investments hinzu. Innerhalb einer Runde darf jeder Name nur einmal vorkommen.',
+                'Aktiviere Wandelbare Rechte in Fully Diluted einbeziehen, wenn ausstehende CLAs mit ihren As-converted-Anteilen zur Pre-Money-Preisgrundlage gehören.',
                 'Wähle keine, nicht partizipierende oder partizipierende Liquidationspräferenz und erfasse Multiple, Senioritätsrang und optionale Zusatzbedingungen.',
                 'Bei einer Pool-Auffrischung wählst du Zielpool, Anteilsmengen und den Zeitpunkt vor oder nach der Runde.',
                 'Klicke Speichern und prüfe Preis je Anteil, Verwässerung und Allokationen in der Finanzierungskarte.',
@@ -8139,6 +8209,7 @@
               en: [
                 'Open New transaction → Equity round and enter round, share class, pre-money valuation and closing date.',
                 'Add all investors and their investments. Within one round, each name may appear only once.',
+                'Enable Include convertible rights in fully diluted when outstanding CLAs belong in the pre-money pricing basis with their as-converted shares.',
                 'Choose no, non-participating or participating liquidation preference and enter the multiple, seniority rank and optional additional terms.',
                 'For a pool refresh, choose the target pool, share count and whether it occurs before or after the round.',
                 'Click Save and check price per share, dilution and allocations on the financing card.',
@@ -8521,7 +8592,7 @@
             },
             steps: {
               de: [
-                'Klicke CSV exportieren, um den vollständigen Workspace im Schema Version 4 herunterzuladen.',
+                'Klicke CSV exportieren, um den vollständigen Workspace im Schema Version 5 herunterzuladen.',
                 'Klicke CSV laden und wähle eine zuvor exportierte Workspace-Datei. Erfolgreiche oder fehlerhafte Imports erscheinen im Statusfeld.',
                 'Klicke OCF exportieren, ergänze rechtlichen Unternehmensnamen, Gründungsdatum und ISO-Ländercode und lade das OCF-1.2-Paket als .ocf.zip herunter.',
                 'Klicke OCF laden, um ein OCF-1.2-Paket zu importieren. Von dieser App exportierte Pakete werden verlustfrei wiederhergestellt.',
@@ -8530,7 +8601,7 @@
                 'Lade das Beispiel erneut, um zum Ausgangspunkt dieser Anleitung zurückzukehren.',
               ],
               en: [
-                'Click Export CSV to download the complete workspace using schema version 4.',
+                'Click Export CSV to download the complete workspace using schema version 5.',
                 'Click Import CSV and choose a previously exported workspace file. Successful or failed imports appear in the status area.',
                 'Click Export OCF, enter the issuer legal name, formation date and ISO country code, then download the OCF 1.2 package as an .ocf.zip file.',
                 'Click Import OCF to import an OCF 1.2 package. Packages exported by this app are restored losslessly.',
@@ -8691,7 +8762,7 @@
             sections: '02, 13',
           },
           {
-            names: { de: 'CSV und Schema Version 4 / CSV and schema version 4', en: 'CSV and schema version 4 / CSV und Schema Version 4' },
+            names: { de: 'CSV und Schema Version 5 / CSV and schema version 5', en: 'CSV and schema version 5 / CSV und Schema Version 5' },
             definition: {
               de: 'Textformat mit Zeilen für verschiedene Datensatztypen und einer festen Spaltenliste.',
               en: 'Text format with rows for different record types and a fixed list of columns.',
@@ -8701,8 +8772,8 @@
               en: 'Backs up and transfers a complete workspace without a server.',
             },
             implementation: {
-              de: 'exportCsv() schreibt schema_version 4 und record_type; parseCsv() unterstützt Semikolon oder Komma und Anführungszeichen; importCsv() validiert Typen, IDs, Verweise und abhängige Secondaries.',
-              en: 'exportCsv() writes schema_version 4 and record_type; parseCsv() supports semicolon or comma and quoted cells; importCsv() validates types, IDs, references and dependent secondaries.',
+              de: 'exportCsv() schreibt schema_version 5 und record_type; parseCsv() unterstützt Semikolon oder Komma und Anführungszeichen; importCsv() validiert Typen, IDs, Verweise und abhängige Secondaries.',
+              en: 'exportCsv() writes schema_version 5 and record_type; parseCsv() supports semicolon or comma and quoted cells; importCsv() validates types, IDs, references and dependent secondaries.',
             },
             component: 'csvHeaders, exportCsv(), parseCsv(), importCsv(), downloadCsv()',
             sections: '02, 03, 13',
@@ -8769,8 +8840,8 @@
               en: 'Determines the share price and new valuation after the round.',
             },
             implementation: {
-              de: 'snapshots() teilt preMoney durch die aktuelle Fully-Diluted-Gesamtmenge; valuation wird auf preMoney plus roundInvestment(r) gesetzt.',
-              en: 'snapshots() divides preMoney by the current fully diluted total; valuation is set to preMoney plus roundInvestment(r).',
+              de: 'snapshots() teilt preMoney durch die aktuelle Fully-Diluted-Gesamtmenge. Ist includeConvertiblesInFullyDiluted aktiv, kommen die simultan berechneten As-converted-Anteile der bei Closing ausstehenden CLAs hinzu. valuation wird auf preMoney plus roundInvestment(r) gesetzt.',
+              en: 'snapshots() divides preMoney by the current fully diluted total. When includeConvertiblesInFullyDiluted is enabled, it adds the simultaneously calculated as-converted shares of CLAs outstanding at closing. valuation is set to preMoney plus roundInvestment(r).',
             },
             component: 'round.preMoney, roundInvestment(), snapshots().price and .valuation',
             sections: '01, 06, 09',
@@ -8786,8 +8857,8 @@
               en: 'Calculates new shares or the proceeds of a secondary.',
             },
             implementation: {
-              de: 'Bei Runden ist price = preMoney / fullyDilutedTotal und shares = investment / price. Bei Secondaries wird der Preis nur für den Käufer-/Verkäufer-Cashflow verwendet.',
-              en: 'For rounds, price = preMoney / fullyDilutedTotal and shares = investment / price. For secondaries, price is used only for buyer/seller cash flow.',
+              de: 'Bei Runden ist price = preMoney / (fullyDilutedTotal + optionale As-converted-CLA-Anteile) und shares = investment / price. Bei Secondaries wird der Preis nur für den Käufer-/Verkäufer-Cashflow verwendet.',
+              en: 'For rounds, price = preMoney / (fullyDilutedTotal + optional as-converted CLA shares) and shares = investment / price. For secondaries, price is used only for buyer/seller cash flow.',
             },
             component: 'snapshots().price, secondary.pricePerShare',
             sections: '06, 08, 09',
@@ -9986,8 +10057,17 @@
               'Bitte Darlehensgeber, Betrag und Datum vollständig eingeben.';
             return;
           }
-          if (editConvertible === null) state.convertibles.push(c);
-          else state.convertibles[editConvertible] = c;
+          const convertibles = state.convertibles.slice();
+          if (editConvertible === null) convertibles.push(c);
+          else convertibles[editConvertible] = c;
+          const invalid = snapshots({ ...state, convertibles }).find(
+            (snapshot) => snapshot.calculationError,
+          );
+          if (invalid) {
+            $('#erm-convertible-error').textContent = invalid.calculationError;
+            return;
+          }
+          state.convertibles = convertibles;
           commitChanges('#erm-convertible-dialog');
         });
 
@@ -10236,6 +10316,7 @@
                     poolRefresh: 0,
                     poolRefreshTiming: 'pre',
                     poolId: pools[0]?.id || '',
+                    includeConvertiblesInFullyDiluted: true,
                   }
                 : {
                     ...state.rounds[i],
@@ -10264,6 +10345,8 @@
           $('#erm-round-pool-id').innerHTML = poolSelectOptions(r.poolId, true);
           $('#erm-round-pool-id').value = r.poolId || '';
           $('#erm-round-pool-timing').value = r.poolRefreshTiming || 'pre';
+          $('#erm-round-include-convertibles-fd').checked =
+            Boolean(r.includeConvertiblesInFullyDiluted);
           $('#erm-round-error').textContent = '';
           updateRoundPreferenceFields();
           $('#erm-round-dialog').showModal();
@@ -10305,6 +10388,7 @@
               poolRefresh: Math.max(0, Number($('#erm-round-pool-refresh').value) || 0),
               poolId: $('#erm-round-pool-id').value,
               poolRefreshTiming: $('#erm-round-pool-timing').value,
+              includeConvertiblesInFullyDiluted: $('#erm-round-include-convertibles-fd').checked,
             },
             r = normalizeRound({
               ...rawRound,
@@ -10373,9 +10457,12 @@
           if (editRound === null) rounds.push(r);
           else rounds[editRound] = r;
           const candidateSnapshots = snapshots({ ...state, rounds }),
-            invalid = candidateSnapshots.find((snapshot) => snapshot.secondaryError);
+            invalid = candidateSnapshots.find(
+              (snapshot) => snapshot.secondaryError || snapshot.calculationError,
+            );
           if (invalid) {
-            $('#erm-round-error').textContent = invalid.secondaryError;
+            $('#erm-round-error').textContent =
+              invalid.secondaryError || invalid.calculationError;
             return;
           }
           state.rounds = rounds;

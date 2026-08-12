@@ -41,6 +41,8 @@ same local workspace between sessions.
   changes formatting only; it does not convert stored values.
 - Chronological cap-table stages for formation, equity rounds, and secondaries.
 - Multi-investor equity rounds priced from a fully diluted pre-money valuation.
+- A per-round switch can include the as-converted shares of outstanding
+  convertible loans in that fully diluted pricing basis.
 - Share classes with seniority, pari-passu ranks, non-participating or fully
   participating liquidation preferences, participation caps, conversion
   ratios, cumulative dividends, and optional redemption floors.
@@ -93,8 +95,8 @@ table also maps product concepts to the relevant state fields and functions.
 Application data is stored in `localStorage` for the current browser origin.
 This makes reloads convenient, but it is not a cloud backup.
 
-- **Export CSV** downloads the complete workspace in CSV schema v4.
-- **Import CSV** restores a complete workspace. Schema v2 and v3 exports remain
+- **Export CSV** downloads the complete workspace in CSV schema v5.
+- **Import CSV** restores a complete workspace. Schema v2 through v4 exports remain
   importable.
 - **Export OCF** asks for the issuer legal name, formation date, and ISO
   country code, then creates a standards-based OCF 1.2 `.ocf.zip` package with
@@ -108,7 +110,9 @@ This makes reloads convenient, but it is not a cloud backup.
 - **Load example** can download the current workspace first, then replace it
   with the versioned public example.
 
-Schema v4 adds
+Schema v5 adds `include_convertibles_in_fully_diluted` to round records. When
+enabled, the round price uses issued equity, the modelled virtual pool and the
+as-converted shares of CLAs outstanding at closing. Schema v4 added
 `fully_diluted_granted_vsop_only` to convertible records. Currency fields keep
 their historical EUR names; selecting `$` changes only display formatting.
 
@@ -126,7 +130,7 @@ Run the calculation and import scenarios without installing dependencies:
 node tests/test-scenarios.js
 ```
 
-The suite contains 62 independently calculated, human-readable scenarios
+The suite contains 63 independently calculated, human-readable scenarios
 covering waterfalls, preference claims, financing rounds, VSOP and vesting,
 convertible loans, secondary transactions, and CSV imports.
 

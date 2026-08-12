@@ -273,7 +273,8 @@ function makeRound(options) {
     redemptionMultiple: options.redemptionMultiple || 1,
     poolRefresh: options.poolRefresh || 0,
     poolRefreshTiming: options.poolRefreshTiming || 'pre',
-    poolId: options.poolId || ''
+    poolId: options.poolId || '',
+    includeConvertiblesInFullyDiluted: Boolean(options.includeConvertiblesInFullyDiluted)
   };
 }
 
@@ -726,6 +727,22 @@ const snapshotScenarios = [
     expected: {price: 10, raised: 1100000, valuation: 11000000, capShares: {Founder: 1000000, Angel: 10800, Fund: 100000}, conversions: {note: {price: 10, claim: 108000, shares: 10800}}}
   },
   {
+    id: 'CT-63',
+    title: 'A convertible included in fully diluted pricing converts at the round price',
+    calculation: 'The €100k CLA represents 1% of the €10m pre-money valuation. Its simultaneous as-converted amount is 10,101.010101 shares, so €10m / 1,010,101.010101 = €9.90 per share for both the CLA and the new investor.',
+    input: makeState({
+      convertibles: [makeConvertible({id: 'note', name: 'Angel Note', lender: 'Angel', principal: 100000, date: '2024-01-01'})],
+      rounds: [makeRound({id: 'round-a', name: 'Seed', preMoney: 10000000, date: '2025-01-01', includeConvertiblesInFullyDiluted: true, investors: [{id: 'fund', name: 'Fund', investment: 1000000}]})]
+    }),
+    expected: {
+      price: 9.9,
+      raised: 1100000,
+      valuation: 11000000,
+      capShares: {Founder: 1000000, Angel: 10101.0101010101, Fund: 101010.101010101},
+      conversions: {note: {price: 9.9, claim: 100000, shares: 10101.0101010101}}
+    }
+  },
+  {
     id: 'CT-35',
     title: 'A non-fully-diluted convertible excludes the virtual pool',
     calculation: '€1m / 900 equity shares = €1,111.111111 per share; €100k converts into 90 shares.',
@@ -981,6 +998,7 @@ const csvScenarios = [
       roundInvestments: {'round-bridge': 1000000, 'round-seed': 3000000, 'round-series-a': 8000000},
       roundInvestorCounts: {'round-bridge': 4, 'round-seed': 2, 'round-series-a': 2},
       roundSeniorities: {'round-bridge': 1, 'round-seed': 2, 'round-series-a': 3},
+      roundIncludeConvertibles: {'round-bridge': true, 'round-seed': true, 'round-series-a': true},
       convertible: {
         id: 'convertible-angel-anna',
         fullyDilutedConversion: true,
@@ -1012,7 +1030,7 @@ const csvScenarios = [
       ],
       ','
     )},
-    expected: {holders: 1, convertibles: 0, rounds: 1, roundInvestments: {seed: 250000}, roundInvestorCounts: {seed: 1}}
+    expected: {holders: 1, convertibles: 0, rounds: 1, roundInvestments: {seed: 250000}, roundInvestorCounts: {seed: 1}, roundIncludeConvertibles: {seed: false}}
   },
   {
     id: 'CSV-49',
@@ -1243,6 +1261,15 @@ function runCsvScenario(scenario) {
     if (!round) throw new Error(`${scenario.id}: round ${id} missing`);
     assertEqual(round.liquidationSeniority, expected, `${scenario.id} ${id} seniority`);
   });
+  Object.entries(scenario.expected.roundIncludeConvertibles || {}).forEach(([id, expected]) => {
+    const round = state.rounds.find(item => item.id === id);
+    if (!round) throw new Error(`${scenario.id}: round ${id} missing`);
+    assertEqual(
+      round.includeConvertiblesInFullyDiluted,
+      expected,
+      `${scenario.id} ${id} convertible rights in fully diluted basis`
+    );
+  });
   if (scenario.expected.convertible) {
     const convertible = state.convertibles.find(
       item => item.id === scenario.expected.convertible.id
@@ -1427,8 +1454,8 @@ function runScenario(scenario) {
 }
 
 async function main() {
-  if (scenarios.length !== 62)
-    throw new Error(`Expected exactly 62 scenarios, found ${scenarios.length}.`);
+  if (scenarios.length !== 63)
+    throw new Error(`Expected exactly 63 scenarios, found ${scenarios.length}.`);
 
   await runOcfContractTests();
 
