@@ -20,6 +20,7 @@ const marker = text => {
 [
   '<html lang="en">',
   'id="erm-import-example"',
+  'id="erm-recalculate"',
   'id="erm-export-ocf"',
   'id="erm-import-ocf"',
   'id="erm-ocf-file"',
@@ -36,6 +37,8 @@ const marker = text => {
   'function renderGuide()',
   "guide/screenshots/${language}/${section.image}",
   "['Beispiel laden', 'Load example']",
+  "['Cap Table neu berechnen', 'Recalculate cap table']",
+  "$('#erm-recalculate').addEventListener('click', recalculateCapTable);",
   "['Beispieldaten laden?', 'Load example data?']",
   "['Fehler melden', 'Report bug']",
   "return supportedLanguages.has(savedLanguage) ? savedLanguage : 'en';",
@@ -49,6 +52,11 @@ const marker = text => {
   'importExampleCsv(false)',
   'importExampleCsv(true)'
 ].forEach(contract => marker(contract));
+const titleRowStart = marker('<div class="erm-title-row">');
+const titleRowEnd = marker('<div class="viz-row erm-create-actions"');
+const recalculateButton = marker('id="erm-recalculate"');
+if (recalculateButton < titleRowStart || recalculateButton > titleRowEnd)
+  throw new Error('The manual recalculation button must be placed beside the page title.');
 const guideSectionsSource = source.slice(
   marker('const guideSections ='),
   marker('function renderGuide()')
@@ -82,6 +90,14 @@ const renderGuideSource = source.slice(
   marker('function renderGuide()'),
   marker('function refreshIcons()')
 );
+const renderVsopSource = source.slice(
+  marker('function renderVsop('),
+  marker('const guideSections =')
+);
+if (!renderVsopSource.includes('asOf = vsopAsOfDate(snap)'))
+  throw new Error('The VSOP section must use the selected Development stage date.');
+if (renderVsopSource.includes('currentSnapshot'))
+  throw new Error('The latest Development stage must not substitute today for its transaction date.');
 ['erm-guide-terminology', '<span>14</span>', 'guideTerms'].forEach(section14Marker => {
   if (renderGuideSource.includes(section14Marker))
     throw new Error(`Guide section 14 is still rendered: ${section14Marker}`);
@@ -99,6 +115,29 @@ const renderGuideSource = source.slice(
 });
 if (source.includes('<span class="erm-page-kicker">EASE Cap Table Manager</span>'))
   throw new Error('Redundant main-section product label is still present.');
+const recalculateSource = source.slice(
+  marker('function recalculateCapTable()'),
+  marker('function createRenderContext()')
+);
+const recalculationStatus = {textContent: ''};
+let renderCalls = 0;
+const recalculateCapTable = new Function(
+  '$',
+  'render',
+  `${recalculateSource}\nreturn recalculateCapTable;`
+)(
+  selector => {
+    if (selector !== '#erm-save-status')
+      throw new Error(`Unexpected recalculation selector: ${selector}`);
+    return recalculationStatus;
+  },
+  () => {
+    renderCalls += 1;
+  }
+);
+recalculateCapTable();
+if (renderCalls !== 1 || recalculationStatus.textContent !== 'Cap Table neu berechnet.')
+  throw new Error('Manual recalculation must render once and announce completion.');
 const license = fs.readFileSync('LICENSE', 'utf8');
 if (!license.includes('GNU AFFERO GENERAL PUBLIC LICENSE') || !license.includes('Version 3, 19 November 2007'))
   throw new Error('The full GNU AGPL version 3 license text is missing.');
@@ -131,7 +170,7 @@ const projectRoundHelpers = new Function(
 const projectFinance = new Function(
   'validDate',
   'today',
-  source.slice(financeStart, financeEnd) + '\nreturn {loanClaim,addMonths,completedMonths,earnedVsopShares,vestedShares,vsopEntitlement,calculateVsopPayout,reservedVsopShares};'
+  source.slice(financeStart, financeEnd) + '\nreturn {loanClaim,addMonths,completedMonths,earnedVsopShares,vestedShares,vsopEntitlement,calculateVsopPayout,reservedVsopShares,vsopAsOfDate};'
 )(validDate, '2030-01-01');
 const projectWaterfall = new Function(
   'validDate',
@@ -981,6 +1020,14 @@ const utilityScenarios = [
     kind: 'vsop-payout',
     input: {asOf: '2027-01-01', valuePerShare: 10, grant: {shares: 100, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 12, cliffMonths: 0, status: 'Aktiv', hurdle: 3}},
     expected: {payable: 100, spread: 7, payout: 700}
+  },
+  {
+    id: 'VSOP-64',
+    title: 'VSOP balances use the selected Development stage date',
+    calculation: 'The selected funding round closed on 1 January 2026, so 4,800 shares vest for 12/48 months = 1,200 even though today is later.',
+    kind: 'vsop-stage-date',
+    input: {snapshot: {asOfDate: '2026-01-01'}, grant: {shares: 4800, grantDate: '2025-01-01', startDate: '2025-01-01', vestingMonths: 48, cliffMonths: 12, status: 'Aktiv'}},
+    expected: {asOf: '2026-01-01', shares: 1200}
   }
 ];
 
@@ -1186,6 +1233,16 @@ function runSnapshotScenario(scenario) {
 }
 
 function runUtilityScenario(scenario) {
+  if (scenario.kind === 'vsop-stage-date') {
+    const asOf = projectFinance.vsopAsOfDate(scenario.input.snapshot);
+    assertEqual(asOf, scenario.expected.asOf, `${scenario.id} selected stage date`);
+    assertNear(
+      projectFinance.vestedShares(scenario.input.grant, asOf),
+      scenario.expected.shares,
+      `${scenario.id} vested shares`
+    );
+    return;
+  }
   if (scenario.kind === 'vesting') {
     const actual = projectFinance.vestedShares(scenario.input.grant, scenario.input.asOf);
     assertNear(actual, scenario.expected.shares, `${scenario.id} vested shares`);
@@ -1454,8 +1511,8 @@ function runScenario(scenario) {
 }
 
 async function main() {
-  if (scenarios.length !== 63)
-    throw new Error(`Expected exactly 63 scenarios, found ${scenarios.length}.`);
+  if (scenarios.length !== 64)
+    throw new Error(`Expected exactly 64 scenarios, found ${scenarios.length}.`);
 
   await runOcfContractTests();
 

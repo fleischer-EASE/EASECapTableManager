@@ -812,6 +812,12 @@
         gap: 4px;
         min-width: 220px;
       }
+      #equity-round-manager .erm-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
       #equity-round-manager .erm-page-title h2 {
         margin: 0;
       }
@@ -2551,7 +2557,12 @@
         <main class="erm-content">
           <header class="erm-head" id="erm-overview">
             <div class="erm-page-title">
-              <h2>Cap Table &amp; Finanzierungen</h2>
+              <div class="erm-title-row">
+                <h2>Cap Table &amp; Finanzierungen</h2>
+                <button type="button" class="btn" id="erm-recalculate">
+                  <i data-lucide="refresh-cw" aria-hidden="true"></i> Cap Table neu berechnen
+                </button>
+              </div>
             </div>
             <div class="viz-row erm-create-actions" aria-label="Einträge hinzufügen">
               <button type="button" class="btn" id="erm-add-pool">
@@ -4055,6 +4066,8 @@
           ['Gründungsland (ISO)', 'Country of formation (ISO)'],
           ['Beispiel laden', 'Load example'],
           ['Lokal gespeichert', 'Saved locally'],
+          ['Cap Table neu berechnet.', 'Cap table recalculated.'],
+          ['Cap Table neu berechnen', 'Recalculate cap table'],
           ['Rückgängig', 'Undo'],
           ['Wiederholen', 'Redo'],
           ['Zurücksetzen', 'Reset'],
@@ -4706,6 +4719,8 @@
                 grant.leaverDate <= asOf
               ? vestedShares(grant, asOf)
               : (Number(grant.shares) || 0) + (Number(grant.plannedShares) || 0);
+        const vsopAsOfDate = (snap) =>
+          validDate(snap?.asOfDate) ? snap.asOfDate : today;
         const vsopPools = () => state.holders.filter((h) => h.isVirtual);
         const poolSelectOptions = (selected = '', allowEmpty = false) =>
           (allowEmpty ? `<option value="">Kein Zielpool</option>` : '') +
@@ -7443,6 +7458,11 @@
           refreshIcons();
         }
 
+        function recalculateCapTable() {
+          render();
+          $('#erm-save-status').textContent = 'Cap Table neu berechnet.';
+        }
+
         function createRenderContext() {
           const snaps = snapshots();
           stage = Math.min(stage, snaps.length - 1);
@@ -7823,9 +7843,8 @@
           $('#erm-exit-pool-rest').textContent = `${num(restPoolShares)} Anteile · ${euro(0)}`;
         }
 
-        function renderVsop({ snap, snaps }) {
-          const currentSnapshot = stage === snaps.length - 1,
-            asOf = currentSnapshot || !validDate(snap.asOfDate) ? today : snap.asOfDate,
+        function renderVsop({ snap }) {
+          const asOf = vsopAsOfDate(snap),
             pools = vsopPools().map((pool) => {
               const capacity =
                   Number((snap.cap.find((holder) => holder.id === pool.id) || {}).shares) || 0;
@@ -7865,8 +7884,10 @@
               0,
             );
           const poolCount = pools.length;
+          const asOfLabel =
+            currentLanguage === 'en' ? `As of ${dateLabel(asOf)}` : `Stand ${dateLabel(asOf)}`;
           $('#erm-vsop-summary').textContent =
-            `${poolCount} ${poolCount === 1 ? 'Pool' : 'Pools'} · ${num(poolSize)} Anteile · ${num(reserved)} belegt · ${num(available)} verfügbar`;
+            `${asOfLabel} · ${poolCount} ${poolCount === 1 ? 'Pool' : 'Pools'} · ${num(poolSize)} Anteile · ${num(reserved)} belegt · ${num(available)} verfügbar`;
           $('#erm-vsop-pools').innerHTML = pools.length
             ? pools
                 .map(
@@ -8061,8 +8082,8 @@
               en: 'Figure EN-03 · Series A stage of the example with development bar, ownership chart and cap table.',
             },
             visible: {
-              de: 'Der hervorgehobene Stand bestimmt Kennzahlen, Diagramm, Cap Table, VSOP-Auswertung und Exit-Anteilsmengen. Namensgleiche Investoren erscheinen als eine Zeile.',
-              en: 'The highlighted stage determines the metrics, chart, cap table, VSOP analysis and exit share counts. Investors with identical names appear as one row.',
+              de: 'Der hervorgehobene Stand bestimmt Kennzahlen, Diagramm, Cap Table, Exit-Anteilsmengen und mit seinem Transaktionsdatum den Stichtag der VSOP-Auswertung. Namensgleiche Investoren erscheinen als eine Zeile.',
+              en: 'The highlighted stage determines the metrics, chart, cap table and exit share counts; its transaction date is the as-of date for the VSOP analysis. Investors with identical names appear as one row.',
             },
             result: {
               de: 'Du kannst einen historischen oder aktuellen Beteiligungsstand prüfen und als eigenständige Ansicht exportieren.',
@@ -8449,10 +8470,12 @@
               de: [
                 'Pool-Anteile sind virtuelle Anteile, keine echten Gesellschaftsanteile.',
                 'Geplante und freie Anteile erhalten im Exit keine Auszahlung.',
+                'Vesting, Reservierung und freie Kapazität werden zum Transaktionsdatum des unter Entwicklung ausgewählten Stands berechnet.',
               ],
               en: [
                 'Pool shares are virtual shares, not actual company shares.',
                 'Planned and available shares receive no exit payout.',
+                'Vesting, reserved and available capacity are calculated as of the transaction date selected under Development.',
               ],
             },
           },
@@ -9602,6 +9625,7 @@
         $('#erm-redo').addEventListener('click', () =>
           restoreHistory(redoStack, undoStack, 'Änderung wiederhergestellt'),
         );
+        $('#erm-recalculate').addEventListener('click', recalculateCapTable);
         $('.erm-nav').addEventListener('click', (e) => {
           const link = e.target.closest('a[href^="#erm-"]');
           if (!link) return;

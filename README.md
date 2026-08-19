@@ -52,11 +52,14 @@ same local workspace between sessions.
 - Multiple VSOP pools with granted, planned, vested, reserved, and available
   balances.
 - VSOP grants with cliff, vesting interval, vesting pause, strike price, expiry,
-  leaver retention, and single- or double-trigger acceleration.
+  leaver retention, and single- or double-trigger acceleration. The VSOP
+  overview evaluates time-dependent balances at the transaction date selected
+  under Development.
 - Exit simulation with a seniority-based liquidation-preference waterfall,
   economic conversion choice, payout multiples, and IRR.
 - Local automatic saving, a 30-state undo/redo history, cap-table search, view
-  export, complete CSV workspace backups, and OCF 1.2 import/export.
+  export, manual cap-table recalculation, complete CSV workspace backups, and
+  OCF 1.2 import/export.
 
 Stakeholders with the same name are grouped into one cap-table and exit row.
 Their individual lots, financing terms, cash flows, and VSOP grants remain
@@ -130,7 +133,7 @@ Run the calculation and import scenarios without installing dependencies:
 node tests/test-scenarios.js
 ```
 
-The suite contains 63 independently calculated, human-readable scenarios
+The suite contains 64 independently calculated, human-readable scenarios
 covering waterfalls, preference claims, financing rounds, VSOP and vesting,
 convertible loans, secondary transactions, and CSV imports.
 
